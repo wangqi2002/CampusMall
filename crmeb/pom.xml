@@ -57,11 +57,11 @@
 
         <!--访问mysql-->
         <!--JDBC-->
-        <!-- MySql 5.5 Connector -->
+        <!-- MySql 8.0 Connector -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.24</version>
+            <version>8.0.13</version>
         </dependency>
 
         <!--代码自动生成工具-->
