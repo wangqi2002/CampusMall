@@ -12,7 +12,6 @@
         <settings />
       </right-panel>
     </div>
-    <div class="open-image" @click="clear" v-if="openImage"><img src="@/assets/imgs/pc1.png" alt=""></div>
   </div>
 </template>
 
@@ -24,11 +23,6 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Layout',
-  data(){
-    return {
-      openImage: true
-    }
-  },
   components: {
     AppMain,
     Navbar,
@@ -38,6 +32,10 @@ export default {
     TagsView
   },
   mixins: [ResizeMixin],
+  data() {
+    return {
+    }
+  },
   computed: {
     ...mapState({
       sidebar: state => state.app.sidebar,
@@ -56,9 +54,6 @@ export default {
     }
   },
   methods: {
-    clear () {
-      this.openImage = false;
-    },
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
     }
@@ -69,18 +64,6 @@ export default {
 <style lang="scss" scoped>
   @import "~@/styles/mixin.scss";
   @import "~@/styles/variables.scss";
-  .open-image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    background-color: rgba(0,0,0,0.6);
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 999999;
-  }
   .app-wrapper {
     @include clearfix;
     position: relative;

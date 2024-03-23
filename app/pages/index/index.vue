@@ -84,7 +84,7 @@
 					</block>
 				</view>
 				<!-- 优惠券 -->
-				<view class="couponIndex" v-if="couponList.length>0">
+				<!-- <view class="couponIndex" v-if="couponList.length>0">
 					<view class="acea-row" style="height: 100%;">
 						<view class="titBox">
 							<view class="tit1">领取优惠券</view>
@@ -104,11 +104,7 @@
 						</view>
 
 					</view>
-				</view>
-				<!-- 活动-->
-				<a_seckill></a_seckill>
-				<b_combination></b_combination>
-				<c_bargain></c_bargain>
+				</view> -->
 
 				<!-- 首页推荐 -->
 				<!-- :class="iSshowH?'on':''" -->
@@ -187,9 +183,6 @@
 	import {
 		getShare
 	} from '@/api/public.js';
-	import a_seckill from './components/a_seckill';
-	import b_combination from './components/b_combination';
-	import c_bargain from './components/c_bargain';
 	import goodList from '@/components/goodList';
 	import promotionGood from '@/components/promotionGood';
 	import couponWindow from '@/components/couponWindow';
@@ -236,9 +229,6 @@
 			promotionGood,
 			couponWindow,
 			countDown,
-			a_seckill,
-			b_combination,
-			c_bargain,
 			recommend,
 			// #ifdef MP
 			authorize,
@@ -476,6 +466,7 @@
 					uni.setNavigationBarTitle({
 						title: '首页'
 					})
+					console.log(res)
 					that.$set(that, "logoUrl", res.data.logoUrl);
 					that.$set(that, "site_name", '首页');
 					that.$set(that, "imgUrls", res.data.banner);
@@ -971,14 +962,14 @@
 
 
 				.logo {
-					width: 118rpx;
-					height: 42rpx;
-					margin-right: 24rpx;
+					width: 132rpx;
+					height: 50rpx;
+					margin-right: 18rpx;
 				}
 
 				image {
-					width: 118rpx;
-					height: 42rpx;
+					width: 132rpx;
+					height: 50rpx;
 				}
 
 				.input {
@@ -1109,6 +1100,7 @@
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
+				margin: 0 10rpx;
 
 				.item {
 					display: flex;

@@ -320,7 +320,6 @@ public class Constants {
     public static final int INDEX_RECOMMEND_BANNER = 1; //首页精品推荐Banner图片
     public static final int INDEX_HOT_BANNER = 2; //热门榜单推荐Banner图片
     public static final int INDEX_NEW_BANNER = 3; //首页首发新品推荐Banner图片
-    public static final int INDEX_BENEFIT_BANNER = 4; //首页促销单品推荐Banner图片
     public static final int INDEX_LIMIT_DEFAULT = 3; //首页默认list分页条数
     public static final int INDEX_GOOD_BANNER = 5; //优选推荐
 

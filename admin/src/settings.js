@@ -1,3 +1,12 @@
+/*
+ * @Author: wangqi2002 1722009706@qq.com
+ * @Date: 2024-02-28 15:06:48
+ * @LastEditors: wangqi2002 1722009706@qq.com
+ * @LastEditTime: 2024-03-12 17:20:45
+ * @FilePath: \CampusMall\admin\src\settings.js
+ * @Description:
+ *
+ */
 // +----------------------------------------------------------------------
 // | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
 // +----------------------------------------------------------------------
@@ -9,12 +18,13 @@
 // +----------------------------------------------------------------------
 
 // 请求接口地址 如果没有配置自动获取当前网址路径
-const VUE_APP_API_URL = process.env.VUE_APP_BASE_API || `${location.origin}/api/`;
+const VUE_APP_API_URL = process.env.VUE_APP_BASE_API || `${location.origin}/api/`
 module.exports = {
   // 接口请求地址
   apiBaseURL: VUE_APP_API_URL,
 
-  title: 'CRMEB',
+  // title: 'CRMEB',
+  title: 'CampusMall',
 
   /**
    * @type {boolean} true | false

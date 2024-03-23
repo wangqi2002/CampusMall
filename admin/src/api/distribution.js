@@ -10,6 +10,7 @@
 
 import request from '@/utils/request'
 
+// todo: 分销 待删
 
 /**
  * @description 分销设置 -- 详情
@@ -46,7 +47,7 @@ export function promoterListApi(params) {
 /**
  * @description 推广人 -- 列表
  */
-export function spreadListApi( params, data) {
+export function spreadListApi(params, data) {
   return request({
     url: '/admin/store/retail/spread/userlist',
     method: 'post',

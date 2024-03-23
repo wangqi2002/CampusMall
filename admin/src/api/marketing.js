@@ -10,6 +10,8 @@
 
 import request from '@/utils/request'
 
+// todo: 优惠券 待删
+
 /**
  * 优惠券 列表
  * @param pram
@@ -180,7 +182,6 @@ export function seckillDeleteApi(params) {
   })
 }
 
-
 /**
  * 秒杀商品 列表
  * @param pram
@@ -256,7 +257,7 @@ export function seckillStoreStatusApi(params) {
 /**
  * 秒杀配置 修改状态
  */
-export function seckillConfigStatusApi(id,params) {
+export function seckillConfigStatusApi(id, params) {
   return request({
     url: `/admin/store/seckill/manger/update/status/${id}`,
     method: 'post',
@@ -388,7 +389,7 @@ export function combinationSaveApi(data) {
 /**
  * 拼团商品 修改
  */
-export function combinationUpdateApi(params,data) {
+export function combinationUpdateApi(params, data) {
   return request({
     url: `/admin/store/combination/update`,
     method: 'post',
@@ -483,7 +484,6 @@ export function draftListApi(params) {
     params
   })
 }
-
 
 /**
  * 视频号 商品列表

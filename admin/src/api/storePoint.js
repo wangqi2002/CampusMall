@@ -10,6 +10,8 @@
 
 import request from '@/utils/request'
 
+// todo: 提货点 待定
+
 /**
  * 提货点分页列表
  * @param pram
@@ -97,12 +99,12 @@ export function storeInfoApi(data) {
  * 提货点修改
  * @param pram
  */
-export function storeUpdateApi(data,id) {
+export function storeUpdateApi(data, id) {
   // const param = ;
   return request({
     url: '/admin/system/store/update',
     method: 'post',
-    params: {id: id},
+    params: { id: id },
     data
   })
 }
@@ -154,7 +156,6 @@ export function storeStaffDeleteApi(data) {
     params: data
   })
 }
-
 
 /**
  * 核销员编辑
@@ -215,13 +216,4 @@ export function orderListApi(params) {
     params
   })
 }
-
-
-
-
-
-
-
-
-
 

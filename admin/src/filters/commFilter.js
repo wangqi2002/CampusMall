@@ -9,7 +9,7 @@
 // +----------------------------------------------------------------------
 
 import * as constants from '@/utils/constants.js'
-import { formatDates } from '@/utils/index';
+import { formatDates } from '@/utils/index'
 
 // 公共过滤器
 export function filterEmpty(val) {
@@ -24,8 +24,8 @@ export function filterEmpty(val) {
 // 时间过滤器
 export function formatDate(time) {
   if (time !== 0) {
-    const date = new Date(time * 1000);
-    return formatDates(date, 'yyyy-MM-dd hh:mm');
+    const date = new Date(time * 1000)
+    return formatDates(date, 'yyyy-MM-dd hh:mm')
   }
 }
 
@@ -66,6 +66,8 @@ export function keywordStatusFilter(status) {
   return statusMap[status]
 }
 
+// todo: 优惠券 待删
+
 /**
  * @description 优惠券类型
  */
@@ -90,20 +92,21 @@ export function couponTypeFilter(status) {
   return statusMap[status]
 }
 
+// todo: 文章 待定
+
 /**
  * @description 文章分类
  */
 export function articleTypeFilter(status) {
-  if(!status){
+  if (!status) {
     return ''
   }
-  let arrayList = JSON.parse(localStorage.getItem('articleClass'));
-  if(arrayList.filter(item => Number(status) === Number(item.id)).length < 1){
+  const arrayList = JSON.parse(localStorage.getItem('articleClass'))
+  if (arrayList.filter(item => Number(status) === Number(item.id)).length < 1) {
     return ''
   }
   return arrayList.filter(item => Number(status) === Number(item.id))[0].name
 }
-
 
 /**
  * @description 支付状态
@@ -152,6 +155,8 @@ export function extractStatusFilter(status) {
   return statusMap[status]
 }
 
+// todo: 砍价 待删
+
 /**
  * @description 砍价状态
  */
@@ -175,6 +180,8 @@ export function bargainColorFilter(status) {
   }
   return statusMap[status]
 }
+
+// todo: 拼团 待删
 
 /**
  * @description 拼团状态

@@ -10,6 +10,8 @@
 
 import request from '@/utils/request'
 
+// todo: 产品文章 待定
+
 /**
  * 绑定产品
  * @param pram

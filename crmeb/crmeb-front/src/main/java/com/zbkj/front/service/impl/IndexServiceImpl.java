@@ -125,13 +125,13 @@ public class IndexServiceImpl implements IndexService {
 
     /**
      * 获取首页商品列表
-     * @param type 类型 【1 精品推荐 2 热门榜单 3首发新品 4促销单品】
+     * @param type 类型 【1 精品推荐 2 热门榜单 3首发新品】
      * @param pageParamRequest 分页参数
      * @return List
      */
     @Override
     public CommonPage<IndexProductResponse> findIndexProductList(Integer type, PageParamRequest pageParamRequest) {
-        if (type < Constants.INDEX_RECOMMEND_BANNER || type > Constants.INDEX_BENEFIT_BANNER) {
+        if (type < Constants.INDEX_RECOMMEND_BANNER || type > Constants.INDEX_NEW_BANNER) {
             return CommonPage.restPage(new ArrayList<>());
         }
         List<StoreProduct> storeProductList = storeProductService.getIndexProduct(type, pageParamRequest);
