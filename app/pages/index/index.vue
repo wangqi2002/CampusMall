@@ -52,8 +52,8 @@
 					</view>
 					<text class='line'>|</text>
 					<view class='swipers'>
-						<swiper :indicator-dots="indicatorDots" :autoplay="autoplay" interval="2500" duration="500" vertical="true"
-						 circular="true">
+						<swiper :indicator-dots="indicatorDots" :autoplay="autoplay" interval="2500" duration="500"
+							vertical="true" circular="true">
 							<block v-for="(item,index) in roll" :key='index'>
 								<swiper-item>
 									<navigator class='item' :url='item.url' hover-class='none'>
@@ -462,6 +462,10 @@
 			// 首页数据
 			getIndexConfig: function() {
 				let that = this;
+				console.log({
+					username: '18712341234',
+					pwd: 'crmeb@123456'
+				})
 				getIndexData().then(res => {
 					uni.setNavigationBarTitle({
 						title: '首页'
@@ -613,7 +617,7 @@
 			get_host_product: function() {
 				let that = this;
 				that.loading = true;
-			
+
 				if (that.hotScroll) return
 				getProductHot(
 					that.hotPage,
@@ -678,7 +682,7 @@
 	}
 </style>
 <style lang="scss">
-	.notice{
+	.notice {
 		width: 100%;
 		height: 70rpx;
 		border-radius: 10rpx;
@@ -686,22 +690,27 @@
 		margin-bottom: 25rpx;
 		line-height: 70rpx;
 		padding: 0 14rpx;
+
 		.line {
 			color: #CCCCCC;
 		}
-		.pic{
+
+		.pic {
 			width: 130rpx;
 			height: 36rpx;
-			image{
+
+			image {
 				width: 100%;
 				height: 100%;
 				display: block !important;
 			}
 		}
+
 		.swipers {
 			height: 100%;
 			width: 444rpx;
 			overflow: hidden;
+
 			swiper {
 				height: 100%;
 				width: 100%;
@@ -710,11 +719,13 @@
 				color: #333333;
 			}
 		}
+
 		.iconfont {
 			color: #999999;
 			font-size: 20rpx;
-		} 
+		}
 	}
+
 	.couponIndex {
 		width: auto;
 		height: 238rpx;
@@ -722,7 +733,7 @@
 		background-size: 100% 100%;
 		padding-left: 42rpx;
 		margin-bottom: 30rpx;
-		
+
 		.titBox {
 			padding: 47rpx 0;
 			text-align: center;
@@ -737,12 +748,13 @@
 			.tit2 {
 				color: #FFEBD2;
 				font-size: 22rpx;
-				margin:10rpx 0 26rpx 0;
+				margin: 10rpx 0 26rpx 0;
 			}
 
 			.tit3 {
 				color: #FFDAAF;
 				font-size: 24rpx;
+
 				.iconfont {
 					font-size: 20rpx;
 				}
@@ -787,9 +799,11 @@
 				.pricehui {
 					color: #B2B2B2;
 				}
-                .fonthui{
+
+				.fonthui {
 					background-color: #F5F5F5 !important;
 				}
+
 				.yuan {
 					font-size: 24rpx;
 				}
@@ -823,7 +837,7 @@
 		/* #ifdef H5*/
 		top: var(--window-top);
 		/* #endif */
-		
+
 		z-index: 99;
 		flex-direction: row;
 		margin: 0px;

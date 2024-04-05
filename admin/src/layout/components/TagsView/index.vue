@@ -1,5 +1,5 @@
 <template>
-  <div id="tags-view-container" class="tags-view-container" v-if="!isPhone">
+  <div v-if="!isPhone" id="tags-view-container" class="tags-view-container">
     <scroll-pane ref="scrollPane" class="tags-view-wrapper">
       <router-link
         v-for="tag in visitedViews"
@@ -49,14 +49,14 @@ export default {
     routes() {
       return this.$store.state.permission.routes
     },
-     theme() {
-      return this.$store.state.settings.theme;
-    },
+    theme() {
+      return this.$store.state.settings.theme
+    }
   },
   watch: {
     $route() {
       this.addTags()
-      if( !this.isPhone ) this.moveToCurrentTag()
+      if (!this.isPhone) this.moveToCurrentTag()
     },
     visible(value) {
       if (value) {

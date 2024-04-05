@@ -391,7 +391,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     @Override
     public Boolean password(PasswordRequest request) {
         //检测验证码
-        checkValidateCode(request.getPhone(), request.getValidateCode());
+//        checkValidateCode(request.getPhone(), request.getValidateCode());
 
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(User::getAccount, request.getPhone());
@@ -501,7 +501,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     @Override
     public Boolean updatePhoneVerify(UserBindingPhoneUpdateRequest request) {
         //检测验证码
-        checkValidateCode(request.getPhone(), request.getCaptcha());
+//        checkValidateCode(request.getPhone(), request.getCaptcha());
 
         //删除验证码
         redisUtil.delete(getValidateCodeRedisKey(request.getPhone()));
@@ -521,7 +521,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     @Override
     public Boolean updatePhone(UserBindingPhoneUpdateRequest request) {
         //检测验证码
-        checkValidateCode(request.getPhone(), request.getCaptcha());
+//        checkValidateCode(request.getPhone(), request.getCaptcha());
 
         //删除验证码
         redisUtil.delete(getValidateCodeRedisKey(request.getPhone()));

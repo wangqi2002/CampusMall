@@ -142,6 +142,7 @@
 				if (qr_password != password) return that.$util.Tips({
 					title: '两次输入的密码不一致！'
 				});
+				// todo: 后端验证码暂时注释
 				if (!captcha) return that.$util.Tips({
 					title: '请输入验证码'
 				});

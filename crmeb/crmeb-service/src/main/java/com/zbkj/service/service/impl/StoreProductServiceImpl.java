@@ -1132,9 +1132,6 @@ public class StoreProductServiceImpl extends ServiceImpl<StoreProductDao, StoreP
             case Constants.INDEX_NEW_BANNER: //首发新品
                 lambdaQueryWrapper.eq(StoreProduct::getIsNew, true);
                 break;
-            case Constants.INDEX_BENEFIT_BANNER: //促销单品
-                lambdaQueryWrapper.eq(StoreProduct::getIsBenefit, true);
-                break;
             case Constants.INDEX_GOOD_BANNER: // 优选推荐
                 lambdaQueryWrapper.eq(StoreProduct::getIsGood, true);
                 break;

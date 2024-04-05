@@ -497,7 +497,6 @@ public class Constants {
     public static final String WE_CHAT_PROGRAM_TEMP_KEY_RECHARGE = "OPENTM200565260";
 
 
-
     //CND  URL测试用
     public static String CND_URL = "https://wuht-1300909283.cos.ap-chengdu.myqcloud.com";
 

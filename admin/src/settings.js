@@ -2,7 +2,7 @@
  * @Author: wangqi2002 1722009706@qq.com
  * @Date: 2024-02-28 15:06:48
  * @LastEditors: wangqi2002 1722009706@qq.com
- * @LastEditTime: 2024-03-12 17:20:45
+ * @LastEditTime: 2024-03-28 09:20:28
  * @FilePath: \CampusMall\admin\src\settings.js
  * @Description:
  *
@@ -23,7 +23,6 @@ module.exports = {
   // 接口请求地址
   apiBaseURL: VUE_APP_API_URL,
 
-  // title: 'CRMEB',
   title: 'CampusMall',
 
   /**
@@ -31,6 +30,7 @@ module.exports = {
    * @description Whether show the settings right-panel
    */
   showSettings: true,
+  // showSettings: false,
 
   /**
    * @type {boolean} true | false

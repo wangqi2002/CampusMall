@@ -1,3 +1,12 @@
+<!--
+ * @Author: wangqi2002 1722009706@qq.com
+ * @Date: 2024-02-28 15:06:49
+ * @LastEditors: wangqi2002 1722009706@qq.com
+ * @LastEditTime: 2024-03-28 09:13:00
+ * @FilePath: \CampusMall\admin\src\layout\components\AppMain.vue
+ * @Description:
+ *
+-->
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
@@ -5,17 +14,17 @@
         <router-view :key="key" />
       </keep-alive>
     </transition>
-    <div class="footers">
+    <!-- <div class="footers">
       <el-link v-for="item in links" :key="item.key" :href="item.href" target="_blank" class="mr15 mb20">{{item.title}}</el-link>
       <div class="title mb15" v-text="copyright"></div>
-    </div>
+    </div> -->
   </section>
 </template>
 
 <script>
 export default {
   name: 'AppMain',
-  data () {
+  data() {
     return {
       links: [
         {

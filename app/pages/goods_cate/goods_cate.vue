@@ -100,6 +100,7 @@
 			getAllCategory: function() {
 				let that = this;
 				getCategoryList().then(res => {
+					console.log(res)
 					that.productList = res.data;
 					setTimeout(function(){
 						that.infoScroll();
