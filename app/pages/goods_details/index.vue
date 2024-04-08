@@ -105,7 +105,7 @@
 							</block>
 						</view>
 						<!-- 优品推荐 -->
-						<view class="superior borRadius14" if='good_list.length' id="past2">
+						<!-- <view class="superior borRadius14" if='good_list.length' id="past2">
 							<view class="title acea-row row-center-wrapper">
 								<image src="../../static/images/xzuo.png"></image>
 								<view class="titleTxt">优品推荐</view>
@@ -133,10 +133,9 @@
 											</view>
 										</view>
 									</swiper-item>
-									<!-- <view class="swiper-pagination" slot="pagination"></view> -->
 								</swiper>
 							</view>
-						</view>
+						</view> -->
 					</view>
 				</view>
 				<view class='product-intro' id="past3">
@@ -269,7 +268,9 @@
 		getProductGood,
 		getReplyProduct
 	} from '@/api/store.js';
-	import { spread } from "@/api/user";
+	import {
+		spread
+	} from "@/api/user";
 	import {
 		getCoupons
 	} from '@/api/api.js';
@@ -279,7 +280,9 @@
 	import {
 		toLogin
 	} from '@/libs/login.js';
-	import {computeUser} from "@/api/user.js";
+	import {
+		computeUser
+	} from "@/api/user.js";
 	import {
 		mapGetters
 	} from "vuex";
@@ -433,12 +436,12 @@
 			// #endif
 			// #ifdef MP || APP-PLUS
 			// 小程序链接进入获取绑定关系id
-			setTimeout(()=>{
-				if(options.spread){
+			setTimeout(() => {
+				if (options.spread) {
 					app.globalData.spread = options.spread;
 					spread(options.spread).then(res => {})
 				}
-			},2000)
+			}, 2000)
 			// #endif
 			uni.getSystemInfo({
 				success: function(res) {
@@ -460,10 +463,10 @@
 					let mapeMpQrCodeValue = that.$util.formatMpQrCodeData(qrCodeValue);
 					app.globalData.spread = mapeMpQrCodeValue.spread;
 					this.id = mapeMpQrCodeValue.id;
-					setTimeout(()=>{
+					setTimeout(() => {
 						spread(mapeMpQrCodeValue.spread).then(res => {}).catch(res => {})
-					},2000)
-					
+					}, 2000)
+
 				} else {
 					this.id = options.id;
 				}
@@ -774,16 +777,16 @@
 						title: productInfo.storeName.substring(0, 7) + "..."
 					})
 					let productAttr = this.attr.productAttr.map(item => {
-					return {
-						attrName : item.attrName,
-						attrValues: item.attrValues.split(','),
-						id:item.id,
-						isDel:item.isDel,
-						productId:item.productId,
-						type:item.type
-					 }
+						return {
+							attrName: item.attrName,
+							attrValues: item.attrValues.split(','),
+							id: item.id,
+							isDel: item.isDel,
+							productId: item.productId,
+							type: item.type
+						}
 					});
-					this.$set(this.attr,'productAttr',productAttr);
+					this.$set(this.attr, 'productAttr', productAttr);
 					if (that.isLogin) {
 						that.getCartCount();
 						//#ifdef H5
@@ -1193,7 +1196,7 @@
 			},
 			// 生成二维码；
 			make(uid) {
-				let href = location.href.split('?')[0] + "?id="+ this.id + "&spread="  + this.uid;
+				let href = location.href.split('?')[0] + "?id=" + this.id + "&spread=" + this.uid;
 				uQRCode.make({
 					canvasId: 'qrcode',
 					text: href,
@@ -1488,6 +1491,10 @@
 
 	.generate-posters .item .iconfont.icon-haibao {
 		color: #5391f1;
+	}
+
+	.product-con .product-intro {
+		padding: 0 14px;
 	}
 
 	.product-con .mask {
