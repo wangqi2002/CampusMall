@@ -49,19 +49,19 @@
           </router-link>
         </el-card>
       </el-col>
-      <el-col v-if="checkPermi(['admin:retail:list'])" v-bind="grid" class="ivu-mb">
+      <el-col v-if="checkPermi(['admin:recharge:list'])" v-bind="grid" class="ivu-mb">
         <el-card :bordered="false">
-          <router-link :to="{path:'/distribution/index'}">
+          <router-link :to="{path:'/financial/record/charge'}">
             <i class="el-icon-s-finance" style="color:#ff85c0" />
-            <p>分销管理</p>
+            <p>财务记录</p>
           </router-link>
         </el-card>
       </el-col>
-      <el-col v-if="checkPermi(['admin:coupon:list'])" v-bind="grid" class="ivu-mb">
+      <el-col v-if="checkPermi(['admin:system:notification:list'])" v-bind="grid" class="ivu-mb">
         <el-card :bordered="false">
-          <router-link :to="{path:'/marketing/coupon/list'}">
-            <i class="el-icon-s-ticket" style="color:#ffc069" />
-            <p>优惠券</p>
+          <router-link :to="{path:'/operation/notification'}">
+            <i class="el-icon-message-solid" style="color:#ffc069" />
+            <p>消息通知</p>
           </router-link>
         </el-card>
       </el-col>

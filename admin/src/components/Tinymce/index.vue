@@ -106,7 +106,7 @@ export default {
         imagetools_cors_hosts: ['www.tinymce.com', 'codepen.io'],
         default_link_target: '_blank',
         link_title: false,
-        convert_urls: false, //防止路径被转化为相对路径
+        convert_urls: false, // 防止路径被转化为相对路径
         nonbreaking_force_tab: true, // inserting nonbreaking space &nbsp; need Nonbreaking Space Plugin
         init_instance_callback: editor => {
           if (_this.value) {
@@ -142,63 +142,63 @@ export default {
       window.tinymce.get(this.tinymceId).getContent()
     },
     imageSuccessCBK(arr) {
-      const _this = this;
+      const _this = this
       arr.forEach((v) => {
-        if (this.getFileType(v) == "video") {
+        if (this.getFileType(v) == 'video') {
           window.tinymce
             .get(_this.tinymceId)
             .insertContent(
               `<video class="wscnph" src="${v}" controls muted></video>`
-            );
+            )
         } else {
           window.tinymce
             .get(_this.tinymceId)
-            .insertContent(`<img class="wscnph" src="${v}" />`);
+            .insertContent(`<img class="wscnph" src="${v}" />`)
         }
-      });
+      })
     },
     getFileType(fileName) {
       // 后缀获取
-      let suffix = "";
+      let suffix = ''
       // 获取类型结果
-      let result = "";
+      let result = ''
       try {
-        const flieArr = fileName.split(".");
-        suffix = flieArr[flieArr.length - 1];
+        const flieArr = fileName.split('.')
+        suffix = flieArr[flieArr.length - 1]
       } catch (err) {
-        suffix = "";
+        suffix = ''
       }
       // fileName无后缀返回 false
       if (!suffix) {
-        return false;
+        return false
       }
-      suffix = suffix.toLocaleLowerCase();
+      suffix = suffix.toLocaleLowerCase()
       // 图片格式
-      const imglist = ["png", "jpg", "jpeg", "bmp", "gif"];
+      const imglist = ['png', 'jpg', 'jpeg', 'bmp', 'gif']
       // 进行图片匹配
-      result = imglist.find((item) => item === suffix);
+      result = imglist.find((item) => item === suffix)
       if (result) {
-        return "image";
+        return 'image'
       }
       // 匹配 视频
       const videolist = [
-        "mp4",
-        "m2v",
-        "mkv",
-        "rmvb",
-        "wmv",
-        "avi",
-        "flv",
-        "mov",
-        "m4v",
-      ];
-      result = videolist.find((item) => item === suffix);
+        'mp4',
+        'm2v',
+        'mkv',
+        'rmvb',
+        'wmv',
+        'avi',
+        'flv',
+        'mov',
+        'm4v'
+      ]
+      result = videolist.find((item) => item === suffix)
       if (result) {
-        return "video";
+        return 'video'
       }
       // 其他 文件类型
-      return "other";
-    },
+      return 'other'
+    }
   }
 }
 </script>

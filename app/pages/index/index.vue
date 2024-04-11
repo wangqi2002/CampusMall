@@ -464,7 +464,7 @@
 				let that = this;
 				console.log({
 					username: '18712341234',
-					pwd: 'crmeb@123456'
+					pwd: 'abcABC123'
 				})
 				getIndexData().then(res => {
 					uni.setNavigationBarTitle({

@@ -13,7 +13,7 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 import { isLoginApi } from '@/api/sms'
 import Cookies from 'js-cookie'
-import { oAuth, getQueryString } from "@/libs/wechat";
+import { oAuth, getQueryString } from '@/libs/wechat'
 
 const state = {
   token: getToken(),
@@ -22,7 +22,7 @@ const state = {
   introduction: '',
   roles: [],
   isLogin: Cookies.get('isLogin'),
-  permissions:[],
+  permissions: []
 }
 
 const mutations = {
@@ -47,15 +47,15 @@ const mutations = {
   },
   SET_PERMISSIONS: (state, permissions) => {
     state.permissions = permissions
-  },
+  }
 }
 
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { account, pwd,  key, code, wxCode } = userInfo
+    const { account, pwd, key, code, wxCode } = userInfo
     return new Promise((resolve, reject) => {
-      login( userInfo ).then(data => {
+      login(userInfo).then(data => {
         commit('SET_TOKEN', data.token)
         Cookies.set('JavaInfo', JSON.stringify(data))
         setToken(data.token)
@@ -100,7 +100,7 @@ const actions = {
         commit('SET_AVATAR', 'http://kaifa.crmeb.net/system/images/admin_logo.png')
 
         commit('SET_INTRODUCTION', 'CRMEB admin')
-        commit('SET_PERMISSIONS', data.permissionsList) //权限标识
+        commit('SET_PERMISSIONS', data.permissionsList) // 权限标识
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -142,7 +142,7 @@ const actions = {
     })
   },
   // 设置token
-  setToken({commit},state) {
+  setToken({ commit }, state) {
     return new Promise(resolve => {
       commit('SET_TOKEN', state.token)
       Cookies.set('JavaInfo', JSON.stringify(state))

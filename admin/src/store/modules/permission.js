@@ -10,8 +10,8 @@
 
 import { asyncRoutes, constantRoutes } from '@/router'
 import * as roleApi from '@/api/roleApi.js'
-import * as Auth from '@/libs/wechat';
-import {formatRoutes} from '@/utils/parsing'
+import * as Auth from '@/libs/wechat'
+import { formatRoutes } from '@/utils/parsing'
 
 /**
  * Filter asynchronous routing tables by recursion
@@ -50,18 +50,18 @@ const mutations = {
   },
   SET_SIDEBAR_ROUTERS: (state, routes) => {
     state.sidebarRouters = routes
-  },
+  }
 }
 
 const actions = {
   generateRoutes({ commit }, roleid) {
     return new Promise(async resolve => {
       let accessedRoutes = []
-      let menus= []
+      let menus = []
       // const { rules } = await roleApi.getRoleById(roleid)
       let menusAll = await roleApi.menuListApi()
       menusAll = formatRoutes(menusAll)
-      
+
       !Auth.isPhone() ? menus = menusAll.filter(item => item.url !== '/javaMobile') : menus = menusAll.filter(item => item.url === '/javaMobile')
       const _routerResult = comRouter(menus, asyncRoutes)
       accessedRoutes = filterAsyncRoutes(_routerResult)
@@ -69,9 +69,9 @@ const actions = {
       this.state.settings.showSettings = false
       commit('SET_ROUTES', menus)
       commit('SET_TOPBAR_ROUTES', menus)
-      if(this.state.settings.topNav){
+      if (this.state.settings.topNav) {
         commit('SET_SIDEBAR_ROUTERS', state.sidebarRouters.length ? state.sidebarRouters : menus[0].child)
-      }else{
+      } else {
         commit('SET_SIDEBAR_ROUTERS', menus)
       }
       // resolve(menus)
