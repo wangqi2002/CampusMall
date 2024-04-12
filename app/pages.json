@@ -28,6 +28,18 @@
 			}
 		},
 		{
+			"path": "pages/creat_store/index",
+			"style": {
+				"navigationBarTitleText": "上传商品",
+				"app-plus": {
+					"titleNView": {
+						"titleText": "上传商品"
+					},
+					"popGesture": "close"
+				}
+			}
+		},
+		{
 			"path": "pages/goods_details/index",
 			"style": {
 				"navigationStyle": "custom"

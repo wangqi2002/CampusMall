@@ -84,35 +84,35 @@ const layouts = {
     const listeners = buildListeners.call(this, scheme)
     let labelWidth = config.labelWidth ? `${config.labelWidth}px` : null
     if (config.showLabel === false) labelWidth = '0'
-    if(config.tips && !config.tipsIsLink){
+    if (config.tips && !config.tipsIsLink) {
       return (
         <el-col span={config.span}>
           <el-form-item label-width={labelWidth} prop={scheme.__vModel__}
             label={config.showLabel ? config.label : ''}>
-            <el-tooltip effect="dark" placement="top-start" style="padding:10px 5px 0 0;">
-                <i class="el-icon-warning-outline" />
-                <div slot="content" style="max-width:400px;">{config.tipsDesc}</div>
-             </el-tooltip>
+            <el-tooltip effect='dark' placement='top-start' style='padding:10px 5px 0 0;'>
+              <i class='el-icon-warning-outline' />
+              <div slot='content' style='max-width:400px;'>{config.tipsDesc}</div>
+            </el-tooltip>
             <render conf={scheme} {...{ on: listeners }} />
           </el-form-item>
         </el-col>
       )
-    }else if(config.tips && config.tipsIsLink){
+    } else if (config.tips && config.tipsIsLink) {
       return (
         <el-col span={config.span}>
           <el-form-item label-width={labelWidth} prop={scheme.__vModel__}
             label={config.showLabel ? config.label : ''}>
-            <el-tooltip effect="dark" placement="top-start" style="padding:10px 5px 0 0;">
-                <i class="el-icon-warning-outline" />
-                <div slot="content" style="max-width:400px;">
-                  <a href={config.tipsLink} target="_blank">{config.tipsDesc}</a>
-                </div>
-             </el-tooltip>
+            <el-tooltip effect='dark' placement='top-start' style='padding:10px 5px 0 0;'>
+              <i class='el-icon-warning-outline' />
+              <div slot='content' style='max-width:400px;'>
+                <a href={config.tipsLink} target='_blank'>{config.tipsDesc}</a>
+              </div>
+            </el-tooltip>
             <render conf={scheme} {...{ on: listeners }} />
           </el-form-item>
         </el-col>
       )
-    }else{
+    } else {
       return (
         <el-col span={config.span}>
           <el-form-item label-width={labelWidth} prop={scheme.__vModel__}
@@ -122,7 +122,6 @@ const layouts = {
         </el-col>
       )
     }
-    
   },
   rowFormItem(h, scheme) {
     let child = renderChildren.apply(this, arguments)
@@ -163,13 +162,13 @@ export default {
       this.formConf.fields.forEach(conf => {
         // 设置现有的数据
         const hasValueForEdit = this.formEditData[conf.__vModel__]
-        if(hasValueForEdit){
+        if (hasValueForEdit) {
           conf.__config__.defaultValue = hasValueForEdit
         }
         // 如果是el-select标签 判断数据后改变实现默认选中效果
-        if(conf.__config__.tag === 'el-select' || conf.__config__.tag === 'el-radio-group'){
+        if (conf.__config__.tag === 'el-select' || conf.__config__.tag === 'el-radio-group') {
           const perValue = conf.__slot__.options.filter(option => option.value == this.formEditData[conf.__vModel__])
-          if(perValue.length > 0){ // 有表单数据
+          if (perValue.length > 0) { // 有表单数据
             conf.__config__.defaultValue = perValue[0].value
           }
         }
