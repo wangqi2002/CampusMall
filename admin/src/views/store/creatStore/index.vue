@@ -9,7 +9,15 @@
           <!--<el-step title="规格设置" />-->
         </el-steps>
       </div>
-      <el-form ref="formValidate" v-loading="fullscreenLoading" class="formValidate mt20" :rules="ruleValidate" :model="formValidate" label-width="120px" @submit.native.prevent>
+      <el-form
+        ref="formValidate"
+        v-loading="fullscreenLoading"
+        class="formValidate mt20"
+        :rules="ruleValidate"
+        :model="formValidate"
+        label-width="120px"
+        @submit.native.prevent
+      >
         <el-row v-show="currentTab === 0" :gutter="24">
           <!-- 商品信息-->
           <el-col v-bind="grid2">
@@ -19,7 +27,15 @@
           </el-col>
           <el-col v-bind="grid2">
             <el-form-item label="商品分类：" prop="cateIds">
-              <el-cascader v-model="formValidate.cateIds" :options="merCateList" :props="props2" clearable class="selWidth" :show-all-levels="false" :disabled="isDisabled" />
+              <el-cascader
+                v-model="formValidate.cateIds"
+                :options="merCateList"
+                :props="props2"
+                clearable
+                class="selWidth"
+                :show-all-levels="false"
+                :disabled="isDisabled"
+              />
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
@@ -34,7 +50,14 @@
           </el-col>
           <el-col v-bind="grid2">
             <el-form-item label="商品简介：" prop="storeInfo">
-              <el-input v-model="formValidate.storeInfo" type="textarea" maxlength="250" :rows="3" placeholder="请输入商品简介" :disabled="isDisabled" />
+              <el-input
+                v-model="formValidate.storeInfo"
+                type="textarea"
+                maxlength="250"
+                :rows="3"
+                placeholder="请输入商品简介"
+                :disabled="isDisabled"
+              />
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
@@ -51,7 +74,7 @@
             <el-form-item label="商品轮播图：" prop="sliderImages">
               <div class="acea-row">
                 <div
-                  v-for="(item,index) in formValidate.sliderImages"
+                  v-for="(item, index) in formValidate.sliderImages"
                   :key="index"
                   class="pictrue"
                   draggable="true"
@@ -63,7 +86,11 @@
                   <img :src="item">
                   <i v-if="!isDisabled" class="el-icon-error btndel" @click="handleRemove(index)" />
                 </div>
-                <div v-if="formValidate.sliderImages.length<10 && !isDisabled" class="upLoadPicBox" @click="modalPicTap('2')">
+                <div
+                  v-if="formValidate.sliderImages.length < 10 && !isDisabled"
+                  class="upLoadPicBox"
+                  @click="modalPicTap('2')"
+                >
                   <div class="upLoad">
                     <i class="el-icon-camera cameraIconfont" />
                   </div>
@@ -73,13 +100,14 @@
           </el-col>
           <el-col :xs="18" :sm="18" :md="18" :lg="12" :xl="12">
             <el-form-item label="运费模板：" prop="tempId">
-              <el-select v-model="formValidate.tempId" placeholder="请选择" class="mr20" :disabled="isDisabled" style="width:100%;">
-                <el-option
-                  v-for="item in shippingList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                />
+              <el-select
+                v-model="formValidate.tempId"
+                placeholder="请选择"
+                class="mr20"
+                :disabled="isDisabled"
+                style="width:100%;"
+              >
+                <el-option v-for="item in shippingList" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -88,13 +116,21 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="商品规格：" props="specType">
-              <el-radio-group v-model="formValidate.specType" :disabled="isDisabled" @change="onChangeSpec(formValidate.specType)">
+              <el-radio-group
+                v-model="formValidate.specType"
+                :disabled="isDisabled"
+                @change="onChangeSpec(formValidate.specType)"
+              >
                 <el-radio :label="false" class="radio">单规格</el-radio>
                 <el-radio :label="true">多规格</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="佣金设置：" props="isSub">
-              <el-radio-group v-model="formValidate.isSub" :disabled="isDisabled" @change="onChangetype(formValidate.isSub)">
+              <el-radio-group
+                v-model="formValidate.isSub"
+                :disabled="isDisabled"
+                @change="onChangetype(formValidate.isSub)"
+              >
                 <el-radio :label="true" class="radio">单独设置</el-radio>
                 <el-radio :label="false">默认设置</el-radio>
               </el-radio-group>
@@ -113,7 +149,10 @@
             </el-form-item>
             <el-form-item>
               <div v-for="(item, index) in formValidate.attr" :key="index">
-                <div class="acea-row row-middle"><span class="mr5">{{ item.attrName }}</span><i class="el-icon-circle-close" @click="handleRemoveAttr(index)" /></div>
+                <div class="acea-row row-middle"><span class="mr5">{{ item.attrName }}</span><i
+                  class="el-icon-circle-close"
+                  @click="handleRemoveAttr(index)"
+                /></div>
                 <div class="rulesBox">
                   <el-tag
                     v-for="(j, indexn) in item.attrValue"
@@ -122,7 +161,7 @@
                     size="medium"
                     :disable-transitions="false"
                     class="mb5 mr10"
-                    @close="handleClose(item.attrValue,indexn)"
+                    @close="handleClose(item.attrValue, indexn)"
                   >
                     {{ j }}
                   </el-tag>
@@ -132,8 +171,8 @@
                     v-model="item.attrValue.attrsVal"
                     class="input-new-tag"
                     size="small"
-                    @keyup.enter.native="createAttr(item.attrValue.attrsVal,index)"
-                    @blur="createAttr(item.attrValue.attrsVal,index)"
+                    @keyup.enter.native="createAttr(item.attrValue.attrsVal, index)"
+                    @blur="createAttr(item.attrValue.attrsVal, index)"
                   />
                   <el-button v-else class="button-new-tag" size="small" @click="showInput(item)">+ 添加</el-button>
                 </div>
@@ -162,12 +201,12 @@
             </el-form-item>
           </el-col>
           <!-- 批量设置-->
-          <el-col v-if="formValidate.attr.length>0 && formValidate.specType && !isDisabled" :span="24" class="noForm">
+          <el-col v-if="formValidate.attr.length > 0 && formValidate.specType && !isDisabled" :span="24" class="noForm">
             <el-form-item label="批量设置：">
               <el-table :data="oneFormBatch" border class="tabNumWidth" size="mini">
                 <el-table-column align="center" label="图片" min-width="80">
                   <template slot-scope="scope">
-                    <div class="upLoadPicBox" @click="modalPicTap('1','pi')">
+                    <div class="upLoadPicBox" @click="modalPicTap('1', 'pi')">
                       <div v-if="scope.row.image" class="pictrue tabPic"><img :src="scope.row.image"></div>
                       <div v-else class="upLoad tabPic">
                         <i class="el-icon-camera cameraIconfont" />
@@ -175,20 +214,44 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column v-for="(item,iii) in attrValue" :key="iii" :label="formThead[iii].title" align="center" min-width="120">
+                <el-table-column
+                  v-for="(item, iii) in attrValue"
+                  :key="iii"
+                  :label="formThead[iii].title"
+                  align="center"
+                  min-width="120"
+                >
                   <template slot-scope="scope">
-                    <el-input v-model="scope.row[iii]" maxlength="9" min="0.01" class="priceBox" @blur="keyupEvent(iii, scope.row[iii], scope.$index, 1)" />
+                    <el-input
+                      v-model="scope.row[iii]"
+                      maxlength="9"
+                      min="0.01"
+                      class="priceBox"
+                      @blur="keyupEvent(iii, scope.row[iii], scope.$index, 1)"
+                    />
                   </template>
                 </el-table-column>
                 <template v-if="formValidate.isSub">
                   <el-table-column align="center" label="一级返佣(元)" min-width="120">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.brokerage" type="number" :min="0" :max="scope.row.price" class="priceBox" />
+                      <el-input
+                        v-model="scope.row.brokerage"
+                        type="number"
+                        :min="0"
+                        :max="scope.row.price"
+                        class="priceBox"
+                      />
                     </template>
                   </el-table-column>
                   <el-table-column align="center" label="二级返佣(元)" min-width="120">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.brokerageTwo" type="number" :min="0" :max="scope.row.price" class="priceBox" />
+                      <el-input
+                        v-model="scope.row.brokerageTwo"
+                        type="number"
+                        :min="0"
+                        :max="scope.row.price"
+                        class="priceBox"
+                      />
                     </template>
                   </el-table-column>
                 </template>
@@ -214,20 +277,45 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column v-for="(item,iii) in attrValue" :key="iii" :label="formThead[iii].title" align="center" min-width="120">
+                <el-table-column
+                  v-for="(item, iii) in attrValue"
+                  :key="iii"
+                  :label="formThead[iii].title"
+                  align="center"
+                  min-width="120"
+                >
                   <template slot-scope="scope">
-                    <el-input v-model="scope.row[iii]" :disabled="isDisabled" maxlength="9" min="0.01" class="priceBox" @blur="keyupEvent(iii, scope.row[iii], scope.$index, 2)" />
+                    <el-input
+                      v-model="scope.row[iii]"
+                      :disabled="isDisabled"
+                      maxlength="9"
+                      min="0.01"
+                      class="priceBox"
+                      @blur="keyupEvent(iii, scope.row[iii], scope.$index, 2)"
+                    />
                   </template>
                 </el-table-column>
                 <template v-if="formValidate.isSub">
                   <el-table-column align="center" label="一级返佣(元)" min-width="120">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.brokerage" :disabled="isDisabled" type="number" :min="0" class="priceBox" />
+                      <el-input
+                        v-model="scope.row.brokerage"
+                        :disabled="isDisabled"
+                        type="number"
+                        :min="0"
+                        class="priceBox"
+                      />
                     </template>
                   </el-table-column>
                   <el-table-column align="center" label="二级返佣(元)" min-width="120">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.brokerageTwo" :disabled="isDisabled" type="number" :min="0" class="priceBox" />
+                      <el-input
+                        v-model="scope.row.brokerageTwo"
+                        :disabled="isDisabled"
+                        type="number"
+                        :min="0"
+                        class="priceBox"
+                      />
                     </template>
                   </el-table-column>
                 </template>
@@ -238,10 +326,21 @@
               <el-button type="default" :disabled="isDisabled" @click="showAllSku()">展示</el-button>
             </el-form-item>
             <!-- 多规格表格-->
-            <el-form-item v-if="formValidate.attr.length>0 && formValidate.specType" label="商品属性：" class="labeltop" :class="isDisabled?'disLabel':'disLabelmoren'">
+            <el-form-item
+              v-if="formValidate.attr.length > 0 && formValidate.specType"
+              label="商品属性："
+              class="labeltop"
+              :class="isDisabled ? 'disLabel' : 'disLabelmoren'"
+            >
               <el-table :data="ManyAttrValue" border class="tabNumWidth" size="mini">
                 <template v-if="manyTabDate">
-                  <el-table-column v-for="(item,iii) in manyTabDate" :key="iii" align="center" :label="manyTabTit[iii].title" min-width="80">
+                  <el-table-column
+                    v-for="(item, iii) in manyTabDate"
+                    :key="iii"
+                    align="center"
+                    :label="manyTabTit[iii].title"
+                    min-width="80"
+                  >
                     <template slot-scope="scope">
                       <span class="priceBox" v-text="scope.row[iii]" />
                     </template>
@@ -249,7 +348,7 @@
                 </template>
                 <el-table-column align="center" label="图片" min-width="80">
                   <template slot-scope="scope">
-                    <div class="upLoadPicBox" @click="modalPicTap('1','duo',scope.$index)">
+                    <div class="upLoadPicBox" @click="modalPicTap('1', 'duo', scope.$index)">
                       <div v-if="scope.row.image" class="pictrue tabPic"><img :src="scope.row.image"></div>
                       <div v-else class="upLoad tabPic">
                         <i class="el-icon-camera cameraIconfont" />
@@ -257,7 +356,13 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column v-for="(item,iii) in attrValue" :key="iii" :label="formThead[iii].title" align="center" min-width="120">
+                <el-table-column
+                  v-for="(item, iii) in attrValue"
+                  :key="iii"
+                  :label="formThead[iii].title"
+                  align="center"
+                  min-width="120"
+                >
                   <template slot-scope="scope">
                     <!--                    <span>scope.row:{{scope.row}}</span>-->
                     <el-input
@@ -272,12 +377,26 @@
                 </el-table-column>
                 <el-table-column v-if="formValidate.isSub" align="center" label="一级返佣(元)" min-width="120">
                   <template slot-scope="scope">
-                    <el-input v-model="scope.row.brokerage" :disabled="isDisabled" type="number" :min="0" :max="scope.row.price" class="priceBox" />
+                    <el-input
+                      v-model="scope.row.brokerage"
+                      :disabled="isDisabled"
+                      type="number"
+                      :min="0"
+                      :max="scope.row.price"
+                      class="priceBox"
+                    />
                   </template>
                 </el-table-column>
                 <el-table-column v-if="formValidate.isSub" align="center" label="二级返佣(元)" min-width="120">
                   <template slot-scope="scope">
-                    <el-input v-model="scope.row.brokerageTwo" :disabled="isDisabled" type="number" :min="0" :max="scope.row.price" class="priceBox" />
+                    <el-input
+                      v-model="scope.row.brokerageTwo"
+                      :disabled="isDisabled"
+                      type="number"
+                      :min="0"
+                      :max="scope.row.price"
+                      class="priceBox"
+                    />
                   </template>
                 </el-table-column>
                 <el-table-column v-if="!isDisabled" key="3" align="center" label="操作" min-width="80">
@@ -314,7 +433,12 @@
             </el-col>
             <el-col v-bind="grid">
               <el-form-item label="积分：">
-                <el-input-number v-model="formValidate.giveIntegral" :min="0" placeholder="请输入排序" :disabled="isDisabled" />
+                <el-input-number
+                  v-model="formValidate.giveIntegral"
+                  :min="0"
+                  placeholder="请输入排序"
+                  :disabled="isDisabled"
+                />
               </el-form-item>
             </el-col>
             <el-col v-bind="grid">
@@ -326,7 +450,8 @@
           <el-col :span="24">
             <el-form-item label="商品推荐：">
               <el-checkbox-group v-model="checkboxGroup" size="small" :disabled="isDisabled" @change="onChangeGroup">
-                <el-checkbox v-for="(item, index) in recommend" :key="index" :label="item.value">{{ item.name }}</el-checkbox>
+                <el-checkbox v-for="(item, index) in recommend" :key="index" :label="item.value">{{ item.name
+                }}</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
           </el-col>
@@ -369,9 +494,19 @@
           </el-col>
         </el-row>
         <el-form-item>
-          <el-button v-show="currentTab>0" class="submission priamry_border" @click="handleSubmitUp">上一步</el-button>
-          <el-button v-show="currentTab<2" type="primary" class="submission" @click="handleSubmitNest('formValidate')">下一步</el-button>
-          <el-button v-show="(currentTab===2 || $route.params.id) && !isDisabled" type="primary" class="submission" @click="handleSubmit('formValidate')">提交</el-button>
+          <el-button v-show="currentTab > 0" class="submission priamry_border" @click="handleSubmitUp">上一步</el-button>
+          <el-button
+            v-show="currentTab < 2"
+            type="primary"
+            class="submission"
+            @click="handleSubmitNest('formValidate')"
+          >下一步</el-button>
+          <el-button
+            v-show="(currentTab === 2 || $route.params.id) && !isDisabled"
+            type="primary"
+            class="submission"
+            @click="handleSubmit('formValidate')"
+          >提交</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -603,9 +738,9 @@ export default {
             this.oneFormBatch[index][key] = key === 'stock' ? 0 : 0.01
           } else {
             this.oneFormBatch[index][key] =
-                key === 'stock'
-                  ? parseInt(val)
-                  : this.$set(this.oneFormBatch[index], key, val.toString().replace(re, '$1'))
+              key === 'stock'
+                ? parseInt(val)
+                : this.$set(this.oneFormBatch[index], key, val.toString().replace(re, '$1'))
           }
           break
         case 2:
@@ -613,9 +748,9 @@ export default {
             this.OneattrValue[index][key] = key === 'stock' ? 0 : 0.01
           } else {
             this.OneattrValue[index][key] =
-                key === 'stock'
-                  ? parseInt(val)
-                  : this.$set(this.OneattrValue[index], key, val.toString().replace(re, '$1'))
+              key === 'stock'
+                ? parseInt(val)
+                : this.$set(this.OneattrValue[index], key, val.toString().replace(re, '$1'))
           }
           break
         default:
@@ -623,9 +758,9 @@ export default {
             this.ManyAttrValue[index][key] = key === 'stock' ? 0 : 0.01
           } else {
             this.ManyAttrValue[index][key] =
-                key === 'stock'
-                  ? parseInt(val)
-                  : this.$set(this.ManyAttrValue[index], key, val.toString().replace(re, '$1'))
+              key === 'stock'
+                ? parseInt(val)
+                : this.$set(this.ManyAttrValue[index], key, val.toString().replace(re, '$1'))
           }
           break
       }
@@ -909,471 +1044,498 @@ export default {
         var hash = {}
         this.formValidate.attr = this.formValidate.attr.reduce(function(item, next) {
           /* eslint-disable */
-            hash[next.attrName] ? '' : hash[next.attrName] = true && item.push(next)
-            return item
-          }, [])
-          this.clearAttr()
-          this.isBtn = false
-        } else {
-          this.$Message.warning('请添加完整的规格！');
+          hash[next.attrName] ? '' : hash[next.attrName] = true && item.push(next)
+          return item
+        }, [])
+        this.clearAttr()
+        this.isBtn = false
+      } else {
+        this.$Message.warning('请添加完整的规格！');
+      }
+    },
+    // 添加属性
+    createAttr(num, idx) {
+      this.isAttr = true
+      if (num) {
+        this.formValidate.attr[idx].attrValue.push(num);
+        var hash = {};
+        this.formValidate.attr[idx].attrValue = this.formValidate.attr[idx].attrValue.reduce(function (item, next) {
+          /* eslint-disable */
+          hash[next] ? '' : hash[next] = true && item.push(next);
+          return item
+        }, []);
+        this.formValidate.attr[idx].inputVisible = false
+      } else {
+        this.$message.warning('请添加属性');
+      }
+    },
+    //点击展示所有多规格属性
+    showAllSku() {
+      if (this.isAttr == false) {
+        this.isAttr = true;
+        if (this.formValidate.specType && this.isAttr) this.watCh(this.formValidate.attr) //重要！！！
+      } else if (this.isAttr == true) {
+        this.isAttr = false;
+        this.getInfo();
+      }
+    },
+    // 详情
+    getInfo() {
+      this.fullscreenLoading = true
+      productDetailApi(this.$route.params.id).then(async res => {
+        // this.isAttr = true;
+        let info = res
+        this.formValidate = {
+          image: this.$selfUtil.setDomain(info.image),
+          sliderImage: info.sliderImage,
+          sliderImages: JSON.parse(info.sliderImage),
+          storeName: info.storeName,
+          storeInfo: info.storeInfo,
+          keyword: info.keyword,
+          cateIds: info.cateId.split(','), // 商品分类id
+          cateId: info.cateId,// 商品分类id传值
+          unitName: info.unitName,
+          sort: info.sort,
+          isShow: info.isShow,
+          isBenefit: info.isBenefit,
+          isNew: info.isNew,
+          isGood: info.isGood,
+          isHot: info.isHot,
+          isBest: info.isBest,
+          tempId: info.tempId,
+          attr: info.attr,
+          attrValue: info.attrValue,
+          selectRule: info.selectRule,
+          isSub: info.isSub,
+          content: this.$selfUtil.replaceImgSrcHttps(info.content),
+          specType: info.specType,
+          id: info.id,
+          giveIntegral: info.giveIntegral,
+          ficti: info.ficti,
+          coupons: info.coupons,
+          couponIds: info.couponIds,
+          activity: info.activityStr ? info.activityStr.split(',') : ['默认', '秒杀', '砍价', '拼团']
         }
-      },
-      // 添加属性
-      createAttr (num, idx) {
-        this.isAttr = true
-        if (num) {
-          this.formValidate.attr[idx].attrValue.push(num);
-          var hash = {};
-          this.formValidate.attr[idx].attrValue = this.formValidate.attr[idx].attrValue.reduce(function (item, next) {
-            /* eslint-disable */
-            hash[next] ? '' : hash[next] = true && item.push(next);
-            return item
-          }, []);
-          this.formValidate.attr[idx].inputVisible = false
-        } else {
-          this.$message.warning('请添加属性');
-        }
-      },
-      //点击展示所有多规格属性
-      showAllSku(){
-          if(this.isAttr == false){
-            this.isAttr = true;
-            if (this.formValidate.specType && this.isAttr) this.watCh(this.formValidate.attr) //重要！！！
-          }else if(this.isAttr == true){
-            this.isAttr = false;
-            this.getInfo();
-          }
-      },
-      // 详情
-      getInfo () {
-        this.fullscreenLoading = true
-        productDetailApi(this.$route.params.id).then(async res => {
-          // this.isAttr = true;
-          let info = res
-          this.formValidate = {
-            image: this.$selfUtil.setDomain(info.image),
-            sliderImage: info.sliderImage,
-            sliderImages: JSON.parse(info.sliderImage),
-            storeName: info.storeName,
-            storeInfo: info.storeInfo,
-            keyword: info.keyword,
-            cateIds: info.cateId.split(','), // 商品分类id
-            cateId: info.cateId,// 商品分类id传值
-            unitName: info.unitName,
-            sort: info.sort,
-            isShow: info.isShow,
-            isBenefit: info.isBenefit,
-            isNew: info.isNew,
-            isGood: info.isGood,
-            isHot: info.isHot,
-            isBest: info.isBest,
-            tempId: info.tempId,
-            attr: info.attr,
-            attrValue: info.attrValue,
-            selectRule: info.selectRule,
-            isSub: info.isSub,
-            content: this.$selfUtil.replaceImgSrcHttps(info.content),
-            specType: info.specType,
-            id: info.id,
-            giveIntegral: info.giveIntegral,
-            ficti: info.ficti,
-            coupons: info.coupons,
-            couponIds: info.couponIds,
-            activity: info.activityStr ? info.activityStr.split(',') : ['默认','秒杀','砍价','拼团']
-          }
-          marketingSendApi({type:3}).then(res=>{
-            if(this.formValidate.couponIds !== null){
-              let ids = this.formValidate.couponIds.toString();
-              let arr = res.list;
-              let obj = {};
-              for (let i in arr) {
-                obj[arr[i].id] = arr[i];
-              }
-              let strArr = ids.split(',');
-              let newArr = [];
-              for (let item of strArr) {
-                if (obj[item]) {
-                  newArr.push(obj[item]);
-                }
-              }
-              this.$set(this.formValidate,'coupons',newArr); //在编辑回显时，让返回数据中的优惠券id，通过接口匹配显示,
-            }
-          })
-          let imgs = JSON.parse(info.sliderImage)
-          let imgss = []
-          Object.keys(imgs).map(i => {
-            imgss.push(this.$selfUtil.setDomain(imgs[i]))
-          })
-          this.formValidate.sliderImages = [ ...imgss ]
-          if(info.isHot) this.checkboxGroup.push('isHot')
-          if(info.isGood) this.checkboxGroup.push('isGood')
-          if(info.isBenefit) this.checkboxGroup.push('isBenefit')
-          if(info.isBest) this.checkboxGroup.push('isBest')
-          if(info.isNew) this.checkboxGroup.push('isNew')
-          this.productGetRule()
-          if(info.specType){
-            this.formValidate.attr = info.attr.map(item => {
-              return {
-                attrName : item.attrName,
-                attrValue: item.attrValues.split(',')
-              }
-            })
-            this.ManyAttrValue = info.attrValue;
-            this.ManyAttrValue.forEach((val) => {
-              val.image = this.$selfUtil.setDomain(val.image);
-              val.attrValue = JSON.parse(val.attrValue);
-              this.attrInfo[Object.values(val.attrValue).sort().join('/')] = val;
-            })
-            /***多规格商品如果被删除过sku，优先展示api返回的数据,否则会有没有删除的错觉***/
-            let manyAttr = this.attrFormat(this.formValidate.attr)
-            if(manyAttr.length !== this.ManyAttrValue.length){
-              this.$set(this,'showAll',true)
-              this.isAttr = false;
-            }else{
-              this.isAttr = true;
-            }
-            /*******/
-            const tmp = {}
-            const tmpTab = {}
-            this.formValidate.attr.forEach((o, i) => {
-              // tmp['value' + i] = { title: o.attrName }
-              // tmpTab['value' + i] = ''
-              tmp[o.attrName] = { title: o.attrName };
-              tmpTab[o.attrName] = '';
-            })
-
-            // 此处手动实现后台原本value0 value1的逻辑
-            this.formValidate.attrValue.forEach(item => {
-              for (let attrValueKey in item.attrValue) {
-               item[attrValueKey] = item.attrValue[attrValueKey];
-              }
-            });
-
-            this.manyTabTit = tmp
-            this.manyTabDate = tmpTab
-            this.formThead = Object.assign({}, this.formThead, tmp)
-          }else{
-            this.OneattrValue = info.attrValue
-            // this.formValidate.attr = [] //单规格商品规格设置为空
-          }
-          this.fullscreenLoading = false
-        }).catch(res => {
-          this.fullscreenLoading = false
-          this.$message.error(res.message);
-        });
-      },
-      handleRemove (i) {
-        this.formValidate.sliderImages.splice(i, 1)
-      },
-      // 点击商品图
-      modalPicTap (tit, num, i,status) {
-        const _this = this;
-        if(_this.isDisabled) return;
-        this.$modalUpload(function(img) {
-          if(tit==='1'&& !num){
-            _this.formValidate.image = img[0].sattDir
-            _this.OneattrValue[0].image = img[0].sattDir
-          }
-          if(tit==='2'&& !num){
-            if(img.length>10) return this.$message.warning("最多选择10张图片！");
-            if(img.length + _this.formValidate.sliderImages.length > 10) return this.$message.warning("最多选择10张图片！");
-            img.map((item) => {
-              _this.formValidate.sliderImages.push(item.sattDir)
-            });
-          }
-          if(tit==='1'&& num === 'dan' ){
-            _this.OneattrValue[0].image = img[0].sattDir
-          }
-          if(tit==='1'&& num === 'duo' ){
-            _this.ManyAttrValue[i].image = img[0].sattDir
-          }
-          if(tit==='1'&& num === 'pi' ){
-            _this.oneFormBatch[0].image = img[0].sattDir
-          }
-        },tit, 'content')
-      },
-      handleSubmitUp(){
-        // this.currentTab --
-        if (this.currentTab-- <0) this.currentTab = 0;
-      },
-      handleSubmitNest(name){
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            if (this.currentTab++ > 2) this.currentTab = 0;
-          } else {
-            if(!this.formValidate.store_name || !this.formValidate.cate_id || !this.formValidate.keyword
-              || !this.formValidate.unit_name || !this.formValidate.store_info
-              || !this.formValidate.image || !this.formValidate.slider_image){
-              this.$message.warning("请填写完整商品信息！");
-            }
-          }
-        })
-      },
-      // 提交
-      handleSubmit:Debounce(function(name) {
-        this.onChangeGroup()
-        if( this.formValidate.specType && this.formValidate.attr.length < 1 ) return this.$message.warning("请填写多规格属性！");
-        this.formValidate.cateId = this.formValidate.cateIds.join(',')
-        this.formValidate.sliderImage = JSON.stringify(this.formValidate.sliderImages)
-        if(this.formValidate.specType){
-          this.formValidate.attrValue=this.ManyAttrValue;
-          this.formValidate.attr = this.formValidate.attr.map((item) =>{
-            return {
-              attrName:item.attrName,
-              id:item.id,
-              attrValues:item.attrValue.join(','),
-            }
-          })
-          for (var i = 0; i < this.formValidate.attrValue.length; i++) {
-            this.$set(this.formValidate.attrValue[i],'id',0);
-            this.$set(this.formValidate.attrValue[i],'productId',0);
-            this.$set(this.formValidate.attrValue[i],'attrValue',JSON.stringify(this.formValidate.attrValue[i].attrValue)); //
-            delete this.formValidate.attrValue[i].value0
-          }
-        }else{
-          this.formValidate.attr = [{attrName:'规格',attrValues:'默认',id: this.$route.params.id? this.formValidate.attr[0].id : 0}]
-          this.OneattrValue.map(item => {
-            this.$set(item, 'attrValue', JSON.stringify({'规格':'默认'}))
-          })
-          this.formValidate.attrValue=this.OneattrValue
-        }
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            this.fullscreenLoading = true
-            this.$route.params.id?productUpdateApi(this.formValidate).then(async res => {
-              this.$message.success('编辑成功');
-              setTimeout(() => {
-                this.$router.push({ path: '/store/index' });
-              }, 500);
-              this.fullscreenLoading = false
-            }).catch(res => {
-              this.fullscreenLoading = false
-            }):productCreateApi(this.formValidate).then(async res => {
-              this.$message.success('新增成功');
-              setTimeout(() => {
-                this.$router.push({ path: '/store/index' });
-              }, 500);
-              this.fullscreenLoading = false
-            }).catch(res => {
-              this.fullscreenLoading = false
-            })
-          } else {
-            if(!this.formValidate.storeName || !this.formValidate.cateId  || !this.formValidate.keyword
-              || !this.formValidate.unitName || !this.formValidate.storeInfo || !this.formValidate.image || !this.formValidate.sliderImages){
-              this.$message.warning("请填写完整商品信息！");
-            }
-          }
-        });
-      }),
-      // 表单验证
-      validate (prop, status, error) {
-        if (status === false) {
-          this.$message.warning(error);
-        }
-      },
-      // 移动
-      handleDragStart (e, item) {
-        if(!this.isDisabled) this.dragging = item;
-      },
-      handleDragEnd (e, item) {
-        if(!this.isDisabled) this.dragging = null
-      },
-      handleDragOver (e) {
-        if(!this.isDisabled) e.dataTransfer.dropEffect = 'move'
-      },
-      handleDragEnter (e, item) {
-        if(!this.isDisabled){
-          e.dataTransfer.effectAllowed = 'move'
-          if (item === this.dragging) {
-            return
-          }
-          const newItems = [...this.formValidate.sliderImages]
-          const src = newItems.indexOf(this.dragging)
-          const dst = newItems.indexOf(item)
-          newItems.splice(dst, 0, ...newItems.splice(src, 1))
-          this.formValidate.sliderImages = newItems;
-        }
-      },
-      handleDragEnterFont(e, item) {
-        if(!this.isDisabled){
-          e.dataTransfer.effectAllowed = 'move'
-          if (item === this.dragging) {
-            return
-          }
-          const newItems = [...this.formValidate.activity]
-          const src = newItems.indexOf(this.dragging)
-          const dst = newItems.indexOf(item)
-          newItems.splice(dst, 0, ...newItems.splice(src, 1))
-          this.formValidate.activity = newItems;
-        }
-      },
-      getGoodsType(){
-        /** 让商品推荐列表的name属性与页面设置tab的name匹配**/
-        goodDesignList({gid:70}).then((response)=>{
-          let list = response.list;
-          let arr = [],arr1 = [];
-          const listArr = [{ name: '是否热卖', value: 'isGood' }];
-          let typeLists = [ 
-            { name: '', value: 'isHot',type:'2' },   //热门榜单 
-            { name: '', value: 'isBenefit' ,type:'4'}, //促销单品
-            { name: '', value: 'isBest',type:'1' }, //精品推荐
-            { name: '', value: 'isNew',type:'3' }]; //首发新品
-          list.forEach((item)=>{
+        marketingSendApi({ type: 3 }).then(res => {
+          if (this.formValidate.couponIds !== null) {
+            let ids = this.formValidate.couponIds.toString();
+            let arr = res.list;
             let obj = {};
-            obj.value = JSON.parse(item.value);
-            obj.id = item.id;
-            obj.gid = item.gid;
-            obj.status = item.status;
-            arr.push(obj);
-          })
-          arr.forEach((item1)=>{
-            let obj1 = {};
-            obj1.name = item1.value.fields[1].value;
-            obj1.status = item1.status;
-            obj1.type = item1.value.fields[3].value;
-            arr1.push(obj1);
-          })
-          typeLists.forEach((item)=>{
-            arr1.forEach((item1)=>{
-              if(item.type == item1.type){
-                listArr.push({
-                  name:item1.name,
-                  value:item.value,
-                  type:item.type
-                })
+            for (let i in arr) {
+              obj[arr[i].id] = arr[i];
+            }
+            let strArr = ids.split(',');
+            let newArr = [];
+            for (let item of strArr) {
+              if (obj[item]) {
+                newArr.push(obj[item]);
               }
-            })
-          })
-          this.recommend = listArr
+            }
+            this.$set(this.formValidate, 'coupons', newArr); //在编辑回显时，让返回数据中的优惠券id，通过接口匹配显示,
+          }
         })
-      },
-    }
+        let imgs = JSON.parse(info.sliderImage)
+        let imgss = []
+        Object.keys(imgs).map(i => {
+          imgss.push(this.$selfUtil.setDomain(imgs[i]))
+        })
+        this.formValidate.sliderImages = [...imgss]
+        if (info.isHot) this.checkboxGroup.push('isHot')
+        if (info.isGood) this.checkboxGroup.push('isGood')
+        if (info.isBenefit) this.checkboxGroup.push('isBenefit')
+        if (info.isBest) this.checkboxGroup.push('isBest')
+        if (info.isNew) this.checkboxGroup.push('isNew')
+        this.productGetRule()
+        if (info.specType) {
+          this.formValidate.attr = info.attr.map(item => {
+            return {
+              attrName: item.attrName,
+              attrValue: item.attrValues.split(',')
+            }
+          })
+          this.ManyAttrValue = info.attrValue;
+          this.ManyAttrValue.forEach((val) => {
+            val.image = this.$selfUtil.setDomain(val.image);
+            val.attrValue = JSON.parse(val.attrValue);
+            this.attrInfo[Object.values(val.attrValue).sort().join('/')] = val;
+          })
+          /***多规格商品如果被删除过sku，优先展示api返回的数据,否则会有没有删除的错觉***/
+          let manyAttr = this.attrFormat(this.formValidate.attr)
+          if (manyAttr.length !== this.ManyAttrValue.length) {
+            this.$set(this, 'showAll', true)
+            this.isAttr = false;
+          } else {
+            this.isAttr = true;
+          }
+          /*******/
+          const tmp = {}
+          const tmpTab = {}
+          this.formValidate.attr.forEach((o, i) => {
+            // tmp['value' + i] = { title: o.attrName }
+            // tmpTab['value' + i] = ''
+            tmp[o.attrName] = { title: o.attrName };
+            tmpTab[o.attrName] = '';
+          })
+
+          // 此处手动实现后台原本value0 value1的逻辑
+          this.formValidate.attrValue.forEach(item => {
+            for (let attrValueKey in item.attrValue) {
+              item[attrValueKey] = item.attrValue[attrValueKey];
+            }
+          });
+
+          this.manyTabTit = tmp
+          this.manyTabDate = tmpTab
+          this.formThead = Object.assign({}, this.formThead, tmp)
+        } else {
+          this.OneattrValue = info.attrValue
+          // this.formValidate.attr = [] //单规格商品规格设置为空
+        }
+        this.fullscreenLoading = false
+      }).catch(res => {
+        this.fullscreenLoading = false
+        this.$message.error(res.message);
+      });
+    },
+    handleRemove(i) {
+      this.formValidate.sliderImages.splice(i, 1)
+    },
+    // 点击商品图
+    modalPicTap(tit, num, i, status) {
+      const _this = this;
+      if (_this.isDisabled) return;
+      this.$modalUpload(function (img) {
+        if (tit === '1' && !num) {
+          _this.formValidate.image = img[0].sattDir
+          _this.OneattrValue[0].image = img[0].sattDir
+        }
+        if (tit === '2' && !num) {
+          if (img.length > 10) return this.$message.warning("最多选择10张图片！");
+          if (img.length + _this.formValidate.sliderImages.length > 10) return this.$message.warning("最多选择10张图片！");
+          img.map((item) => {
+            _this.formValidate.sliderImages.push(item.sattDir)
+          });
+        }
+        if (tit === '1' && num === 'dan') {
+          _this.OneattrValue[0].image = img[0].sattDir
+        }
+        if (tit === '1' && num === 'duo') {
+          _this.ManyAttrValue[i].image = img[0].sattDir
+        }
+        if (tit === '1' && num === 'pi') {
+          _this.oneFormBatch[0].image = img[0].sattDir
+        }
+      }, tit, 'content')
+    },
+    handleSubmitUp() {
+      // this.currentTab --
+      if (this.currentTab-- < 0) this.currentTab = 0;
+    },
+    handleSubmitNest(name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          if (this.currentTab++ > 2) this.currentTab = 0;
+        } else {
+          if (!this.formValidate.store_name || !this.formValidate.cate_id || !this.formValidate.keyword
+            || !this.formValidate.unit_name || !this.formValidate.store_info
+            || !this.formValidate.image || !this.formValidate.slider_image) {
+            this.$message.warning("请填写完整商品信息！");
+          }
+        }
+      })
+    },
+    // 提交
+    handleSubmit: Debounce(function (name) {
+      this.onChangeGroup()
+      if (this.formValidate.specType && this.formValidate.attr.length < 1) return this.$message.warning("请填写多规格属性！");
+      this.formValidate.cateId = this.formValidate.cateIds.join(',')
+      this.formValidate.sliderImage = JSON.stringify(this.formValidate.sliderImages)
+      if (this.formValidate.specType) {
+        this.formValidate.attrValue = this.ManyAttrValue;
+        this.formValidate.attr = this.formValidate.attr.map((item) => {
+          return {
+            attrName: item.attrName,
+            id: item.id,
+            attrValues: item.attrValue.join(','),
+          }
+        })
+        for (var i = 0; i < this.formValidate.attrValue.length; i++) {
+          this.$set(this.formValidate.attrValue[i], 'id', 0);
+          this.$set(this.formValidate.attrValue[i], 'productId', 0);
+          this.$set(this.formValidate.attrValue[i], 'attrValue', JSON.stringify(this.formValidate.attrValue[i].attrValue)); //
+          delete this.formValidate.attrValue[i].value0
+        }
+      } else {
+        this.formValidate.attr = [{ attrName: '规格', attrValues: '默认', id: this.$route.params.id ? this.formValidate.attr[0].id : 0 }]
+        this.OneattrValue.map(item => {
+          this.$set(item, 'attrValue', JSON.stringify({ '规格': '默认' }))
+        })
+        this.formValidate.attrValue = this.OneattrValue
+      }
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          this.fullscreenLoading = true
+          this.$route.params.id ? productUpdateApi(this.formValidate).then(async res => {
+            this.$message.success('编辑成功');
+            setTimeout(() => {
+              this.$router.push({ path: '/store/index' });
+            }, 500);
+            this.fullscreenLoading = false
+          }).catch(res => {
+            this.fullscreenLoading = false
+          }) : productCreateApi(this.formValidate).then(async res => {
+            this.$message.success('新增成功');
+            setTimeout(() => {
+              this.$router.push({ path: '/store/index' });
+            }, 500);
+            this.fullscreenLoading = false
+          }).catch(res => {
+            this.fullscreenLoading = false
+          })
+        } else {
+          if (!this.formValidate.storeName || !this.formValidate.cateId || !this.formValidate.keyword
+            || !this.formValidate.unitName || !this.formValidate.storeInfo || !this.formValidate.image || !this.formValidate.sliderImages) {
+            this.$message.warning("请填写完整商品信息！");
+          }
+        }
+      });
+    }),
+    // 表单验证
+    validate(prop, status, error) {
+      if (status === false) {
+        this.$message.warning(error);
+      }
+    },
+    // 移动
+    handleDragStart(e, item) {
+      if (!this.isDisabled) this.dragging = item;
+    },
+    handleDragEnd(e, item) {
+      if (!this.isDisabled) this.dragging = null
+    },
+    handleDragOver(e) {
+      if (!this.isDisabled) e.dataTransfer.dropEffect = 'move'
+    },
+    handleDragEnter(e, item) {
+      if (!this.isDisabled) {
+        e.dataTransfer.effectAllowed = 'move'
+        if (item === this.dragging) {
+          return
+        }
+        const newItems = [...this.formValidate.sliderImages]
+        const src = newItems.indexOf(this.dragging)
+        const dst = newItems.indexOf(item)
+        newItems.splice(dst, 0, ...newItems.splice(src, 1))
+        this.formValidate.sliderImages = newItems;
+      }
+    },
+    handleDragEnterFont(e, item) {
+      if (!this.isDisabled) {
+        e.dataTransfer.effectAllowed = 'move'
+        if (item === this.dragging) {
+          return
+        }
+        const newItems = [...this.formValidate.activity]
+        const src = newItems.indexOf(this.dragging)
+        const dst = newItems.indexOf(item)
+        newItems.splice(dst, 0, ...newItems.splice(src, 1))
+        this.formValidate.activity = newItems;
+      }
+    },
+    getGoodsType() {
+      /** 让商品推荐列表的name属性与页面设置tab的name匹配**/
+      goodDesignList({ gid: 70 }).then((response) => {
+        let list = response.list;
+        let arr = [], arr1 = [];
+        const listArr = [{ name: '是否热卖', value: 'isGood' }];
+        let typeLists = [
+          { name: '', value: 'isHot', type: '2' },   //热门榜单 
+          { name: '', value: 'isBenefit', type: '4' }, //促销单品
+          { name: '', value: 'isBest', type: '1' }, //精品推荐
+          { name: '', value: 'isNew', type: '3' }]; //首发新品
+        list.forEach((item) => {
+          let obj = {};
+          obj.value = JSON.parse(item.value);
+          obj.id = item.id;
+          obj.gid = item.gid;
+          obj.status = item.status;
+          arr.push(obj);
+        })
+        arr.forEach((item1) => {
+          let obj1 = {};
+          obj1.name = item1.value.fields[1].value;
+          obj1.status = item1.status;
+          obj1.type = item1.value.fields[3].value;
+          arr1.push(obj1);
+        })
+        typeLists.forEach((item) => {
+          arr1.forEach((item1) => {
+            if (item.type == item1.type) {
+              listArr.push({
+                name: item1.name,
+                value: item.value,
+                type: item.type
+              })
+            }
+          })
+        })
+        this.recommend = listArr
+      })
+    },
   }
+}
 </script>
 <style scoped lang="scss">
-  .disLabel{
-    ::v-deep.el-form-item__label{
-      margin-left: 36px !important;
-    }
+.disLabel {
+  ::v-deep.el-form-item__label {
+    margin-left: 36px !important;
   }
-  .disLabelmoren{
-    ::v-deep.el-form-item__label{
-      margin-left: 120px !important;
-    }
+}
+
+.disLabelmoren {
+  ::v-deep.el-form-item__label {
+    margin-left: 120px !important;
   }
-  .priamry_border{
-    border: 1px solid #1890FF;
-    color: #1890FF;
+}
+
+.priamry_border {
+  border: 1px solid #1890FF;
+  color: #1890FF;
+}
+
+.color-item {
+  height: 30px;
+  line-height: 30px;
+  padding: 0 10px;
+  color: #fff;
+  margin-right: 10px;
+}
+
+.color-list .color-item.blue {
+  background-color: #1E9FFF;
+}
+
+.color-list .color-item.yellow {
+  background-color: rgb(254, 185, 0);
+}
+
+.color-list .color-item.green {
+  background-color: #009688;
+}
+
+.color-list .color-item.red {
+  background-color: #ed4014;
+}
+
+.proCoupon {
+  ::v-deep.el-form-item__content {
+    margin-top: 5px;
   }
-  .color-item{
-    height: 30px;
-    line-height: 30px;
-    padding: 0 10px;
-    color:#fff;
-    margin-right :10px;
-  }
-  .color-list .color-item.blue{
-    background-color: #1E9FFF;
-  }
-  .color-list .color-item.yellow{
-    background-color: rgb(254, 185, 0);
-  }
-  .color-list .color-item.green{
-    background-color: #009688;
-  }
-  .color-list .color-item.red{
-    background-color: #ed4014;
-  }
-  .proCoupon{
-    ::v-deep.el-form-item__content{
-      margin-top: 5px;
-    }
-  }
-  .tabPic{
-    width: 40px !important;
-    height: 40px !important;
-    img{
-      width: 100%;
-      height: 100%;
-    }
-  }
-  .noLeft{
-    ::v-deep.el-form-item__content{
-      margin-left: 0 !important;
-    }
-  }
-  .tabNumWidth{
-    ::v-deep.el-input-number--medium{
-      width: 121px !important;
-    }
-    ::v-deep.el-input-number__increase{
-      width: 20px !important;
-      font-size: 12px !important;
-    }
-    ::v-deep.el-input-number__decrease{
-      width: 20px !important;
-      font-size: 12px !important;
-    }
-    ::v-deep.el-input-number--medium .el-input__inner {
-      padding-left: 25px !important;
-      padding-right: 25px !important;
-    }
-    ::v-deep thead{
-      line-height: normal !important;
-    }
-    ::v-deep .el-table .cell{
-      line-height: normal !important;
-    }
-  }
-  .selWidth{
+}
+
+.tabPic {
+  width: 40px !important;
+  height: 40px !important;
+
+  img {
     width: 100%;
+    height: 100%;
   }
-  .selWidthd{
-    width: 300px;
+}
+
+.noLeft {
+  ::v-deep.el-form-item__content {
+    margin-left: 0 !important;
   }
-  .button-new-tag {
-    height: 28px;
-    line-height: 26px;
-    padding-top: 0;
-    padding-bottom: 0;
+}
+
+.tabNumWidth {
+  ::v-deep.el-input-number--medium {
+    width: 121px !important;
   }
-  .input-new-tag {
-    width: 90px;
-    margin-left: 10px;
-    vertical-align: bottom;
+
+  ::v-deep.el-input-number__increase {
+    width: 20px !important;
+    font-size: 12px !important;
   }
-  .pictrue{
-    width: 60px;
-    height: 60px;
-    border: 1px dotted rgba(0,0,0,0.1);
-    margin-right: 10px;
-    position: relative;
-    cursor: pointer;
-    img{
-      width: 100%;
-      height: 100%;
-    }
-    video{
-      width: 100%;
-      height: 100%;
-    }
+
+  ::v-deep.el-input-number__decrease {
+    width: 20px !important;
+    font-size: 12px !important;
   }
-  .btndel{
-    position: absolute;
-    z-index: 1;
-    width :20px !important;
-    height: 20px !important;
-    left: 46px;
-    top: -4px;
+
+  ::v-deep.el-input-number--medium .el-input__inner {
+    padding-left: 25px !important;
+    padding-right: 25px !important;
   }
-  .labeltop{
-    ::v-deep.el-form-item__label{
-      float: none !important;
-      display: inline-block !important;
-      width: auto !important;
-    }
+
+  ::v-deep thead {
+    line-height: normal !important;
   }
-  .iview-video-style {
+
+  ::v-deep .el-table .cell {
+    line-height: normal !important;
+  }
+}
+
+.selWidth {
+  width: 100%;
+}
+
+.selWidthd {
+  width: 300px;
+}
+
+.button-new-tag {
+  height: 28px;
+  line-height: 26px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.input-new-tag {
+  width: 90px;
+  margin-left: 10px;
+  vertical-align: bottom;
+}
+
+.pictrue {
+  width: 60px;
+  height: 60px;
+  border: 1px dotted rgba(0, 0, 0, 0.1);
+  margin-right: 10px;
+  position: relative;
+  cursor: pointer;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+
+  video {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.btndel {
+  position: absolute;
+  z-index: 1;
+  width: 20px !important;
+  height: 20px !important;
+  left: 46px;
+  top: -4px;
+}
+
+.labeltop {
+  ::v-deep.el-form-item__label {
+    float: none !important;
+    display: inline-block !important;
+    width: auto !important;
+  }
+}
+
+.iview-video-style {
   width: 300px;
   height: 180px;
   border-radius: 10px;

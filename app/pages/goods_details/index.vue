@@ -760,6 +760,7 @@
 				let that = this;
 				getProductDetail(that.id, that.type).then(res => {
 					let productInfo = res.data.productInfo;
+					console.log(productInfo)
 					// 字符串数组转数组；
 					let arrayImg = productInfo.sliderImage;
 					let sliderImage = JSON.parse(arrayImg);

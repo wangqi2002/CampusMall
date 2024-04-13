@@ -470,7 +470,6 @@
 					uni.setNavigationBarTitle({
 						title: '首页'
 					})
-					console.log(res)
 					that.$set(that, "logoUrl", res.data.logoUrl);
 					that.$set(that, "site_name", '首页');
 					that.$set(that, "imgUrls", res.data.banner);
