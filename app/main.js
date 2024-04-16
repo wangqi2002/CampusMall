@@ -14,9 +14,13 @@ Vue.config.productionTip = false
 Vue.prototype.$Order = Order;
 
 // #ifdef H5
-import { parseQuery } from "./utils";
+import {
+	parseQuery
+} from "./utils";
 import Auth from './libs/wechat';
-import { SPREAD } from './config/cache';
+import {
+	SPREAD
+} from './config/cache';
 Vue.prototype.$wechat = Auth;
 let cookieName = "VCONSOLE",
 	query = parseQuery(),
@@ -36,8 +40,8 @@ if (urlSpread !== undefined) {
 }
 
 if (vconsole !== undefined) {
-  if (vconsole === md5UnCrmeb && Cache.has(cookieName))
-	  Cache.clear(cookieName);
+	if (vconsole === md5UnCrmeb && Cache.has(cookieName))
+		Cache.clear(cookieName);
 } else vconsole = Cache.get(cookieName);
 
 import VConsole from './components/vconsole.min.js'
@@ -55,7 +59,7 @@ App.mpType = 'app'
 
 
 const app = new Vue({
-    ...App,
+	...App,
 	store,
 	Cache
 })

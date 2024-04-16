@@ -12,12 +12,12 @@
  * Created by PanJiaChen on 16/11/18.
  */
 const baseAttr = {
-  min: "%s最小长度为:min",
-  max: "%s最大长度为:max",
-  length: "%s长度必须为:length",
-  range: "%s长度为:range",
-  pattern: "$s格式错误"
-};
+  min: '%s最小长度为:min',
+  max: '%s最大长度为:max',
+  length: '%s长度必须为:length',
+  range: '%s长度为:range',
+  pattern: '$s格式错误'
+}
 
 /**
  * @param {string} path
@@ -105,18 +105,18 @@ export function isArray(arg) {
 }
 
 const bindMessage = (fn, message) => {
-  fn.message = field => message.replace("%s", field || "");
-};
+  fn.message = field => message.replace('%s', field || '')
+}
 
 export function required(message, opt = {}) {
   return {
     required: true,
     message,
-    type: "string",
+    type: 'string',
     ...opt
-  };
+  }
 }
-bindMessage(required, "请输入%s");
+bindMessage(required, '请输入%s')
 
 /**
  * 正确的金额
@@ -128,30 +128,29 @@ export function num(message) {
   return attrs.pattern(
     /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
     message
-  );
+  )
 }
-bindMessage(num, "%s格式不正确");
-
+bindMessage(num, '%s格式不正确')
 
 const attrs = Object.keys(baseAttr).reduce((attrs, key) => {
-  attrs[key] = (attr, message = "", opt = {}) => {
+  attrs[key] = (attr, message = '', opt = {}) => {
     const _attr =
-      key === "range" ? { min: attr[0], max: attr[1] } : { [key]: attr };
+      key === 'range' ? { min: attr[0], max: attr[1] } : { [key]: attr }
 
     return {
       message: message.replace(
         `:${key}`,
-        key === "range" ? `${attr[0]}-${attr[1]}` : attr
+        key === 'range' ? `${attr[0]}-${attr[1]}` : attr
       ),
-      type: "string",
+      type: 'string',
       ..._attr,
       ...opt
-    };
-  };
-  bindMessage(attrs[key], baseAttr[key]);
-  return attrs;
-}, {});
-export default attrs;
+    }
+  }
+  bindMessage(attrs[key], baseAttr[key])
+  return attrs
+}, {})
+export default attrs
 
 /**
  * 函数防抖 (只执行最后一次点击)
@@ -160,17 +159,17 @@ export default attrs;
  * @returns {Function}
  * @constructor
  */
- export const Debounce = (fn, t) => {
-	const delay = t || 500
-	let timer
-	return function() {
-		const args = arguments
-		if (timer) {
-			clearTimeout(timer)
-		}
-		timer = setTimeout(() => {
-			timer = null
-			fn.apply(this, args)
-		}, delay)
-	}
+export const Debounce = (fn, t) => {
+  const delay = t || 500
+  let timer
+  return function() {
+    const args = arguments
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      timer = null
+      fn.apply(this, args)
+    }, delay)
+  }
 }
