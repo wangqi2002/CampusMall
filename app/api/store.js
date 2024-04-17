@@ -54,7 +54,7 @@ export function collectDel(proId) {
  * @param string id
  */
 export function collectDelete(ids) {
-	return request.post(`collect/delete`,ids);
+	return request.post(`collect/delete`, ids);
 }
 
 /**
@@ -71,6 +71,16 @@ export function postCartAdd(data) {
  */
 export function getCategoryList() {
 	return request.get('category', {}, {
+		noAuth: true
+	});
+}
+
+/**
+ * 获取分类列表树
+ * 
+ */
+export function getCategoryListTree(data) {
+	return request.get('category/list/tree', data, {
 		noAuth: true
 	});
 }
@@ -136,7 +146,7 @@ export function getCollectUserList(data) {
  * 
  */
 export function getReplyList(id, data) {
-	return request.get('reply/list/' + id, data,{
+	return request.get('reply/list/' + id, data, {
 		noAuth: true
 	})
 }
@@ -146,7 +156,7 @@ export function getReplyList(id, data) {
  * @param int id
  */
 export function getReplyConfig(id) {
-	return request.get('reply/config/' + id,{},{
+	return request.get('reply/config/' + id, {}, {
 		noAuth: true
 	});
 }
@@ -175,7 +185,9 @@ export function storeListApi(data) {
  * @param object data
  */
 export function getProductGood() {
-	return request.get('product/good',{},{ noAuth : true});
+	return request.get('product/good', {}, {
+		noAuth: true
+	});
 }
 
 /**
@@ -185,7 +197,7 @@ export function getProductGood() {
  * 
  */
 export function getReplyProduct(id) {
-	return request.get('reply/product/' + id, {},{
+	return request.get('reply/product/' + id, {}, {
 		noAuth: true
 	})
 }

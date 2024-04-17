@@ -11,9 +11,11 @@ import com.zbkj.common.vo.CategoryTreeVo;
 import com.zbkj.front.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,6 +67,23 @@ public class ProductController {
     @RequestMapping(value = "/category", method = RequestMethod.GET)
     public CommonResult<List<CategoryTreeVo>> getCategory() {
         return CommonResult.success(productService.getCategory());
+    }
+
+    /**
+     * 查询分类表信息
+     */
+    @ApiOperation(value = "获取tree结构的列表")
+    @RequestMapping(value = "/category/list/tree", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="type", value="类型ID | 类型，1 产品分类，2 附件分类，3 文章分类， 4 设置分类， 5 菜单分类， 6 配置分类， 7 秒杀配置", example = "1"),
+            @ApiImplicitParam(name="status", value="-1=全部，0=未生效，1=已生效", example = "1"),
+            @ApiImplicitParam(name="name", value="模糊搜索", example = "电视")
+    })
+    public CommonResult<List<CategoryTreeVo>> getListTree(@RequestParam(name = "type") Integer type,
+                                                          @RequestParam(name = "status") Integer status,
+                                                          @RequestParam(name = "name", required = false) String name) {
+        List<CategoryTreeVo> listTree = productService.getListTree(type,status,name);
+        return CommonResult.success(listTree);
     }
 
     /**

@@ -32,6 +32,24 @@ public interface ProductService {
     List<CategoryTreeVo> getCategory();
 
     /**
+     * 获取树形结构数据
+     * @param type 分类
+     * @param status 状态
+     * @param name 名称
+     * @return List
+     */
+    List<CategoryTreeVo> getListTree(Integer type, Integer status, String name);
+
+    /**
+     * 获取树形结构数据
+     * @param type 分类
+     * @param status 状态
+     * @param categoryIdList 分类idList
+     * @return List
+     */
+    List<CategoryTreeVo> getListTree(Integer type, Integer status, List<Integer> categoryIdList);
+
+    /**
      * 商品列表
      * @param request 请求参数
      * @param pageParamRequest 分页参数

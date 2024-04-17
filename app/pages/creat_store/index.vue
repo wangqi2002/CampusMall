@@ -187,121 +187,9 @@
 </template>
 
 <script>
-	const defaultList = [{
-			"id": 742,
-			"pid": 0,
-			"path": "/0/",
-			"name": "图书报刊",
-			"type": 1,
-			"url": "",
-			"extra": "http://127.0.0.1:8080/crmebimage/public/store/2024/03/27/bfd80d3d77904897bbd634419899d3e2h3igy8s6i7.jpg",
-			"status": true,
-			"sort": 10,
-			"children": [{
-					"id": 751,
-					"pid": 742,
-					"path": "/0/742/",
-					"name": "工学",
-					"type": 1,
-					"url": "",
-					"extra": "http://127.0.0.1:8080/crmebimage/public/store/2024/04/04/39f71f1bf31a4890bb257721b2b3e7de5266fk9u35.png",
-					"status": true,
-					"sort": 0
-				},
-				{
-					"id": 752,
-					"pid": 742,
-					"path": "/0/742/",
-					"name": "农学",
-					"type": 1,
-					"url": "",
-					"extra": "http://127.0.0.1:8080/crmebimage/public/store/2024/04/04/9489adfaad0048b381d59bcdeb9ca63eywo0crj4nu.png",
-					"status": true,
-					"sort": 0
-				},
-				{
-					"id": 754,
-					"pid": 742,
-					"path": "/0/742/",
-					"name": "医学",
-					"type": 1,
-					"url": "",
-					"extra": "http://127.0.0.1:8080/crmebimage/public/store/2024/04/04/2c34d05521624833864d42677f55e61ab5xfnqiryf.png",
-					"status": true,
-					"sort": 0
-				},
-				{
-					"id": 756,
-					"pid": 742,
-					"path": "/0/742/",
-					"name": "公共课与文化课",
-					"type": 1,
-					"url": "",
-					"extra": "http://127.0.0.1:8080/crmebimage/public/store/2024/04/04/af5e60325d9d4dcea241c495f8fbe980jr5si78hcq.png",
-					"status": true,
-					"sort": 0
-				},
-				{
-					"id": 757,
-					"pid": 742,
-					"path": "/0/742/",
-					"name": "其他",
-					"type": 1,
-					"url": "",
-					"extra": "http://127.0.0.1:8080/crmebimage/public/store/2024/04/04/dad01b8a9f994c1093fa7d94f9f98e7a4cwcy28l2o.png",
-					"status": true,
-					"sort": 0
-				}
-			],
-			"label": "图书报刊"
-		},
-		{
-			"id": 281,
-			"pid": 0,
-			"path": "/0/",
-			"name": "户外出行",
-			"type": 1,
-			"url": "",
-			"extra": "http://127.0.0.1:8080/crmebimage/public/maintain/2021/12/25/55014ffb17b74d039b5670298e1047fcyw64lmyzlj.jpg",
-			"status": true,
-			"sort": 0,
-			"children": [{
-				"id": 290,
-				"pid": 281,
-				"path": "/0/281/",
-				"name": "骑行配件",
-				"type": 1,
-				"url": "",
-				"extra": "http://127.0.0.1:8080/crmebimage/public/store/2021/12/25/ef98f38ef1cd4083a91fb62b1dd8362cmran1psnmc.png",
-				"status": true,
-				"sort": 0
-			}],
-			"label": "户外出行"
-		},
-		{
-			"id": 284,
-			"pid": 0,
-			"path": "/0/283/",
-			"name": "日用文创",
-			"type": 1,
-			"url": "",
-			"extra": "http://127.0.0.1:8080/crmebimage/public/store/2021/12/25/d813cbdd98b148c99885652234ad43b1m1aewwn8wd.jpg",
-			"status": true,
-			"sort": 0,
-			"children": [{
-				"id": 302,
-				"pid": 284,
-				"path": "/0/283/284/",
-				"name": "办公文具",
-				"type": 1,
-				"url": "",
-				"extra": "http://127.0.0.1:8080/crmebimage/public/store/2021/12/25/de35d545523448db9f3636e34ca085b29qw11rescg.png",
-				"status": true,
-				"sort": 0
-			}],
-			"label": "日用文创"
-		}
-	]
+	import {
+		getCategoryListTree
+	} from '@/api/store.js';
 	const defaultObj = {
 		image: '',
 		sliderImages: ["/static/images/canbj.png", "/static/images/bargainBg.jpg", "/static/images/money.png",
@@ -348,15 +236,7 @@
 	export default {
 		data() {
 			return {
-				readOnly: false,
-				formats: {},
-
-				isDisabled: false,
-				currentTab: 0,
-				merCateMap: {
-					text: 'name',
-					value: 'id'
-				},
+				//数据项
 				merCateList: [],
 				formValidate: Object.assign({}, defaultObj),
 				ruleValidate: {
@@ -409,6 +289,14 @@
 						trigger: 'change'
 					}]
 				},
+
+				//配置项
+				isDisabled: false,
+				currentTab: 0,
+				merCateMap: {
+					text: 'name',
+					value: 'id'
+				},
 				grid2: {
 					xl: 12,
 					lg: 12,
@@ -420,9 +308,35 @@
 					color: '#333333',
 					borderColor: '#cecdc2'
 				},
+				readOnly: false,
+				formats: {},
 			}
 		},
 		methods: {
+			//接口
+			getCategorySelect() {
+				let that = this;
+				getCategoryListTree({
+					status: -1,
+					type: 1
+				}).then(res => {
+					res = res.data
+					that.merCateList = that.filerMerCateList(res)
+					const newArr = []
+					res.forEach((value, index) => {
+						newArr[index] = value
+						if (value.child) newArr[index].child = value.child.filter(item => item.status ===
+							true)
+					}) // 过滤商品分类设置为隐藏的子分类不出现在树形列表里
+					that.merCateList = that.filerMerCateList(newArr)
+				}).catch(err => {
+					return this.$util.Tips({
+						title: err
+					});
+				});
+			},
+
+			//editor编辑框
 			getCon() {
 				this.editorCtx.getContents({
 					success: (res) => {
@@ -439,7 +353,6 @@
 					value
 				} = e.target.dataset
 				if (!name) return
-				// console.log('format', name, value)
 				this.editorCtx.format(name, value)
 			},
 			clear() {
@@ -502,6 +415,11 @@
 				const formats = e.detail
 				this.formats = formats
 			},
+
+			//表单操作
+			handleRemove(i) {
+				this.formValidate.sliderImages.splice(i, 1)
+			},
 			handleSubmitUp() {
 				if (this.currentTab-- < 0) this.currentTab = 0;
 			},
@@ -527,6 +445,8 @@
 					console.log('表单错误信息：', err);
 				})
 			},
+
+			//功能函数
 			filerMerCateList(treeData) {
 				return treeData.map((item) => {
 					({
@@ -542,12 +462,10 @@
 					return item
 				})
 			},
-			handleRemove(i) {
-				this.formValidate.sliderImages.splice(i, 1)
-			},
 		},
 		mounted() {
-			this.merCateList = this.filerMerCateList(defaultList)
+			// this.formValidate.sliderImages = []
+			this.getCategorySelect()
 		}
 	}
 </script>

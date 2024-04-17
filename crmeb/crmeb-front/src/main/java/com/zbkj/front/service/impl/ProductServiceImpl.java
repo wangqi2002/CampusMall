@@ -4,11 +4,16 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
 import com.zbkj.common.constants.CategoryConstants;
 import com.zbkj.common.constants.Constants;
 import com.zbkj.common.constants.RedisConstatns;
 import com.zbkj.common.constants.SysConfigConstants;
+import com.zbkj.common.model.category.Category;
 import com.zbkj.common.model.product.StoreProduct;
 import com.zbkj.common.model.product.StoreProductAttr;
 import com.zbkj.common.model.product.StoreProductAttrValue;
@@ -25,17 +30,21 @@ import com.zbkj.common.utils.RedisUtil;
 import com.zbkj.common.vo.CategoryTreeVo;
 import com.zbkj.common.vo.MyRecord;
 import com.zbkj.front.service.ProductService;
+import com.zbkj.service.dao.CategoryDao;
 import com.zbkj.service.delete.ProductUtils;
 import com.zbkj.service.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
 * IndexServiceImpl 接口实现
@@ -51,6 +60,9 @@ import java.util.List;
 */
 @Service
 public class ProductServiceImpl implements ProductService {
+
+    @Resource
+    private CategoryDao dao;
 
     @Autowired
     private StoreProductService storeProductService;
@@ -108,6 +120,96 @@ public class ProductServiceImpl implements ProductService {
         }
         return listTree;
     }
+
+    /**
+     * 带结构的无线级分类
+     * @author Mr.Zhang
+     * @since 2020-04-16
+     */
+    @Override
+    public List<CategoryTreeVo> getListTree(Integer type, Integer status, String name) {
+        return getTree(type, status,name,null);
+    }
+
+    /**
+     * 带权限的属性结构
+     */
+    @Override
+    public List<CategoryTreeVo> getListTree(Integer type, Integer status, List<Integer> categoryIdList) {
+        System.out.println("菜单列表:getListTree: type:" + type + "| status:" + status + "| categoryIdList:" + JSON.toJSONString(categoryIdList));
+        return getTree(type, status,null,categoryIdList);
+    }
+
+    /**
+     * 带结构的无线级分类
+     */
+    private List<CategoryTreeVo> getTree(Integer type, Integer status,String name, List<Integer> categoryIdList) {
+        //循环数据，把数据对象变成带list结构的vo
+        List<CategoryTreeVo> treeList = new ArrayList<>();
+
+        LambdaQueryWrapper<Category> lambdaQueryWrapper = Wrappers.lambdaQuery();
+        lambdaQueryWrapper.eq(Category::getType, type);
+
+        if(null != categoryIdList && categoryIdList.size() > 0){
+            lambdaQueryWrapper.in(Category::getId, categoryIdList);
+        }
+
+        if(status >= 0){
+            lambdaQueryWrapper.eq(Category::getStatus, status);
+        }
+        if(StringUtils.isNotBlank(name)){ // 根据名称模糊搜索
+            lambdaQueryWrapper.like(Category::getName,name);
+        }
+
+        lambdaQueryWrapper.orderByDesc(Category::getSort);
+        lambdaQueryWrapper.orderByAsc(Category::getId);
+        List<Category> allTree = dao.selectList(lambdaQueryWrapper);
+        if(allTree == null){
+            return null;
+        }
+        // 根据名称搜索特殊处理 这里仅仅处理两层搜索后有子父级关系的数据
+        if(StringUtils.isNotBlank(name) && allTree.size() >0){
+            List<Category> searchCategory = new ArrayList<>();
+            List<Integer> categoryIds = allTree.stream().map(Category::getId).collect(Collectors.toList());
+
+            List<Integer> pidList = allTree.stream().filter(c -> c.getPid() > 0 && !categoryIds.contains(c.getPid()))
+                    .map(Category::getPid).distinct().collect(Collectors.toList());
+            if (CollUtil.isNotEmpty(pidList)) {
+                pidList.forEach(pid -> {
+                    searchCategory.add(dao.selectById(pid));
+                });
+            }
+            allTree.addAll(searchCategory);
+        }
+
+        for (Category category: allTree) {
+            CategoryTreeVo categoryTreeVo = new CategoryTreeVo();
+            BeanUtils.copyProperties(category, categoryTreeVo);
+            treeList.add(categoryTreeVo);
+        }
+
+
+        //返回
+        Map<Integer, CategoryTreeVo> map = new HashMap<>();
+        //ID 为 key 存储到map 中
+        for (CategoryTreeVo categoryTreeVo1 : treeList) {
+            map.put(categoryTreeVo1.getId(), categoryTreeVo1);
+        }
+
+        List<CategoryTreeVo> list = new ArrayList<>();
+        for (CategoryTreeVo tree : treeList) {
+            //子集ID返回对象，有则添加。
+            CategoryTreeVo tree1 = map.get(tree.getPid());
+            if(tree1 != null){
+                tree1.getChild().add(tree);
+            }else {
+                list.add(tree);
+            }
+        }
+        System.out.println("无限极分类 : getTree:" + JSON.toJSONString(list));
+        return list;
+    }
+
 
     /**
      * 商品列表
