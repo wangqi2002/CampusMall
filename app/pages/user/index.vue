@@ -31,25 +31,14 @@
 							</view>
 						</view>
 						<view class="num-wrapper">
-							<view class="num-item" @click="goMenuPage('/pages/users/user_money/index')">
+							<view class="num-item-name">
+								钱包
+							</view>
+							<view class="num-item-value" @click="goMenuPage('/pages/users/user_money/index')">
 								<text
 									class="num">{{userInfo.nowMoney && uid ?Number(userInfo.nowMoney).toFixed(2):0}}</text>
-								<view class="txt">余额</view>
-							</view>
-							<view class="num-item" @click="goMenuPage('/pages/users/user_integral/index')">
-								<text class="num">{{userInfo.integral && uid ? userInfo.integral: 0}}</text>
-								<view class="txt">积分</view>
-							</view>
-							<view class="num-item" @click="goMenuPage('/pages/users/user_coupon/index')">
-								<text class="num">{{userInfo.couponCount && uid ? userInfo.couponCount : 0}}</text>
-								<view class="txt">优惠券</view>
-							</view>
-							<view class="num-item" @click="goMenuPage('/pages/users/user_goods_collection/index')">
-								<text class="num">{{userInfo.collectCount && uid ? userInfo.collectCount : 0}}</text>
-								<view class="txt">收藏</view>
 							</view>
 						</view>
-						<!-- <view class="sign" @click="goSignIn">签到</view> -->
 					</view>
 					<view class="order-wrapper">
 						<view class="order-hd flex">
@@ -112,7 +101,7 @@
 						</view>
 					</view>
 					<image src="/static/images/support.png" alt="" class='support'>
-					<view class="uni-p-b-98"></view>
+						<view class="uni-p-b-98"></view>
 				</view>
 
 			</scroll-view>
@@ -125,12 +114,24 @@
 <script>
 	let sysHeight = uni.getSystemInfoSync().statusBarHeight + 'px';
 	import Cache from '@/utils/cache';
-	import {BACK_URL} from '@/config/cache';
-	import {getMenuList} from '@/api/user.js';
-	import {orderData} from '@/api/order.js';
-	import {toLogin} from '@/libs/login.js';
-	import {getCity} from '@/api/api.js';
-	import {mapGetters} from "vuex";
+	import {
+		BACK_URL
+	} from '@/config/cache';
+	import {
+		getMenuList
+	} from '@/api/user.js';
+	import {
+		orderData
+	} from '@/api/order.js';
+	import {
+		toLogin
+	} from '@/libs/login.js';
+	import {
+		getCity
+	} from '@/api/api.js';
+	import {
+		mapGetters
+	} from "vuex";
 	// #ifdef H5
 	import Auth from '@/libs/wechat';
 	// #endif
@@ -314,7 +315,7 @@
 					res.data.routine_my_menus.map((item) => {
 						if (item.url.indexOf('service') !== -1) that.servicePic = item.pic
 					})
-					if(res.data.routine_my_banner){
+					if (res.data.routine_my_banner) {
 						that.imgUrls = res.data.routine_my_banner
 					}
 				});
@@ -373,12 +374,13 @@
 		position: absolute;
 		left: 0;
 		top: 0;
-		width:100%;
+		width: 100%;
 		height: 420rpx;
 		background-image: url('~@/static/images/user_bg.png');
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
 	}
+
 	.contenBox {
 		padding: 0 30rpx;
 	}
@@ -420,6 +422,7 @@
 				width: 100%;
 				margin: 0 auto;
 				padding: 35rpx 0 30rpx 0;
+
 				.user-info {
 					z-index: 20;
 					position: relative;
@@ -483,21 +486,25 @@
 					align-items: center;
 					justify-content: space-between;
 					margin-top: 30rpx;
-					color: #fff;
+					padding: 20rpx 30rpx;
+					color: #666666;
+					background-color: #fff;
+					border-radius: 6px;
 
-					.num-item {
-						width: 33.33%;
+					.num-item-name {
+						width: 33%;
+						font-size: 30rpx;
+						font-weight: 600;
+						padding-left: 10rpx;
+					}
+
+					.num-item-value {
+						width: 25%;
 						text-align: center;
 
 						.num {
-							font-size: 42rpx;
+							font-size: 36rpx;
 							font-weight: bold;
-						}
-
-						.txt {
-							margin-top: 10rpx;
-							font-size: 26rpx;
-							color: rgba(255, 255, 255, 0.6);
 						}
 					}
 				}
@@ -526,7 +533,7 @@
 				padding: 30rpx 16rpx;
 				position: relative;
 				z-index: 11;
-                
+
 				.order-hd {
 					justify-content: space-between;
 					font-size: 30rpx;

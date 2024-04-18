@@ -9,7 +9,8 @@
 				<input type="text" v-model="codeNum" placeholder="输入验证码" />
 				<button class="code" :disabled="disabled" @click="code">{{text}}</button>
 			</view>
-			<view class="sub_btn" @click="loginBtn">{{(!userInfo.phone && isLogin) || (userInfo.phone && isLogin)?'立即绑定':'立即登录'}}</view>
+			<view class="sub_btn" @click="loginBtn">
+				{{(!userInfo.phone && isLogin) || (userInfo.phone && isLogin)?'立即绑定':'立即登录'}}</view>
 		</view>
 	</view>
 </template>
@@ -18,7 +19,9 @@
 	const app = getApp();
 	import sendVerifyCode from "@/mixins/SendVerifyCode";
 	import Routine from '@/libs/routine';
-	import {mapGetters} from "vuex";
+	import {
+		mapGetters
+	} from "vuex";
 	import {
 		loginMobile,
 		registerVerify,
@@ -37,7 +40,7 @@
 	const BACK_URL = "login_back_url";
 	export default {
 		name: 'login_mobile',
-		computed: mapGetters(['userInfo','isLogin']),
+		computed: mapGetters(['userInfo', 'isLogin']),
 		props: {
 			isUp: {
 				type: Boolean,
@@ -77,7 +80,7 @@
 			//this.getCode();
 		},
 		onLoad() {
-			
+
 		},
 		methods: {
 			// 获取验证码
@@ -130,7 +133,7 @@
 					title: '请输入正确的验证码'
 				});
 				uni.showLoading({
-					title: !this.userInfo.phone && this.isLogin?'正在绑定中':'正在登录中'
+					title: !this.userInfo.phone && this.isLogin ? '正在绑定中' : '正在登录中'
 				});
 				if (!this.userInfo.phone && this.isLogin) {
 					iosBinding({
@@ -200,6 +203,7 @@
 				let that = this;
 				getUserInfo().then(res => {
 					uni.hideLoading();
+					console.log(res.data)
 					that.$store.commit("UPDATE_USERINFO", res.data);
 					// #ifdef MP 
 					that.$util.Tips({
