@@ -1,0 +1,381 @@
+<template>
+	<view class="page">
+		<view class="order-category">
+			<view class="category-row">
+				<view class="row-name">订单类型：</view>
+				<view class="row-button">
+					<view class='item' :class='orderCategory==0 ? "on": ""' @click="categoryClick(0)">
+						<view>回收</view>
+					</view>
+					<view class='item' :class='orderCategory==1 ? "on": ""' @click="categoryClick(1)">
+						<view>配送</view>
+					</view>
+				</view>
+			</view>
+			<view class="category-row">
+				<view class="row-name">订单状态：</view>
+				<view class="row-button">
+					<view v-if="orderCategory" style="display: flex;">
+						<view class='item' :class='orderStatus==0 ? "on": ""' @click="statusClick(0)">
+							<view>待出库</view>
+						</view>
+						<view class='item' :class='orderStatus==1 ? "on": ""' @click="statusClick(1)">
+							<view>待发货</view>
+						</view>
+						<view class='item' :class='orderStatus==2 ? "on": ""' @click="statusClick(2)">
+							<view>待签收</view>
+						</view>
+					</view>
+					<view v-else style="display: flex;">
+						<view class='item' :class='orderStatus==0 ? "on": ""' @click="statusClick(0)">
+							<view>待回收</view>
+						</view>
+						<view class='item' :class='orderStatus==1 ? "on": ""' @click="statusClick(1)">
+							<view>待入库</view>
+						</view>
+						<view class='item' :class='orderStatus==2 ? "on": ""' @click="statusClick(3)">
+							<view>待上架</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="order-list">
+			<view class='list'>
+				<view class='item' v-for="(item,index) in orderList" :key="index">
+					<view @click=''>
+						<view class='title acea-row row-between-wrapper'>
+							<view class="acea-row row-middle">
+								<text class="sign cart-color acea-row row-center-wrapper"
+									v-if="item.activityType !== '普通' && item.activityType !== '核销'">{{item.activityType}}</text>
+								<view>{{item.createTime}}</view>
+							</view>
+							<view class='font-color'>{{item.orderStatus}}</view>
+						</view>
+						<view class='item-info acea-row row-between row-top' v-for="(items,index) in item.orderInfoList"
+							:key="index">
+							<view class='text acea-row row-between'>
+								<view class='name line2'>{{items.storeName}}</view>
+								<view class='money'>
+									<view>x{{items.cartNum}}</view>
+								</view>
+							</view>
+						</view>
+						<view class='totalPrice'>共{{item.totalNum}}件商品</view>
+					</view>
+					<view class='bottom acea-row row-right row-middle'>
+						<view class='bnt cancelBnt' v-if="!item.paid" @click='cancelOrder(index,item.id)'>取消订单</view>
+						<view class='bnt bg-color' v-if="!item.paid" @click='goPay(item.payPrice,item.orderId)'>立即付款
+						</view>
+						<view class='bnt bg-color' v-else-if="item.status== 0 || item.status== 1 || item.status== 3"
+							@click='goOrderDetails(item.orderId)'>查看详情</view>
+						<view class='bnt bg-color' v-else-if="item.status==2" @click='goOrderDetails(item.orderId)'>去评价
+						</view>
+						<view class='bnt cancelBnt' v-if="item.status == 3" @click='delOrder(item.id,index)'>删除订单</view>
+					</view>
+				</view>
+			</view>
+			<view class='loadingicon acea-row row-center-wrapper' v-if="orderList.length>0">
+				<!-- <text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{loadTitle}} -->
+			</view>
+			<view v-if="orderList.length == 0">
+				<emptyPage title="暂无订单~"></emptyPage>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import emptyPage from '@/components/emptyPage.vue'
+	export default {
+		components: {
+			emptyPage,
+		},
+		data() {
+			return {
+				orderCategory: 0, //订单类别
+				orderStatus: 0, //订单状态
+				orderList: [{
+						"storeOrder": null,
+						"cartInfo": null,
+						"statusPic": null,
+						"offlinePayStatus": null,
+						"id": 5,
+						"orderId": "order29743171386437601053710",
+						"createTime": "2024-04-23 17:26:16",
+						"paid": true,
+						"payTime": "2024-04-23 17:26:16",
+						"payPrice": "34.00",
+						"status": 0,
+						"orderStatus": "待发货",
+						"totalNum": 3,
+						"payPostage": "0.00",
+						"refundStatus": 0,
+						"deliveryName": null,
+						"deliveryType": null,
+						"deliveryId": null,
+						"pinkId": 0,
+						"bargainId": 0,
+						"verifyCode": "",
+						"storeId": 0,
+						"shippingType": 1,
+						"activityType": "普通",
+						"orderInfoList": [{
+								"attrId": null,
+								"productId": 29,
+								"cartNum": 2,
+								"image": "http://127.0.0.1:8080/crmebimage/public/content/2024/04/06/5d572bca82e84c1bbb273af2d088d10fs26rxuhx0z.png",
+								"storeName": "四季乐韵：中外古典音乐品鉴",
+								"price": "14.00",
+								"isReply": null,
+								"sku": null
+							},
+							{
+								"attrId": null,
+								"productId": 65,
+								"cartNum": 1,
+								"image": "http://127.0.0.1:8080/crmebimage/public/content/2024/04/09/2e6231be90df405e8ae85b060c8f7795rvfz686ktu.png",
+								"storeName": "大学计算机基础——走进智能时代",
+								"price": "6.00",
+								"isReply": null,
+								"sku": null
+							}
+						],
+						"type": 0
+					},
+					{
+						"storeOrder": null,
+						"cartInfo": null,
+						"statusPic": null,
+						"offlinePayStatus": null,
+						"id": 4,
+						"orderId": "order49083171386429179992534",
+						"createTime": "2024-04-23 17:24:51",
+						"paid": true,
+						"payTime": "2024-04-23 17:24:51",
+						"payPrice": "36.00",
+						"status": 0,
+						"orderStatus": "待发货",
+						"totalNum": 2,
+						"payPostage": "0.00",
+						"refundStatus": 0,
+						"deliveryName": null,
+						"deliveryType": null,
+						"deliveryId": null,
+						"pinkId": 0,
+						"bargainId": 0,
+						"verifyCode": "",
+						"storeId": 0,
+						"shippingType": 1,
+						"activityType": "普通",
+						"orderInfoList": [{
+							"attrId": null,
+							"productId": 28,
+							"cartNum": 2,
+							"image": "http://127.0.0.1:8080/crmebimage/public/content/2024/04/06/d5d4086e099b4f2caaa95ede9bbce31fdr5ddtbchf.png",
+							"storeName": "中国古代青铜器保护与修复",
+							"price": "18.00",
+							"isReply": null,
+							"sku": null
+						}],
+						"type": 0
+					},
+					{
+						"storeOrder": null,
+						"cartInfo": null,
+						"statusPic": null,
+						"offlinePayStatus": null,
+						"id": 3,
+						"orderId": "order37571171386426024297558",
+						"createTime": "2024-04-23 17:24:20",
+						"paid": true,
+						"payTime": "2024-04-23 17:24:20",
+						"payPrice": "5.00",
+						"status": 0,
+						"orderStatus": "待发货",
+						"totalNum": 1,
+						"payPostage": "0.00",
+						"refundStatus": 0,
+						"deliveryName": null,
+						"deliveryType": null,
+						"deliveryId": null,
+						"pinkId": 0,
+						"bargainId": 0,
+						"verifyCode": "",
+						"storeId": 0,
+						"shippingType": 1,
+						"activityType": "普通",
+						"orderInfoList": [{
+							"attrId": null,
+							"productId": 62,
+							"cartNum": 1,
+							"image": "http://127.0.0.1:8080/crmebimage/public/content/2024/04/07/ea98229f2ebe49ddb49165071c7c27578xh5vb98wo.jpg",
+							"storeName": "怎样做一名优秀的大学生",
+							"price": "5.00",
+							"isReply": null,
+							"sku": null
+						}],
+						"type": 0
+					}
+				],
+				loadTitle: '加载更多', //提示语
+			}
+		},
+		methods: {
+			/**
+			 * 切换类别
+			 */
+			categoryClick: function(category) {
+				console.log(category)
+				if (category == this.orderCategory) return;
+				this.orderCategory = category;
+			},
+			/**
+			 * 切换状态
+			 */
+			statusClick: function(status) {
+				console.log(status)
+				if (status == this.orderStatus) return;
+				this.orderStatus = status;
+			},
+		}
+	}
+</script>
+<style scoped>
+	page {
+		width: 100%;
+		height: 100%;
+		background-color: #f8f8f8;
+	}
+</style>
+<style lang="scss">
+	.page {
+		width: 100%;
+		height: 100%;
+		background-color: #f8f8f8;
+
+		.order-category {
+			margin: 10rpx 12rpx;
+			padding: 10rpx 0;
+			border-radius: 12rpx;
+			background-color: #fdfdfd;
+
+			.category-row {
+				width: 100%;
+				height: 54rpx;
+				line-height: 54rpx;
+				margin: 15rpx 0;
+				display: flex;
+
+				.row-name {
+					text-align: center;
+					font-size: 30rpx;
+					font-weight: bolder;
+					color: #282828;
+					padding: 0 20rpx 0 30rpx;
+				}
+
+				.row-button {
+					border-radius: 8rpx;
+					border: 1px solid #7e7e7e;
+					display: flex;
+
+					.item {
+						width: 120rpx;
+						text-align: center;
+						font-size: 26rpx;
+						color: #282828;
+						border-right: 1px solid #7e7e7e;
+					}
+
+					.item:last-child {
+						border: none;
+					}
+
+					.item.on {
+						background-color: #1890ff;
+						color: #fff;
+					}
+				}
+			}
+		}
+
+		.order-list {
+			.list {
+				width: 720rpx;
+				margin: 14rpx auto 0 auto;
+
+				.item {
+					background-color: #fff;
+					border-radius: 14rpx;
+					margin-bottom: 14rpx;
+
+					.title {
+						height: 84rpx;
+						padding: 0 24rpx;
+						border-bottom: 1rpx solid #eee;
+						font-size: 28rpx;
+						color: #282828;
+
+						.sign {
+							font-size: 24rpx;
+							padding: 0 13rpx;
+							height: 36rpx;
+							margin-right: 15rpx;
+							border-radius: 18rpx;
+						}
+					}
+
+					.item-info {
+						padding: 0 24rpx;
+						margin-top: 22rpx;
+
+						.text {
+							width: 500rpx;
+							font-size: 28rpx;
+							color: #999;
+
+							.name {
+								width: 350rpx;
+								color: #282828;
+							}
+
+							.money {
+								text-align: right;
+							}
+						}
+					}
+
+					.totalPrice {
+						font-size: 26rpx;
+						color: #282828;
+						text-align: right;
+						margin: 27rpx 0 0 30rpx;
+						padding: 0 30rpx 30rpx 0;
+						border-bottom: 1rpx solid #eee;
+
+						.money {
+							font-size: 28rpx;
+							font-weight: bold;
+						}
+					}
+
+					.bottom {
+						height: 107rpx;
+						padding: 0 30rpx;
+
+						.bnt {
+							width: 176rpx;
+							height: 60rpx;
+							text-align: center;
+							line-height: 60rpx;
+							color: #fff;
+							border-radius: 50rpx;
+							font-size: 27rpx;
+						}
+					}
+				}
+			}
+		}
+	}
+</style>

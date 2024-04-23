@@ -121,6 +121,9 @@ public class User implements Serializable {
     @ApiModelProperty(value = "是否为推广员")
     private Boolean isPromoter;
 
+    @ApiModelProperty(value = "是否为管理员")
+    private Boolean isAdmin;
+
     @ApiModelProperty(value = "用户购买次数")
     private Integer payCount;
 
@@ -156,4 +159,7 @@ public class User implements Serializable {
 
     @ApiModelProperty(value = "成为分销员时间")
     private Date promoterTime;
+
+    @ApiModelProperty(value = "成为管理员时间")
+    private Date adminTime;
 }

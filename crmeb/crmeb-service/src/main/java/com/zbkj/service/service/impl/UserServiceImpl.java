@@ -541,6 +541,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 用户中心
+     *
      * @return UserCenterResponse
      */
     @Override
@@ -806,7 +807,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     /**
      * 更新推广员推广数
      *
-     * @param uid uid
+     * @param uid  uid
      * @param type add or sub
      */
     public Boolean updateSpreadCountByUid(Integer uid, String type) {
@@ -891,9 +892,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     /**
      * PC后台分销员列表
      *
-     * @param keywords             搜索参数
-     * @param dateLimit            时间参数
-     * @param pageRequest          分页参数
+     * @param keywords    搜索参数
+     * @param dateLimit   时间参数
+     * @param pageRequest 分页参数
      * @return PageInfo
      */
     @Override
@@ -999,8 +1000,8 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     /**
      * 根据条件获取会员对应信息列表
      *
-     * @param userId 用户id
-     * @param type  0=消费记录，1=积分明细，2=签到记录，3=持有优惠券，4=余额变动，5=好友关系
+     * @param userId           用户id
+     * @param type             0=消费记录，1=积分明细，2=签到记录，3=持有优惠券，4=余额变动，5=好友关系
      * @param pageParamRequest 分页参数
      * @return Object
      */
@@ -1357,6 +1358,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 绑定推广关系（登录状态）
+     *
      * @param spreadUid 推广人id
      */
     @Override
@@ -1487,11 +1489,15 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         if (!tempUser.getIsPromoter() && user.getIsPromoter()) {
             user.setPromoterTime(cn.hutool.core.date.DateUtil.date());
         }
+        if (!tempUser.getIsAdmin() && user.getIsAdmin()) {
+            user.setAdminTime(cn.hutool.core.date.DateUtil.date());
+        }
         return updateById(user);
     }
 
     /**
      * 根据手机号查询用户
+     *
      * @param phone 用户手机号
      * @return 用户信息
      */
@@ -1504,7 +1510,8 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 后台修改用户手机号
-     * @param id 用户uid
+     *
+     * @param id    用户uid
      * @param phone 手机号
      * @return Boolean
      */
@@ -1537,6 +1544,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 根据昵称匹配用户，返回id集合
+     *
      * @param nikeName 需要匹配得昵称
      * @return List
      */
@@ -1554,6 +1562,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 清除对应的用户等级
+     *
      * @param levelId 等级id
      */
     @Override
@@ -1566,6 +1575,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 更新用户会员等级
+     *
      * @param request request
      * @return Boolean
      */
@@ -1676,8 +1686,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 根据日期段获取注册用户数量
+     *
      * @param startDate 日期
-     * @param endDate 日期
+     * @param endDate   日期
      * @return UserOverviewResponse
      */
     @Override
@@ -1690,6 +1701,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 获取用户性别数据
+     *
      * @return List
      */
     @Override
@@ -1702,6 +1714,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 获取用户渠道数据
+     *
      * @return List
      */
     @Override
@@ -1714,6 +1727,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 获取所有用户的id跟地址
+     *
      * @return List
      */
     @Override
@@ -1725,6 +1739,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 修改个人资料
+     *
      * @param request 修改信息
      */
     @Override
@@ -1737,6 +1752,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 获取用户详情
+     *
      * @param id 用户uid
      */
     @Override
@@ -1750,6 +1766,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 根据日期获取注册用户数量
+     *
      * @param date 日期
      * @return Integer
      */
@@ -1763,7 +1780,8 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 更新用户等级
-     * @param uid 用户id
+     *
+     * @param uid     用户id
      * @param levelId 会员等级id
      * @return Boolean
      */

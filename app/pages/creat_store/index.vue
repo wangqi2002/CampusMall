@@ -170,9 +170,9 @@
 							show-img-resize @statuschange="onStatusChange" :read-only="readOnly" @ready="onEditorReady">
 						</editor>
 					</view>
-					<view>
+					<!-- <view>
 						<button @tap="getCon">打印文本内容</button>
-					</view>
+					</view> -->
 				</view>
 			</uni-row>
 			<uni-forms-item class="submission-options">
@@ -475,7 +475,7 @@
 	page {
 		width: 100%;
 		height: 100%;
-		background-color: #fff;
+		background-color: #fafafa;
 	}
 
 	.create-form /deep/ .uni-forms-item {
@@ -496,7 +496,7 @@
 		height: 100%;
 		display: flex;
 		flex-direction: column;
-		background-color: #fff;
+		background-color: #fafafa;
 
 		.create-step {
 			width: 100%;
@@ -507,7 +507,6 @@
 			width: 100%;
 			text-align: center;
 			flex: 1;
-			background-color: #fff;
 
 			.submission-form {
 				width: 100%;
@@ -598,7 +597,6 @@
 				width: 100%;
 				height: 180rpx;
 				margin: 0;
-				background-color: #fff;
 				position: fixed;
 				bottom: 0rpx;
 

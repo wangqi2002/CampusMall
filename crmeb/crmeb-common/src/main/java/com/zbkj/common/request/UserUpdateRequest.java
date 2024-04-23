@@ -64,4 +64,8 @@ public class UserUpdateRequest implements Serializable {
     @NotNull(message = "是否为推广员不能为空")
     private Boolean isPromoter;
 
+    @ApiModelProperty(value = "是否为管理员")
+    @NotNull(message = "是否为管理员不能为空")
+    private Boolean isAdmin;
+
 }

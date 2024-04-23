@@ -21,8 +21,8 @@
 			"style": {
 				"navigationBarTitleText": "个人中心",
 				"navigationBarBackgroundColor": "#e93323"
-				// #ifdef MP
-				,
+					// #ifdef MP
+					,
 				"navigationBarTextStyle": "#fff"
 				// #endif
 			}
@@ -38,6 +38,19 @@
 					"popGesture": "close"
 				}
 			}
+		},
+		{
+			"path": "pages/admin_order/index",
+			"style": {
+				"navigationBarTitleText": "订单管理",
+				"app-plus": {
+					"titleNView": {
+						"titleText": "订单管理"
+					},
+					"popGesture": "close"
+				}
+			}
+
 		},
 		{
 			"path": "pages/goods_details/index",
@@ -117,7 +130,7 @@
 					// #ifdef MP
 					,
 				"navigationBarTextStyle": "#fff"
-					// #endif
+				// #endif
 			}
 		}, {
 			"path": "pages/index/components/a_seckill",
@@ -130,8 +143,7 @@
 	"subPackages": [{
 			"root": "pages/users",
 			"name": "users",
-			"pages": [
-				{
+			"pages": [{
 					"path": "privacy/index",
 					"style": {
 						"navigationBarTitleText": "隐私协议"
@@ -139,8 +151,7 @@
 				},
 				{
 					"path": "web_page/index",
-					"style": {
-					}
+					"style": {}
 				},
 				{
 					"path": "retrievePassword/index",
@@ -210,7 +221,7 @@
 							// #ifdef MP
 							,
 						"navigationBarTextStyle": "#fff"
-							// #endif
+						// #endif
 					}
 				},
 				{
@@ -227,7 +238,7 @@
 							// #ifdef MP
 							,
 						"navigationBarTextStyle": "#fff"
-							// #endif
+						// #endif
 					}
 				},
 				{
@@ -238,7 +249,7 @@
 							// #ifdef MP
 							,
 						"navigationBarTextStyle": "#fff"
-							// #endif
+						// #endif
 					}
 				},
 				{
@@ -267,7 +278,7 @@
 							// #ifdef MP
 							,
 						"navigationBarTextStyle": "#fff"
-							// #endif
+						// #endif
 					}
 				},
 				{
@@ -284,7 +295,7 @@
 							// #ifdef MP 
 							,
 						"navigationBarTextStyle": "#fff"
-							// #endif
+						// #endif
 					}
 				},
 				{
@@ -307,7 +318,7 @@
 							// #ifdef MP
 							,
 						"navigationBarTextStyle": "#fff"
-							// #endif
+						// #endif
 					}
 				},
 				{
@@ -318,7 +329,7 @@
 							// #ifdef MP
 							,
 						"navigationBarTextStyle": "#fff"
-							// #endif
+						// #endif
 					}
 				},
 				{
@@ -329,7 +340,7 @@
 							// #ifdef MP 
 							,
 						"navigationBarTextStyle": "#fff"
-							// #endif
+						// #endif
 					}
 				},
 				{
@@ -340,7 +351,7 @@
 							// #ifdef MP
 							,
 						"navigationBarTextStyle": "#fff"
-							// #endif
+						// #endif
 					}
 				},
 				{
@@ -408,33 +419,33 @@
 					"path": "goods_bargain/index",
 					"style": {
 						"navigationBarTitleText": "砍价列表"
-						// #ifdef MP
+							// #ifdef MP
 							,
 						"navigationBarTextStyle": "black",
 						"navigationBarBackgroundColor": "#fff"
-							// #endif
+						// #endif
 					}
 				},
 				{
 					"path": "goods_bargain_details/index",
 					"style": {
 						"navigationBarTitleText": "砍价详情"
-						// #ifdef MP
-						,
+							// #ifdef MP
+							,
 						"navigationBarTextStyle": "black",
 						"navigationBarBackgroundColor": "#fff"
-							// #endif
+						// #endif
 					}
 				},
 				{
 					"path": "goods_combination/index",
 					"style": {
 						"navigationBarTitleText": "拼团列表"
-						// #ifdef MP || APP-PLUS
+							// #ifdef MP || APP-PLUS
 							,
 						"navigationBarTextStyle": "#fff",
 						"navigationBarBackgroundColor": "#e93323"
-							// #endif
+						// #endif
 					}
 				},
 				{
@@ -457,7 +468,7 @@
 							,
 						"navigationBarTextStyle": "#fff",
 						"navigationBarBackgroundColor": "#e93323"
-							// #endif
+						// #endif
 					}
 				},
 				{
@@ -467,7 +478,7 @@
 							// #ifdef MP
 							,
 						"navigationStyle": "custom"
-							// #endif
+						// #endif
 					}
 				},
 				{
@@ -478,7 +489,7 @@
 							,
 						"navigationBarTextStyle": "#fff",
 						"navigationBarBackgroundColor": "#e93323"
-							// #endif
+						// #endif
 					}
 				},
 				{

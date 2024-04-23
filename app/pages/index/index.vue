@@ -68,14 +68,22 @@
 				<!-- menu -->
 				<view class='nav acea-row' v-if="menus.length">
 					<block v-for="(item,index) in menus" :key="index">
-						<navigator class='item' v-if="item.show == '1'" :url='item.url' open-type='switchTab'
+						<navigator class='item' v-if="item.show == '1' &&  item.url !== '/pages/admin_order/index'"
+							:url='item.url' open-type='switchTab' hover-class='none'>
+							<view class='pictrue'>
+								<image :src='item.pic'></image>
+							</view>
+							<view class="menu-txt">{{item.name}}</view>
+						</navigator>
+						<navigator class='item' v-else-if="item.url !== '/pages/admin_order/index'" :url='item.url'
 							hover-class='none'>
 							<view class='pictrue'>
 								<image :src='item.pic'></image>
 							</view>
 							<view class="menu-txt">{{item.name}}</view>
 						</navigator>
-						<navigator class='item' v-else :url='item.url' hover-class='none'>
+						<navigator class='item' v-else-if="isLogin && userInfo.isAdmin" :url='item.url'
+							hover-class='none'>
 							<view class='pictrue'>
 								<image :src='item.pic'></image>
 							</view>
@@ -222,7 +230,7 @@
 	import Loading from '@/components/Loading/index.vue';
 	const arrTemp = ["beforePay", "afterPay", "refundApply", "beforeRecharge", "createBargain", "pink"];
 	export default {
-		computed: mapGetters(['isLogin', 'uid']),
+		computed: mapGetters(['isLogin', 'userInfo', 'uid']),
 		components: {
 			tabNav,
 			goodList,
@@ -470,6 +478,7 @@
 					uni.setNavigationBarTitle({
 						title: '首页'
 					})
+					console.log(res.data)
 					that.$set(that, "logoUrl", res.data.logoUrl);
 					that.$set(that, "site_name", '首页');
 					that.$set(that, "imgUrls", res.data.banner);

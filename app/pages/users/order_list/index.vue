@@ -337,6 +337,7 @@
 					let list = res.data.list || [];
 					let loadend = list.length < that.limit;
 					that.orderList = that.$util.SplitArray(list, that.orderList);
+					console.log(that.orderList)
 					that.$set(that, 'orderList', that.orderList);
 					that.loadend = loadend;
 					that.loading = false;

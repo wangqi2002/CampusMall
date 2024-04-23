@@ -203,7 +203,6 @@
 				let that = this;
 				getUserInfo().then(res => {
 					uni.hideLoading();
-					console.log(res.data)
 					that.$store.commit("UPDATE_USERINFO", res.data);
 					// #ifdef MP 
 					that.$util.Tips({
