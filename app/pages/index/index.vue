@@ -470,15 +470,11 @@
 			// 首页数据
 			getIndexConfig: function() {
 				let that = this;
-				console.log({
-					username: '18712341234',
-					pwd: 'abcABC123'
-				})
 				getIndexData().then(res => {
 					uni.setNavigationBarTitle({
 						title: '首页'
 					})
-					console.log(res.data)
+					// console.log(res.data)
 					that.$set(that, "logoUrl", res.data.logoUrl);
 					that.$set(that, "site_name", '首页');
 					that.$set(that, "imgUrls", res.data.banner);

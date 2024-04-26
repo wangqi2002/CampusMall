@@ -1246,7 +1246,6 @@ export default {
     },
     // 提交
     handleSubmit: Debounce(function (name) {
-      console.log("start--",this.formValidate)
       this.onChangeGroup()
       if (this.formValidate.specType && this.formValidate.attr.length < 1) return this.$message.warning("请填写多规格属性！");
       this.formValidate.cateId = this.formValidate.cateIds.join(',')

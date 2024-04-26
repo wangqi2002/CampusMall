@@ -390,6 +390,10 @@ public class Constants {
     public static final int ORDER_STATUS_H5_JUDGE = 3; // 待评价
     public static final int ORDER_STATUS_H5_COMPLETE = 4; // 已完成
     public static final int ORDER_STATUS_H5_VERIFICATION = 5; // 待核销
+    public static final int ORDER_STATUS_H5_DELIVERY = 6; // 待出库
+    public static final int ORDER_STATUS_H5_RECYCLE = 7; // 待回收
+    public static final int ORDER_STATUS_H5_STORAGE = 8; // 待入库
+    public static final int ORDER_STATUS_H5_LISTING = 9; // 待上架
     public static final int ORDER_STATUS_H5_REFUNDING = -1; // 退款中
     public static final int ORDER_STATUS_H5_REFUNDED = -2; // 已退款
     public static final int ORDER_STATUS_H5_REFUND = -3; // 退款

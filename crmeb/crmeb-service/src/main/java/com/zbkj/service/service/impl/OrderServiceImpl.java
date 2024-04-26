@@ -491,6 +491,18 @@ public class OrderServiceImpl implements OrderService {
         if (storeOrder.getStatus().equals(3)) {
             return "已完成";
         }
+        if (storeOrder.getStatus().equals(4)) {
+            return "待出库";
+        }
+        if (storeOrder.getStatus().equals(5)) {
+            return "待回收";
+        }
+        if (storeOrder.getStatus().equals(6)) {
+            return "待入库";
+        }
+        if (storeOrder.getStatus().equals(7)) {
+            return "待上架";
+        }
         return "";
     }
 

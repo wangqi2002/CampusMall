@@ -52,6 +52,28 @@
 							</view>
 							<view class='font-color'>{{item.orderStatus}}</view>
 						</view>
+						<view class='user-info acea-row row-between-wrapper'>
+							<view class="acea-row row-middle">
+								<view class='text acea-row row-between'>
+									<view class='sign line2'>姓名：</view>
+									<view class='info'>
+										<view>{{item.realName}}</view>
+									</view>
+								</view>
+								<view class='text acea-row row-between'>
+									<view class='sign line2'>电话：</view>
+									<view class='info'>
+										<view>{{item.userPhone}}</view>
+									</view>
+								</view>
+								<view class='text acea-row row-between'>
+									<view class='sign line2'>详细地址：</view>
+									<view class='info'>
+										<view>{{item.userAddress}}</view>
+									</view>
+								</view>
+							</view>
+						</view>
 						<view class='item-info acea-row row-between row-top' v-for="(items,index) in item.orderInfoList"
 							:key="index">
 							<view class='text acea-row row-between'>
@@ -103,6 +125,9 @@
 						"id": 5,
 						"orderId": "order29743171386437601053710",
 						"createTime": "2024-04-23 17:26:16",
+						"realName": "大可",
+						"userPhone": "18712341234",
+						"userAddress": "安徽省马鞍山市雨山区安工大",
 						"paid": true,
 						"payTime": "2024-04-23 17:26:16",
 						"payPrice": "34.00",
@@ -151,6 +176,9 @@
 						"id": 4,
 						"orderId": "order49083171386429179992534",
 						"createTime": "2024-04-23 17:24:51",
+						"realName": "大可",
+						"userPhone": "18712341234",
+						"userAddress": "安徽省马鞍山市雨山区安工大",
 						"paid": true,
 						"payTime": "2024-04-23 17:24:51",
 						"payPrice": "36.00",
@@ -188,6 +216,9 @@
 						"id": 3,
 						"orderId": "order37571171386426024297558",
 						"createTime": "2024-04-23 17:24:20",
+						"realName": "大可",
+						"userPhone": "18712341234",
+						"userAddress": "安徽省马鞍山市雨山区安工大",
 						"paid": true,
 						"payTime": "2024-04-23 17:24:20",
 						"payPrice": "5.00",
@@ -326,12 +357,35 @@
 						}
 					}
 
+					.user-info {
+						border-bottom: 1rpx solid #eee;
+						font-size: 28rpx;
+						color: #282828;
+
+						.text {
+							width: 100%;
+							font-size: 28rpx;
+							padding: 0 24rpx;
+							margin: 10rpx 0;
+							color: #999;
+
+							.sign {
+								width: 140rpx;
+								color: #282828;
+							}
+
+							.info {
+								text-align: left;
+							}
+						}
+					}
+
 					.item-info {
 						padding: 0 24rpx;
 						margin-top: 22rpx;
 
 						.text {
-							width: 500rpx;
+							width: 100%;
 							font-size: 28rpx;
 							color: #999;
 

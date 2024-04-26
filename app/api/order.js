@@ -197,6 +197,16 @@ export function orderCreate(data) {
 }
 
 /**
+ * 订单创建
+ * @param string key
+ * @param object data
+ * 
+ */
+export function recycleOrderCreate(data) {
+	return request.post('order/create/recycle', data);
+}
+
+/**
  * 计算订单金额
  * @param key
  * @param data

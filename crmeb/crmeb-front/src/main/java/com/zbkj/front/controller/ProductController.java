@@ -6,9 +6,11 @@ import com.zbkj.common.page.CommonPage;
 import com.zbkj.common.request.PageParamRequest;
 import com.zbkj.common.request.ProductListRequest;
 import com.zbkj.common.request.ProductRequest;
+import com.zbkj.common.request.StoreProductAddRequest;
 import com.zbkj.common.response.*;
 import com.zbkj.common.vo.CategoryTreeVo;
 import com.zbkj.front.service.ProductService;
+import com.zbkj.service.service.StoreProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -41,6 +43,23 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private StoreProductService storeProductService;
+
+    /**
+     * 新增商品
+     * @param request 新增参数
+     */
+    @ApiOperation(value = "新增商品")
+    @RequestMapping(value = "/product/save", method = RequestMethod.POST)
+    public CommonResult<String> save(@RequestBody @Validated StoreProductAddRequest request) {
+        if (storeProductService.save(request)) {
+            return CommonResult.success();
+        } else {
+            return CommonResult.failed();
+        }
+    }
 
     /**
      * 热门商品推荐

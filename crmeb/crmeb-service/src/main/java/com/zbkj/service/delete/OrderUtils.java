@@ -158,6 +158,26 @@ public class OrderUtils {
                 queryWrapper.eq(StoreOrder::getStatus, 3);
                 queryWrapper.eq(StoreOrder::getRefundStatus, 0);
                 break;
+            case Constants.ORDER_STATUS_H5_DELIVERY: // 待出库
+                queryWrapper.eq(StoreOrder::getPaid, true);
+                queryWrapper.eq(StoreOrder::getStatus, 4);
+                queryWrapper.eq(StoreOrder::getRefundStatus, 0);
+                break;
+            case Constants.ORDER_STATUS_H5_RECYCLE: // 待回收
+                queryWrapper.eq(StoreOrder::getPaid, true);
+                queryWrapper.eq(StoreOrder::getStatus, 5);
+                queryWrapper.eq(StoreOrder::getRefundStatus, 0);
+                break;
+            case Constants.ORDER_STATUS_H5_STORAGE: // 待入库
+                queryWrapper.eq(StoreOrder::getPaid, true);
+                queryWrapper.eq(StoreOrder::getStatus, 6);
+                queryWrapper.eq(StoreOrder::getRefundStatus, 0);
+                break;
+            case Constants.ORDER_STATUS_H5_LISTING: // 待上架
+                queryWrapper.eq(StoreOrder::getPaid, true);
+                queryWrapper.eq(StoreOrder::getStatus, 7);
+                queryWrapper.eq(StoreOrder::getRefundStatus, 0);
+                break;
             case Constants.ORDER_STATUS_H5_REFUNDING: // 退款中
                 queryWrapper.eq(StoreOrder::getPaid, true);
                 queryWrapper.in(StoreOrder::getRefundStatus, 1, 3);

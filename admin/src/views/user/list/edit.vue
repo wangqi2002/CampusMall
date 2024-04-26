@@ -19,12 +19,12 @@
         <el-option v-for="(item, index) in labelLists" :key="index" :value="item.id" :label="item.name" />
       </el-select>
     </el-form-item>
-    <el-form-item label="推广员">
+    <!-- <el-form-item label="推广员">
       <el-radio-group v-model="ruleForm.isPromoter">
         <el-radio :label="true">开启</el-radio>
         <el-radio :label="false">关闭</el-radio>
       </el-radio-group>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="管理员">
       <el-radio-group v-model="ruleForm.isAdmin">
         <el-radio :label="true">开启</el-radio>

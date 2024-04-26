@@ -180,7 +180,7 @@
 				if (!value.nickname) return that.$util.Tips({
 					title: '用户姓名不能为空'
 				});
-				value.avatar = that.newAvatar?that.newAvatar:that.userInfo.avatar;
+				value.avatar = that.newAvatar ? that.newAvatar : that.userInfo.avatar;
 				userEdit(value).then(res => {
 					that.$store.commit("changInfo", {
 						amount1: 'avatar',

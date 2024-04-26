@@ -48,6 +48,15 @@ public class OrderDetailResponse implements Serializable {
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
+    @ApiModelProperty(value = "用户姓名")
+    private String realName;
+
+    @ApiModelProperty(value = "用户电话")
+    private String userPhone;
+
+    @ApiModelProperty(value = "详细地址")
+    private String userAddress;
+
     @ApiModelProperty(value = "支付状态")
     private Boolean paid;
 

@@ -12,6 +12,15 @@ export function getProductDetail(id, type) {
 }
 
 /**
+ * 新增商品
+ * @param pram
+ * 
+ */
+export function productCreateApi(data) {
+	return request.post('product/save', data, {});
+}
+
+/**
  * 产品分享二维码 推广员
  * @param int id
  */

@@ -14,8 +14,8 @@
 					</uni-forms-item>
 				</uni-col>
 				<uni-col v-bind="grid2">
-					<uni-forms-item label="商品分类：" name="cateIds" label-width="100px" required>
-						<uni-data-picker class="selWidth" v-model="formValidate.cateIds" :localdata="merCateList"
+					<uni-forms-item label="商品分类：" name="cateId" label-width="100px" required>
+						<uni-data-picker class="selWidth" v-model="formValidate.cateId" :localdata="merCateList"
 							:map="merCateMap" popup-title="商品分类" placeholder="选择分类" :disabled="isDisabled">
 						</uni-data-picker>
 					</uni-forms-item>
@@ -42,37 +42,39 @@
 				</uni-col>
 				<uni-col v-bind="grid2">
 					<uni-forms-item label="商品封面图：" name="image" label-width="100px" required>
-						<view v-if="formValidate.image" class="pictrue">
-							<image class="pictrue" :src='formValidate.image'></image>
-						</view>
-						<view v-else class="upLoad">
-							<uni-icons class="upLoad-icon" type="image" size="40"></uni-icons>
+						<view @click.stop='uploadpic(0)'>
+							<view v-if="formValidate.image" class="pictrue">
+								<image class="pictrue" :src='formValidate.image'></image>
+							</view>
+							<view v-else class="upLoad">
+								<uni-icons class="upLoad-icon" type="image" size="40"></uni-icons>
+							</view>
 						</view>
 					</uni-forms-item>
 				</uni-col>
 			</uni-row>
 			<uni-row class="submission-form" v-show="currentTab === 1">
 				<uni-col v-bind="grid2">
-					<uni-forms-item label="商品售价：" name="storeName" label-width="100px" required>
-						<uni-easyinput v-model="formValidate.attrValue.price" type="number" placeholder="请输入商品售价"
+					<uni-forms-item label="商品售价：" name="['attrValue[0]','price']" label-width="100px" required>
+						<uni-easyinput v-model="formValidate.attrValue[0].price" type="number" placeholder="请输入商品售价"
 							:styles="inputStyles" :disabled="isDisabled"></uni-easyinput>
 					</uni-forms-item>
 				</uni-col>
 				<uni-col v-bind="grid2">
-					<uni-forms-item label="商品成本价：" name="storeName" label-width="100px" required>
-						<uni-easyinput v-model="formValidate.attrValue.cost" type="number" placeholder="请输入商品成本价"
+					<uni-forms-item label="商品成本价：" name="['attrValue[0]','cost']" label-width="100px" required>
+						<uni-easyinput v-model="formValidate.attrValue[0].cost" type="number" placeholder="请输入商品成本价"
 							:styles="inputStyles" :disabled="isDisabled"></uni-easyinput>
 					</uni-forms-item>
 				</uni-col>
 				<uni-col v-bind="grid2">
-					<uni-forms-item label="商品原价：" name="storeName" label-width="100px" required>
-						<uni-easyinput v-model="formValidate.attrValue.otPrice" type="number" placeholder="请输入商品原价："
+					<uni-forms-item label="商品原价：" name="['attrValue[0]','otPrice']" label-width="100px" required>
+						<uni-easyinput v-model="formValidate.attrValue[0].otPrice" type="number" placeholder="请输入商品原价："
 							:styles="inputStyles" :disabled="isDisabled"></uni-easyinput>
 					</uni-forms-item>
 				</uni-col>
 				<uni-col v-bind="grid2">
-					<uni-forms-item label="商品数量：" name="storeName" label-width="100px" required>
-						<uni-easyinput v-model="formValidate.attrValue.stock" type="number" placeholder="请输入商品数量："
+					<uni-forms-item label="商品数量：" name="['attrValue[0]','stock']" label-width="100px" required>
+						<uni-easyinput v-model="formValidate.attrValue[0].stock" type="number" placeholder="请输入商品数量："
 							:styles="inputStyles" :disabled="isDisabled"></uni-easyinput>
 					</uni-forms-item>
 				</uni-col>
@@ -86,8 +88,10 @@
 								</uni-icons>
 							</view>
 							<view v-if="formValidate.sliderImages.length < 5 && !isDisabled" class="upLoad" @click="">
-								<view class="upLoad">
-									<uni-icons class="upLoad-icon" type="image" size="40"></uni-icons>
+								<view @click.stop='uploadpic(1)'>
+									<view class="upLoad">
+										<uni-icons class="upLoad-icon" type="image" size="40"></uni-icons>
+									</view>
 								</view>
 							</view>
 						</view>
@@ -167,12 +171,10 @@
 					</view>
 					<view class="editor-wrapper">
 						<editor id="editor" class="ql-container" placeholder="开始输入..." show-img-size show-img-toolbar
-							show-img-resize @statuschange="onStatusChange" :read-only="readOnly" @ready="onEditorReady">
+							show-img-resize @statuschange="onStatusChange" :read-only="readOnly" @ready="onEditorReady"
+							@blur="getCon">
 						</editor>
 					</view>
-					<!-- <view>
-						<button @tap="getCon">打印文本内容</button>
-					</view> -->
 				</view>
 			</uni-row>
 			<uni-forms-item class="submission-options">
@@ -180,7 +182,8 @@
 					@click="handleSubmitUp">上一步</button>
 				<button class="submission" type="primary" v-show="currentTab<2"
 					@click="handleSubmitNest('formValidate')">下一步</button>
-				<button class="submission" type="primary" v-show="currentTab===2" @click="submit">提交</button>
+				<button class="submission" type="primary" v-show="currentTab===2"
+					@click="handleSubmit('formValidate')">提交</button>
 			</uni-forms-item>
 		</uni-forms>
 	</view>
@@ -188,13 +191,18 @@
 
 <script>
 	import {
-		getCategoryListTree
+		getCategoryListTree,
+		productCreateApi
 	} from '@/api/store.js';
+	import {
+		recycleOrderCreate
+	} from '@/api/order.js';
+	import {
+		Debounce
+	} from '@/utils/validate'
 	const defaultObj = {
 		image: '',
-		sliderImages: ["/static/images/canbj.png", "/static/images/bargainBg.jpg", "/static/images/money.png",
-			"/static/images/red-packets.png"
-		],
+		sliderImages: [],
 		videoLink: '',
 		sliderImage: '',
 		storeName: '',
@@ -212,7 +220,7 @@
 		isGood: false,
 		isHot: false,
 		isBest: false,
-		tempId: '',
+		tempId: 1,
 		attrValue: [{
 			image: '',
 			price: 0,
@@ -221,9 +229,16 @@
 			stock: 0,
 			barCode: '',
 			weight: 0,
-			volume: 0
+			volume: 0,
+			attrValue: JSON.stringify({
+				'规格': '默认'
+			})
 		}],
-		attr: [],
+		attr: [{
+			attrName: "规格",
+			attrValues: "默认",
+			id: 0
+		}],
 		selectRule: '',
 		isSub: false,
 		content: '',
@@ -240,54 +255,48 @@
 				merCateList: [],
 				formValidate: Object.assign({}, defaultObj),
 				ruleValidate: {
-					storeName: [{
-						required: true,
-						message: '请输入商品名称',
-						trigger: 'blur'
-					}],
-					cateIds: [{
-						required: true,
-						message: '请选择商品分类',
-						trigger: 'change',
-						type: 'array',
-						min: '1'
-					}],
-					keyword: [{
-						required: true,
-						message: '请输入商品关键字',
-						trigger: 'blur'
-					}],
-					unitName: [{
-						required: true,
-						message: '请输入单位',
-						trigger: 'blur'
-					}],
-					storeInfo: [{
-						required: true,
-						message: '请输入商品简介',
-						trigger: 'blur'
-					}],
-					tempId: [{
-						required: true,
-						message: '请选择运费模板',
-						trigger: 'change'
-					}],
-					image: [{
-						required: true,
-						message: '请上传商品图',
-						trigger: 'change'
-					}],
-					sliderImages: [{
-						required: true,
-						message: '请上传商品轮播图',
-						type: 'array',
-						trigger: 'change'
-					}],
-					specType: [{
-						required: true,
-						message: '请选择商品规格',
-						trigger: 'change'
-					}]
+					storeName: {
+						rules: [{
+							required: true,
+							errorMessage: '请输入商品名称',
+						}]
+					},
+					cateId: {
+						rules: [{
+							required: true,
+							errorMessage: '请选择商品分类'
+						}]
+					},
+					keyword: {
+						rules: [{
+							required: true,
+							errorMessage: '请输入商品关键字'
+						}]
+					},
+					unitName: {
+						rules: [{
+							required: true,
+							errorMessage: '请输入单位'
+						}]
+					},
+					storeInfo: {
+						rules: [{
+							required: true,
+							errorMessage: '请输入商品简介'
+						}]
+					},
+					image: {
+						rules: [{
+							required: true,
+							errorMessage: '请上传商品图'
+						}]
+					},
+					sliderImages: {
+						rules: [{
+							required: true,
+							errorMessage: '请上传商品轮播图'
+						}]
+					}
 				},
 
 				//配置项
@@ -340,10 +349,10 @@
 			getCon() {
 				this.editorCtx.getContents({
 					success: (res) => {
-						console.log('文本详情：', res)
+						this.formValidate.content = res.html
 					},
 					fail: (err) => {
-						// console.log(err)
+						console.log(err)
 					}
 				})
 			},
@@ -417,6 +426,25 @@
 			},
 
 			//表单操作
+			/**
+			 * 上传文件
+			 * 
+			 */
+			uploadpic: function(val) {
+				let that = this;
+				that.$util.uploadImageOne({
+					url: 'user/upload/image',
+					name: 'multipart',
+					model: "content",
+					pid: 1
+				}, function(res) {
+					if (!val) {
+						that.formValidate.image = res.data.url;
+						that.formValidate.attrValue[0].image = res.data.url;
+					}
+					that.formValidate.sliderImages.push(res.data.url)
+				});
+			},
 			handleRemove(i) {
 				this.formValidate.sliderImages.splice(i, 1)
 			},
@@ -424,27 +452,53 @@
 				if (this.currentTab-- < 0) this.currentTab = 0;
 			},
 			handleSubmitNest(name) {
-				if (this.currentTab++ > 2) this.currentTab = 0;
-				// this.$refs[name].validate((valid) => {
-				// 	if (valid) {
-				// 		if (this.currentTab++ > 2) this.currentTab = 0;
-				// 	} else {
-				// 		if (!this.formValidate.store_name || !this.formValidate.cate_id || !this.formValidate
-				// 			.keyword ||
-				// 			!this.formValidate.unit_name || !this.formValidate.store_info ||
-				// 			!this.formValidate.image || !this.formValidate.slider_image) {
-				// 			this.$message.warning("请填写完整商品信息！");
-				// 		}
-				// 	}
-				// })
-			},
-			submit() {
-				this.$refs.form.validate().then(res => {
-					console.log('表单数据信息：', res);
+				// if (this.currentTab++ > 2) this.currentTab = 0;
+				this.$refs[name].validate().then(res => {
+					if (this.currentTab++ > 2) this.currentTab = 0;
 				}).catch(err => {
-					console.log('表单错误信息：', err);
+					if (!this.formValidate.storeName || !this.formValidate.cateId || !this.formValidate
+						.keyword ||
+						!this.formValidate.unitName || !this.formValidate.storeInfo ||
+						!this.formValidate.image || !this.formValidate.sliderImage) {
+						this.$util.Tips({
+							title: '请填写完整商品信息！'
+						});
+					}
 				})
 			},
+			handleSubmit: Debounce(function(name) {
+				this.formValidate.cateIds.push(this.formValidate.cateId)
+				this.formValidate.sliderImage = JSON.stringify(this.formValidate.sliderImages)
+				this.$refs[name].validate().then(res => {
+					console.log(this.formValidate)
+					productCreateApi(this.formValidate).then(async res => {
+						this.$util.Tips({
+							title: '新增成功！',
+							duration: 2000,
+							icon: 'success'
+						});
+						
+						// recycleOrderCreate(data).then(res => {
+						// }).catch(err => {
+						// 	uni.hideLoading();
+						// 	return that.$util.Tips({
+						// 		title: err
+						// 	});
+						// });
+						
+						setTimeout(() => {
+							this.currentTab = 0
+							this.formValidate = Object.assign({}, defaultObj)
+						}, 500);
+					}).catch(res => {
+						console.log(res)
+					})
+				}).catch(err => {
+					this.$util.Tips({
+						title: '请填写完整商品信息！'
+					});
+				})
+			}),
 
 			//功能函数
 			filerMerCateList(treeData) {

@@ -81,7 +81,7 @@ public class UploadServiceImpl implements UploadService {
             throw new CrmebException("上传的文件对象不存在...");
         }
 
-//        String rootPath = (systemConfigService.getValueByKey(Constants.UPLOAD_ROOT_PATH_CONFIG_KEY) + "/").replace(" ", "").replace("//", "/");
+        // String rootPath = (systemConfigService.getValueByKey(Constants.UPLOAD_ROOT_PATH_CONFIG_KEY) + "/").replace(" ", "").replace("//", "/");
         String rootPath = crmebConfig.getImagePath().replace(" ", "").replace("//", "/");
         UploadUtil.setModelPath(model);
         String modelPath = "public/" + model + "/";

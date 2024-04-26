@@ -74,6 +74,15 @@ public class StoreOrderController {
     }
 
     /**
+     * 创建订单
+     */
+    @ApiOperation(value = "创建订单")
+    @RequestMapping(value = "/create/recycle", method = RequestMethod.POST)
+    public CommonResult<Map<String, Object>> createRecycleOrder(@Validated @RequestBody CreateOrderRequest orderRequest) {
+        return CommonResult.success(orderService.createOrder(orderRequest));
+    }
+
+    /**
      * 订单列表
      * @param type 类型
      * @param pageRequest 分页
