@@ -1,6 +1,7 @@
 package com.zbkj.front.controller;
 
 
+import cn.hutool.core.util.ObjectUtil;
 import com.zbkj.common.model.product.StoreProduct;
 import com.zbkj.common.page.CommonPage;
 import com.zbkj.common.request.PageParamRequest;
@@ -9,6 +10,7 @@ import com.zbkj.common.request.ProductRequest;
 import com.zbkj.common.request.StoreProductAddRequest;
 import com.zbkj.common.response.*;
 import com.zbkj.common.vo.CategoryTreeVo;
+import com.zbkj.common.vo.MyRecord;
 import com.zbkj.front.service.ProductService;
 import com.zbkj.service.service.StoreProductService;
 import io.swagger.annotations.Api;
@@ -22,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户 -- 用户中心
@@ -53,9 +56,10 @@ public class ProductController {
      */
     @ApiOperation(value = "新增商品")
     @RequestMapping(value = "/product/save", method = RequestMethod.POST)
-    public CommonResult<String> save(@RequestBody @Validated StoreProductAddRequest request) {
-        if (storeProductService.save(request)) {
-            return CommonResult.success();
+    public CommonResult<Map<String, Object>> save(@RequestBody @Validated StoreProductAddRequest request) {
+        MyRecord record = storeProductService.save(request);
+        if (!ObjectUtil.isNull(record.get("productId"))) {
+            return CommonResult.success(record);
         } else {
             return CommonResult.failed();
         }

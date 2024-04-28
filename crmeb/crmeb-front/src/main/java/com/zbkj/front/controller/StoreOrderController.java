@@ -74,12 +74,12 @@ public class StoreOrderController {
     }
 
     /**
-     * 创建订单
+     * 创建回收订单
      */
-    @ApiOperation(value = "创建订单")
+    @ApiOperation(value = "创建回收订单")
     @RequestMapping(value = "/create/recycle", method = RequestMethod.POST)
-    public CommonResult<Map<String, Object>> createRecycleOrder(@Validated @RequestBody CreateOrderRequest orderRequest) {
-        return CommonResult.success(orderService.createOrder(orderRequest));
+    public CommonResult<Map<String, Object>> createRecycleOrder(@Validated @RequestBody CreateRecycleOrderRequest orderRequest) {
+        return CommonResult.success(orderService.createRecycleOrder(orderRequest));
     }
 
     /**

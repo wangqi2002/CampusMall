@@ -240,7 +240,7 @@ public class StoreProductServiceImpl extends ServiceImpl<StoreProductDao, StoreP
      * @return 新增结果
      */
     @Override
-    public Boolean save(StoreProductAddRequest request) {
+    public MyRecord save(StoreProductAddRequest request) {
         // 多规格需要校验规格参数
         if (!request.getSpecType()) {
             if (request.getAttrValue().size() > 1) {
@@ -349,7 +349,12 @@ public class StoreProductServiceImpl extends ServiceImpl<StoreProductDao, StoreP
             return Boolean.TRUE;
         });
 
-        return execute;
+        MyRecord record = new MyRecord();
+        if(execute){
+            record.set("productId", storeProduct.getId());
+            record.set("attrValueId", attrValueList.get(0).getId());
+        }
+        return record;
     }
 
     /**

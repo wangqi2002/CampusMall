@@ -1209,6 +1209,96 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * 创建回收订单
+     * @param request 创建订单请求参数
+     * @return MyRecord 订单编号
+     */
+    @Override
+    public MyRecord createRecycleOrder(CreateRecycleOrderRequest request) {
+        User user = userService.getInfoException();
+
+        // 生成订单号
+        String orderNo = CrmebUtil.getOrderNo("order");
+
+        StoreProductAttrValue attrValue = attrValueService.getByIdAndProductIdAndType(request.getAttrValueId(), request.getProductId(), Constants.PRODUCT_TYPE_NORMAL);
+        StoreProduct storeProduct = storeProductService.getById(request.getProductId());
+
+        List<StoreOrderInfo> storeOrderInfos = new ArrayList<>();
+        StoreOrderInfo soInfo = new StoreOrderInfo();
+        soInfo.setProductId(request.getProductId());
+        soInfo.setInfo(JSON.toJSON(attrValue).toString());
+        soInfo.setUnique(attrValue.getId().toString());
+        soInfo.setOrderNo(orderNo);
+        soInfo.setProductName(storeProduct.getStoreName());
+        soInfo.setAttrValueId(attrValue.getId());
+        soInfo.setImage(StrUtil.isNotBlank(attrValue.getImage()) ? attrValue.getImage() : storeProduct.getImage());
+        soInfo.setSku(attrValue.getSuk());
+        soInfo.setPrice(attrValue.getPrice());
+        soInfo.setPayNum(storeProduct.getStock());
+        soInfo.setWeight(attrValue.getWeight());
+        soInfo.setVolume(attrValue.getVolume());
+        soInfo.setGiveIntegral(0);
+        soInfo.setIsReply(true);
+        soInfo.setIsSub(true);
+        soInfo.setProductType(Constants.PRODUCT_TYPE_NORMAL);
+        soInfo.setVipPrice(attrValue.getPrice());
+        storeOrderInfos.add(soInfo);
+
+        StoreOrder storeOrder = new StoreOrder();
+        storeOrder.setUid(user.getUid());
+        storeOrder.setOrderId(orderNo);
+        storeOrder.setRealName(request.getRealName());
+        storeOrder.setUserPhone(request.getPhone());
+        storeOrder.setUserAddress(request.getAddress());
+        storeOrder.setTotalNum(request.getProductNum());
+        storeOrder.setCouponId(0);
+        storeOrder.setTotalPrice(BigDecimal.valueOf(0));
+        storeOrder.setProTotalPrice(BigDecimal.valueOf(0));
+        storeOrder.setTotalPostage(BigDecimal.valueOf(0));
+        storeOrder.setCouponPrice(BigDecimal.valueOf(0));
+        storeOrder.setPayPrice(BigDecimal.valueOf(0));
+        storeOrder.setPayPostage(BigDecimal.valueOf(0));
+        storeOrder.setDeductionPrice(BigDecimal.valueOf(0));
+        storeOrder.setPayType("shou");
+        storeOrder.setUseIntegral(0);
+        storeOrder.setGainIntegral(0);
+        storeOrder.setMark("");
+        storeOrder.setCombinationId(0);
+        storeOrder.setPinkId(0);
+        storeOrder.setSeckillId(0);
+        storeOrder.setBargainId(0);
+        storeOrder.setBargainUserId(0);
+        storeOrder.setCreateTime(DateUtil.nowDateTime());
+        storeOrder.setShippingType(1);
+        storeOrder.setIsChannel(9);
+        storeOrder.setPaid(true);
+        storeOrder.setCost(BigDecimal.ZERO);
+        storeOrder.setType(0);
+
+        Boolean execute = transactionTemplate.execute(e -> {
+            storeOrderService.create(storeOrder);
+            storeOrderInfos.forEach(info -> info.setOrderId(storeOrder.getId()));
+
+            // 保存购物车商品详情
+            storeOrderInfoService.saveOrderInfos(storeOrderInfos);
+            // 生成订单日志
+            storeOrderStatusService.createLog(storeOrder.getId(), Constants.ORDER_STATUS_CREATE_ORDER, "回收订单生成");
+
+            return Boolean.TRUE;
+        });
+        if (!execute) {
+            throw new CrmebException("订单生成失败");
+        }
+
+        // 发送后台管理员下单提醒通知短信
+        sendAdminOrderNotice(storeOrder.getOrderId());
+
+        MyRecord record = new MyRecord();
+        record.set("orderNo", storeOrder.getOrderId());
+        return record;
+    }
+
+    /**
      * 获取支付配置
      * @return PreOrderResponse
      */

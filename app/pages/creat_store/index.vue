@@ -1,7 +1,7 @@
 <template>
 	<view class="create-page">
 		<view class="create-step">
-			<uni-steps :options="[{title: '商品信息'}, {title: '商品详情'}, {title: '商品介绍'}]" :active="currentTab">
+			<uni-steps :options="[{title: '商品信息'}, {title: '商品详情'}, {title: '个人信息'}]" :active="currentTab">
 			</uni-steps>
 		</view>
 		<uni-forms class="create-form" ref="formValidate" :modelValue="formValidate" :rules="ruleValidate"
@@ -97,85 +97,113 @@
 						</view>
 					</uni-forms-item>
 				</uni-col>
+				<uni-col v-bind="grid2">
+					<view class="wrapper">
+						<view class="editor-lable">商品介绍：</view>
+						<view class='toolbar' @tap="format" style="height: 80px;overflow-y: auto;">
+							<view :class="formats.bold ? 'ql-active' : ''" class="iconfont icon-zitijiacu"
+								data-name="bold">
+							</view>
+							<view :class="formats.italic ? 'ql-active' : ''" class="iconfont icon-zitixieti"
+								data-name="italic">
+							</view>
+							<view :class="formats.underline ? 'ql-active' : ''" class="iconfont icon-zitixiahuaxian"
+								data-name="underline"></view>
+							<view :class="formats.strike ? 'ql-active' : ''" class="iconfont icon-zitishanchuxian"
+								data-name="strike"></view>
+							<!-- #ifndef MP-BAIDU -->
+							<view :class="formats.align === 'left' ? 'ql-active' : ''" class="iconfont icon-zuoduiqi"
+								data-name="align" data-value="left"></view>
+							<!-- #endif -->
+							<view :class="formats.align === 'center' ? 'ql-active' : ''"
+								class="iconfont icon-juzhongduiqi" data-name="align" data-value="center"></view>
+							<view :class="formats.align === 'right' ? 'ql-active' : ''" class="iconfont icon-youduiqi"
+								data-name="align" data-value="right"></view>
+							<view :class="formats.align === 'justify' ? 'ql-active' : ''"
+								class="iconfont icon-zuoyouduiqi" data-name="align" data-value="justify"></view>
+							<!-- #ifndef MP-BAIDU -->
+							<view :class="formats.lineHeight ? 'ql-active' : ''" class="iconfont icon-line-height"
+								data-name="lineHeight" data-value="2"></view>
+							<view :class="formats.letterSpacing ? 'ql-active' : ''"
+								class="iconfont icon-Character-Spacing" data-name="letterSpacing" data-value="2em">
+							</view>
+							<view :class="formats.marginTop ? 'ql-active' : ''"
+								class="iconfont icon-722bianjiqi_duanqianju" data-name="marginTop" data-value="20px">
+							</view>
+							<view :class="formats.marginBottom ? 'ql-active' : ''"
+								class="iconfont icon-723bianjiqi_duanhouju" data-name="marginBottom" data-value="20px">
+							</view>
+							<!-- #endif -->
+
+							<view class="iconfont icon-clearedformat" @tap="removeFormat"></view>
+
+							<!-- #ifndef MP-BAIDU -->
+							<view :class="formats.fontFamily ? 'ql-active' : ''" class="iconfont icon-font"
+								data-name="fontFamily" data-value="Pacifico"></view>
+							<view :class="formats.fontSize === '24px' ? 'ql-active' : ''" class="iconfont icon-fontsize"
+								data-name="fontSize" data-value="24px"></view>
+							<!-- #endif -->
+							<view :class="formats.color === '#0000ff' ? 'ql-active' : ''"
+								class="iconfont icon-text_color" data-name="color" data-value="#0000ff"></view>
+							<view :class="formats.backgroundColor === '#00ff00' ? 'ql-active' : ''"
+								class="iconfont icon-fontbgcolor" data-name="backgroundColor" data-value="#00ff00">
+							</view>
+							<view class="iconfont icon--checklist" data-name="list" data-value="check"></view>
+							<view :class="formats.list === 'ordered' ? 'ql-active' : ''"
+								class="iconfont icon-youxupailie" data-name="list" data-value="ordered"></view>
+							<view :class="formats.list === 'bullet' ? 'ql-active' : ''" class="iconfont icon-wuxupailie"
+								data-name="list" data-value="bullet"></view>
+
+							<view class="iconfont icon-undo" @tap="undo"></view>
+							<view class="iconfont icon-redo" @tap="redo"></view>
+
+							<view class="iconfont icon-outdent" data-name="indent" data-value="-1"></view>
+							<view class="iconfont icon-indent" data-name="indent" data-value="+1"></view>
+							<view class="iconfont icon-fengexian" @tap="insertDivider"></view>
+							<view class="iconfont icon-charutupian" @tap="insertImage"></view>
+							<view :class="formats.header === 1 ? 'ql-active' : ''" class="iconfont icon-format-header-1"
+								data-name="header" :data-value="1"></view>
+							<view :class="formats.script === 'sub' ? 'ql-active' : ''" class="iconfont icon-zitixiabiao"
+								data-name="script" data-value="sub"></view>
+							<view :class="formats.script === 'super' ? 'ql-active' : ''"
+								class="iconfont icon-zitishangbiao" data-name="script" data-value="super"></view>
+
+							<view class="iconfont icon-shanchu" @tap="clear"></view>
+
+							<view :class="formats.direction === 'rtl' ? 'ql-active' : ''"
+								class="iconfont icon-direction-rtl" data-name="direction" data-value="rtl"></view>
+						</view>
+						<view class="editor-wrapper">
+							<editor id="editor" class="ql-container" placeholder="开始输入..." show-img-size
+								show-img-toolbar show-img-resize @statuschange="onStatusChange" :read-only="readOnly"
+								@ready="onEditorReady" @blur="getCon">
+							</editor>
+						</view>
+					</view>
+				</uni-col>
 			</uni-row>
 			<uni-row class="submission-form" v-show="currentTab === 2">
-				<view class="wrapper">
-					<view class='toolbar' @tap="format" style="height: 80px;overflow-y: auto;">
-						<view :class="formats.bold ? 'ql-active' : ''" class="iconfont icon-zitijiacu" data-name="bold">
-						</view>
-						<view :class="formats.italic ? 'ql-active' : ''" class="iconfont icon-zitixieti"
-							data-name="italic">
-						</view>
-						<view :class="formats.underline ? 'ql-active' : ''" class="iconfont icon-zitixiahuaxian"
-							data-name="underline"></view>
-						<view :class="formats.strike ? 'ql-active' : ''" class="iconfont icon-zitishanchuxian"
-							data-name="strike"></view>
-						<!-- #ifndef MP-BAIDU -->
-						<view :class="formats.align === 'left' ? 'ql-active' : ''" class="iconfont icon-zuoduiqi"
-							data-name="align" data-value="left"></view>
-						<!-- #endif -->
-						<view :class="formats.align === 'center' ? 'ql-active' : ''" class="iconfont icon-juzhongduiqi"
-							data-name="align" data-value="center"></view>
-						<view :class="formats.align === 'right' ? 'ql-active' : ''" class="iconfont icon-youduiqi"
-							data-name="align" data-value="right"></view>
-						<view :class="formats.align === 'justify' ? 'ql-active' : ''" class="iconfont icon-zuoyouduiqi"
-							data-name="align" data-value="justify"></view>
-						<!-- #ifndef MP-BAIDU -->
-						<view :class="formats.lineHeight ? 'ql-active' : ''" class="iconfont icon-line-height"
-							data-name="lineHeight" data-value="2"></view>
-						<view :class="formats.letterSpacing ? 'ql-active' : ''" class="iconfont icon-Character-Spacing"
-							data-name="letterSpacing" data-value="2em"></view>
-						<view :class="formats.marginTop ? 'ql-active' : ''" class="iconfont icon-722bianjiqi_duanqianju"
-							data-name="marginTop" data-value="20px"></view>
-						<view :class="formats.marginBottom ? 'ql-active' : ''"
-							class="iconfont icon-723bianjiqi_duanhouju" data-name="marginBottom" data-value="20px">
-						</view>
-						<!-- #endif -->
-
-						<view class="iconfont icon-clearedformat" @tap="removeFormat"></view>
-
-						<!-- #ifndef MP-BAIDU -->
-						<view :class="formats.fontFamily ? 'ql-active' : ''" class="iconfont icon-font"
-							data-name="fontFamily" data-value="Pacifico"></view>
-						<view :class="formats.fontSize === '24px' ? 'ql-active' : ''" class="iconfont icon-fontsize"
-							data-name="fontSize" data-value="24px"></view>
-						<!-- #endif -->
-						<view :class="formats.color === '#0000ff' ? 'ql-active' : ''" class="iconfont icon-text_color"
-							data-name="color" data-value="#0000ff"></view>
-						<view :class="formats.backgroundColor === '#00ff00' ? 'ql-active' : ''"
-							class="iconfont icon-fontbgcolor" data-name="backgroundColor" data-value="#00ff00"></view>
-						<view class="iconfont icon--checklist" data-name="list" data-value="check"></view>
-						<view :class="formats.list === 'ordered' ? 'ql-active' : ''" class="iconfont icon-youxupailie"
-							data-name="list" data-value="ordered"></view>
-						<view :class="formats.list === 'bullet' ? 'ql-active' : ''" class="iconfont icon-wuxupailie"
-							data-name="list" data-value="bullet"></view>
-
-						<view class="iconfont icon-undo" @tap="undo"></view>
-						<view class="iconfont icon-redo" @tap="redo"></view>
-
-						<view class="iconfont icon-outdent" data-name="indent" data-value="-1"></view>
-						<view class="iconfont icon-indent" data-name="indent" data-value="+1"></view>
-						<view class="iconfont icon-fengexian" @tap="insertDivider"></view>
-						<view class="iconfont icon-charutupian" @tap="insertImage"></view>
-						<view :class="formats.header === 1 ? 'ql-active' : ''" class="iconfont icon-format-header-1"
-							data-name="header" :data-value="1"></view>
-						<view :class="formats.script === 'sub' ? 'ql-active' : ''" class="iconfont icon-zitixiabiao"
-							data-name="script" data-value="sub"></view>
-						<view :class="formats.script === 'super' ? 'ql-active' : ''" class="iconfont icon-zitishangbiao"
-							data-name="script" data-value="super"></view>
-
-						<view class="iconfont icon-shanchu" @tap="clear"></view>
-
-						<view :class="formats.direction === 'rtl' ? 'ql-active' : ''"
-							class="iconfont icon-direction-rtl" data-name="direction" data-value="rtl"></view>
-					</view>
-					<view class="editor-wrapper">
-						<editor id="editor" class="ql-container" placeholder="开始输入..." show-img-size show-img-toolbar
-							show-img-resize @statuschange="onStatusChange" :read-only="readOnly" @ready="onEditorReady"
-							@blur="getCon">
-						</editor>
-					</view>
-				</view>
+				<uni-col v-bind="grid2">
+					<uni-forms-item label="用户姓名：" label-width="100px" required>
+						<uni-easyinput v-model="orderInfo.realName" maxlength="180" placeholder="请输入用户姓名"
+							:styles="inputStyles" :disabled="isDisabled">
+						</uni-easyinput>
+					</uni-forms-item>
+				</uni-col>
+				<uni-col v-bind="grid2">
+					<uni-forms-item label="联系方式：" label-width="100px" required>
+						<uni-easyinput v-model="orderInfo.phone" placeholder="请输入联系方式" :styles="inputStyles"
+							:disabled="isDisabled">
+						</uni-easyinput>
+					</uni-forms-item>
+				</uni-col>
+				<uni-col v-bind="grid2">
+					<uni-forms-item label="详细地址：" label-width="100px" required>
+						<uni-easyinput v-model="orderInfo.address" type="textarea" placeholder="请输入详细地址"
+							:styles="inputStyles" :disabled="isDisabled">
+						</uni-easyinput>
+					</uni-forms-item>
+				</uni-col>
 			</uni-row>
 			<uni-forms-item class="submission-options">
 				<button class="submission priamry_border" type="primary" v-show="currentTab>0"
@@ -191,6 +219,9 @@
 
 <script>
 	import {
+		getAddressList
+	} from '@/api/user.js';
+	import {
 		getCategoryListTree,
 		productCreateApi
 	} from '@/api/store.js';
@@ -200,7 +231,7 @@
 	import {
 		Debounce
 	} from '@/utils/validate'
-	const defaultObj = {
+	const defaultObj1 = {
 		image: '',
 		sliderImages: [],
 		videoLink: '',
@@ -248,12 +279,22 @@
 		coupons: [],
 		activity: ['默认', '秒杀', '砍价', '拼团']
 	}
+	const defaultObj2 = {
+		productId: '',
+		attrValueId: '',
+		productNum: '',
+		realName: '',
+		phone: '',
+		address: '',
+		storeProduct: {}
+	}
 	export default {
 		data() {
 			return {
 				//数据项
 				merCateList: [],
-				formValidate: Object.assign({}, defaultObj),
+				orderInfo: Object.assign({}, defaultObj2),
+				formValidate: Object.assign({}, defaultObj1),
 				ruleValidate: {
 					storeName: {
 						rules: [{
@@ -344,6 +385,26 @@
 					});
 				});
 			},
+			/**
+			 * 获取地址列表
+			 * 
+			 */
+			getAddressList: function(isPage) {
+				let that = this;
+				getAddressList({
+					page: 1,
+					limit: 20
+				}).then(res => {
+					let lists = res.data.list;
+					let list = lists.find(list => list.isDefault === true)
+					this.orderInfo.realName = list.realName
+					this.orderInfo.phone = list.phone
+					this.orderInfo.address = list.province + list.city + list.district + list.detail
+				}).catch(err => {
+					console.log(err)
+				});
+			},
+
 
 			//editor编辑框
 			getCon() {
@@ -467,34 +528,41 @@
 				})
 			},
 			handleSubmit: Debounce(function(name) {
-				this.formValidate.cateIds.push(this.formValidate.cateId)
-				this.formValidate.sliderImage = JSON.stringify(this.formValidate.sliderImages)
-				this.$refs[name].validate().then(res => {
-					console.log(this.formValidate)
-					productCreateApi(this.formValidate).then(async res => {
-						this.$util.Tips({
+				let that = this
+				that.formValidate.cateIds.push(that.formValidate.cateId)
+				that.formValidate.sliderImage = JSON.stringify(that.formValidate.sliderImages)
+				that.$refs[name].validate().then(res => {
+					uni.showLoading({
+						title: '上传商品中'
+					});
+					productCreateApi(that.formValidate).then(async res => {
+						that.$util.Tips({
 							title: '新增成功！',
 							duration: 2000,
 							icon: 'success'
 						});
-						
-						// recycleOrderCreate(data).then(res => {
-						// }).catch(err => {
-						// 	uni.hideLoading();
-						// 	return that.$util.Tips({
-						// 		title: err
-						// 	});
-						// });
-						
+						console.log(res)
+						that.orderInfo.productId = res.data.productId
+						that.orderInfo.attrValueId = res.data.attrValueId
+						that.orderInfo.storeProduct=that.formValidate
+						recycleOrderCreate(that.orderInfo).then(res => {
+							console.log(res)
+						}).catch(err => {
+							uni.hideLoading();
+							return that.$util.Tips({
+								title: err
+							});
+						});
+
 						setTimeout(() => {
-							this.currentTab = 0
-							this.formValidate = Object.assign({}, defaultObj)
+							that.currentTab = 0
+							that.formValidate = Object.assign({}, defaultObj1)
 						}, 500);
 					}).catch(res => {
 						console.log(res)
 					})
 				}).catch(err => {
-					this.$util.Tips({
+					that.$util.Tips({
 						title: '请填写完整商品信息！'
 					});
 				})
@@ -520,6 +588,7 @@
 		mounted() {
 			// this.formValidate.sliderImages = []
 			this.getCategorySelect()
+			this.getAddressList()
 		}
 	}
 </script>
@@ -547,7 +616,7 @@
 <style lang="scss">
 	.create-page {
 		width: 100%;
-		height: 100%;
+		min-height: 100%;
 		display: flex;
 		flex-direction: column;
 		background-color: #fafafa;
@@ -607,6 +676,13 @@
 
 				.wrapper {
 					height: 100%;
+					margin-bottom: 180rpx;
+
+					.editor-lable {
+						padding: 10rpx 15rpx 25rpx;
+						text-align: left;
+						font-size: 30rpx;
+					}
 
 					.toolbar {
 						background-color: #F5F5F5;
@@ -650,6 +726,7 @@
 			.submission-options {
 				width: 100%;
 				height: 180rpx;
+				background-color: #fafafa;
 				margin: 0;
 				position: fixed;
 				bottom: 0rpx;

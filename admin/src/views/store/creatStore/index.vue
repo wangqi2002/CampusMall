@@ -1272,7 +1272,7 @@ export default {
         })
         this.formValidate.attrValue = this.OneattrValue
       }
-      console.log("finally--",this.formValidate)
+      console.log("finally--", this.formValidate)
       this.$refs[name].validate((valid) => {
         if (valid) {
           this.fullscreenLoading = true
@@ -1285,12 +1285,14 @@ export default {
           }).catch(res => {
             this.fullscreenLoading = false
           }) : productCreateApi(this.formValidate).then(async res => {
+            console.log(res)
             this.$message.success('新增成功');
             setTimeout(() => {
               this.$router.push({ path: '/store/index' });
             }, 500);
             this.fullscreenLoading = false
           }).catch(res => {
+            console.log(res)
             this.fullscreenLoading = false
           })
         } else {

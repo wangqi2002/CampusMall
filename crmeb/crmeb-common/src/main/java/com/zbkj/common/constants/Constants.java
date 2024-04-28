@@ -411,6 +411,7 @@ public class Constants {
     public static final String ORDER_TASK_REDIS_KEY_AFTER_REFUND_BY_USER = "alterOrderRefundByUser"; // 用户订单退款后续操作
 
     public static final String ORDER_STATUS_CACHE_CREATE_ORDER = "cache_key_create_order";
+    public static final String ORDER_STATUS_CREATE_ORDER = "immediate_create_order";
 
     //支付方式
     public static final String PAY_TYPE_WE_CHAT = "weixin"; //微信支付

@@ -1,5 +1,6 @@
 package com.zbkj.admin.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.zbkj.common.page.CommonPage;
 import com.zbkj.common.response.CommonResult;
 import com.zbkj.common.request.PageParamRequest;
@@ -10,6 +11,7 @@ import com.zbkj.common.request.StoreProductSearchRequest;
 import com.zbkj.common.response.StoreProductInfoResponse;
 import com.zbkj.common.response.StoreProductResponse;
 import com.zbkj.common.response.StoreProductTabsHeader;
+import com.zbkj.common.vo.MyRecord;
 import com.zbkj.service.service.StoreCartService;
 import com.zbkj.service.service.StoreProductService;
 import io.swagger.annotations.Api;
@@ -73,9 +75,10 @@ public class StoreProductController {
     @PreAuthorize("hasAuthority('admin:product:save')")
     @ApiOperation(value = "新增商品")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public CommonResult<String> save(@RequestBody @Validated StoreProductAddRequest request) {
-        if (storeProductService.save(request)) {
-            return CommonResult.success();
+    public CommonResult<Map<String, Object>> save(@RequestBody @Validated StoreProductAddRequest request) {
+        MyRecord record = storeProductService.save(request);
+        if (!ObjectUtil.isNull(record.get("productId"))) {
+            return CommonResult.success(record);
         } else {
             return CommonResult.failed();
         }

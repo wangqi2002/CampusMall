@@ -47,7 +47,7 @@ public interface StoreProductService extends IService<StoreProduct> {
      * @param request 商品请求对象
      * @return Boolean
      */
-    Boolean save(StoreProductAddRequest request);
+    MyRecord save(StoreProductAddRequest request);
 
     /**
      * 更新商品信息

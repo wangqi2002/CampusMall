@@ -137,6 +137,13 @@ public interface OrderService {
     MyRecord createOrder(CreateOrderRequest orderRequest);
 
     /**
+     * 创建回收订单
+     * @param orderRequest 创建订单请求参数
+     * @return MyRecord 订单编号
+     */
+    MyRecord createRecycleOrder(CreateRecycleOrderRequest orderRequest);
+
+    /**
      * 获取支付配置
      * @return PreOrderResponse
      */
