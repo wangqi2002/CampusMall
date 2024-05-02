@@ -5,7 +5,8 @@
 				<view class='picTxt acea-row row-between-wrapper'>
 					<view class='text'>
 						<view class='name'>订单信息</view>
-						<view>消费订单：{{orderData.orderCount || 0}} 总消费：￥{{Number(orderData.sumPrice).toFixed(2) || 0}}</view>
+						<view>消费订单：{{orderData.orderCount || 0}} 总消费：￥{{Number(orderData.sumPrice).toFixed(2) || 0}}
+						</view>
 					</view>
 					<view class='pictrue'>
 						<image src='../../../static/images/orderTime.png'></image>
@@ -39,7 +40,8 @@
 					<view @click='goOrderDetails(item.orderId)'>
 						<view class='title acea-row row-between-wrapper'>
 							<view class="acea-row row-middle">
-								<text class="sign cart-color acea-row row-center-wrapper" v-if="item.activityType !== '普通' && item.activityType !== '核销'">{{item.activityType}}</text>
+								<text class="sign cart-color acea-row row-center-wrapper"
+									v-if="item.activityType !== '普通' && item.activityType !== '核销'">{{item.activityType}}</text>
 								<!-- <text class="sign cart-color acea-row row-center-wrapper" v-if="item.bargainId != 0">砍价</text>
 								<text class="sign cart-color acea-row row-center-wrapper" v-else-if="item.storeOrder.combinationId != 0">拼团</text>
 								<text class="sign cart-color acea-row row-center-wrapper" v-else-if="item.storeOrder.seckillId != 0">秒杀</text> -->
@@ -53,7 +55,8 @@
 							<view v-else-if="item.status?item.status.type == 4:0 && item.storeOrder.shippingType==1" class='font-color'>已完成</view>
 							<view v-else-if="item.storeOrder.shippingType==2" class='font-color'>待核销</view> -->
 						</view>
-						<view class='item-info acea-row row-between row-top' v-for="(items,index) in item.orderInfoList" :key="index">
+						<view class='item-info acea-row row-between row-top' v-for="(items,index) in item.orderInfoList"
+							:key="index">
 							<view class='pictrue'>
 								<image :src='items.image'></image>
 							</view>
@@ -71,9 +74,12 @@
 					</view>
 					<view class='bottom acea-row row-right row-middle'>
 						<view class='bnt cancelBnt' v-if="!item.paid" @click='cancelOrder(index,item.id)'>取消订单</view>
-						<view class='bnt bg-color' v-if="!item.paid" @click='goPay(item.payPrice,item.orderId)'>立即付款</view>
-						<view class='bnt bg-color' v-else-if="item.status== 0 || item.status== 1 || item.status== 3" @click='goOrderDetails(item.orderId)'>查看详情</view>
-						<view class='bnt bg-color' v-else-if="item.status==2" @click='goOrderDetails(item.orderId)'>去评价</view>
+						<view class='bnt bg-color' v-if="!item.paid" @click='goPay(item.payPrice,item.orderId)'>立即付款
+						</view>
+						<view class='bnt bg-color' v-else-if="item.status== 0 || item.status== 1 || item.status== 3"
+							@click='goOrderDetails(item.orderId)'>查看详情</view>
+						<view class='bnt bg-color' v-else-if="item.status==2" @click='goOrderDetails(item.orderId)'>去评价
+						</view>
 						<view class='bnt cancelBnt' v-if="item.status == 3" @click='delOrder(item.id,index)'>删除订单</view>
 					</view>
 					<!-- <view class='bottom acea-row row-right row-middle'>
@@ -104,7 +110,8 @@
 		<!-- <authorize @onLoadFun="onLoadFun" :isAuto="isAuto" :isShowAuth="isShowAuth" @authColse="authColse"></authorize> -->
 		<!-- #endif -->
 		<home></home>
-		<payment :payMode='payMode' :pay_close="pay_close" @onChangeFun='onChangeFun' :order_id="pay_order_id" :totalPrice='totalPrice'></payment>
+		<payment :payMode='payMode' :pay_close="pay_close" @onChangeFun='onChangeFun' :order_id="pay_order_id"
+			:totalPrice='totalPrice'></payment>
 	</view>
 </template>
 
@@ -236,7 +243,7 @@
 					title: '缺少订单号无法取消订单'
 				});
 				uni.showLoading({
-				    title: '正在删除中'
+					title: '正在删除中'
 				});
 				orderCancel(order_id).then(res => {
 					uni.hideLoading();
@@ -337,7 +344,6 @@
 					let list = res.data.list || [];
 					let loadend = list.length < that.limit;
 					that.orderList = that.$util.SplitArray(list, that.orderList);
-					console.log(that.orderList)
 					that.$set(that, 'orderList', that.orderList);
 					that.loadend = loadend;
 					that.loading = false;

@@ -1222,31 +1222,48 @@ public class OrderServiceImpl implements OrderService {
 
         StoreProductAttrValue attrValue = attrValueService.getByIdAndProductIdAndType(request.getAttrValueId(), request.getProductId(), Constants.PRODUCT_TYPE_NORMAL);
         StoreProduct storeProduct = storeProductService.getById(request.getProductId());
+        OrderInfoDetailVo detailVo = new OrderInfoDetailVo();
+        detailVo.setProductId(request.getProductId());
+        detailVo.setProductName(storeProduct.getStoreName());
+        detailVo.setAttrValueId(attrValue.getId());
+        detailVo.setImage(StrUtil.isNotBlank(attrValue.getImage()) ? attrValue.getImage() : storeProduct.getImage());
+        detailVo.setSku(attrValue.getSuk());
+        detailVo.setPrice(attrValue.getPrice());
+        detailVo.setPayNum(request.getProductNum());
+        detailVo.setWeight(attrValue.getWeight());
+        detailVo.setTempId(storeProduct.getTempId());
+        detailVo.setIsSub(storeProduct.getIsSub());
+        detailVo.setVolume(attrValue.getVolume());
+        detailVo.setProductType(Constants.PRODUCT_TYPE_NORMAL);
+        detailVo.setVipPrice(detailVo.getPrice());
+        detailVo.setGiveIntegral(storeProduct.getGiveIntegral());
 
         List<StoreOrderInfo> storeOrderInfos = new ArrayList<>();
         StoreOrderInfo soInfo = new StoreOrderInfo();
-        soInfo.setProductId(request.getProductId());
-        soInfo.setInfo(JSON.toJSON(attrValue).toString());
+        soInfo.setProductId(detailVo.getProductId());
+        soInfo.setInfo(JSON.toJSON(detailVo).toString());
         soInfo.setUnique(attrValue.getId().toString());
         soInfo.setOrderNo(orderNo);
-        soInfo.setProductName(storeProduct.getStoreName());
-        soInfo.setAttrValueId(attrValue.getId());
-        soInfo.setImage(StrUtil.isNotBlank(attrValue.getImage()) ? attrValue.getImage() : storeProduct.getImage());
-        soInfo.setSku(attrValue.getSuk());
-        soInfo.setPrice(attrValue.getPrice());
-        soInfo.setPayNum(storeProduct.getStock());
-        soInfo.setWeight(attrValue.getWeight());
-        soInfo.setVolume(attrValue.getVolume());
+        soInfo.setProductName(detailVo.getProductName());
+        soInfo.setAttrValueId(detailVo.getAttrValueId());
+        soInfo.setImage(detailVo.getImage());
+        soInfo.setSku(detailVo.getSku());
+        soInfo.setPrice(detailVo.getPrice());
+        soInfo.setPayNum(detailVo.getPayNum());
+        soInfo.setWeight(detailVo.getWeight());
+        soInfo.setVolume(detailVo.getVolume());
         soInfo.setGiveIntegral(0);
         soInfo.setIsReply(true);
-        soInfo.setIsSub(true);
+        soInfo.setIsSub(detailVo.getIsSub());
         soInfo.setProductType(Constants.PRODUCT_TYPE_NORMAL);
-        soInfo.setVipPrice(attrValue.getPrice());
+        soInfo.setVipPrice(detailVo.getVipPrice());
         storeOrderInfos.add(soInfo);
 
         StoreOrder storeOrder = new StoreOrder();
         storeOrder.setUid(user.getUid());
+        storeOrder.setMerId(user.getUid());
         storeOrder.setOrderId(orderNo);
+        storeOrder.setStatus(Constants.ORDER_STATUS_INT_RECYCLED);
         storeOrder.setRealName(request.getRealName());
         storeOrder.setUserPhone(request.getPhone());
         storeOrder.setUserAddress(request.getAddress());
@@ -1273,7 +1290,7 @@ public class OrderServiceImpl implements OrderService {
         storeOrder.setIsChannel(9);
         storeOrder.setPaid(true);
         storeOrder.setCost(BigDecimal.ZERO);
-        storeOrder.setType(0);
+        storeOrder.setType(2);
 
         Boolean execute = transactionTemplate.execute(e -> {
             storeOrderService.create(storeOrder);

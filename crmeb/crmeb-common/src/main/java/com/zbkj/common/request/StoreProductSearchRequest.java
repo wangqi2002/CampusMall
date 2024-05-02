@@ -34,7 +34,7 @@ public class StoreProductSearchRequest implements Serializable {
 
     @ApiModelProperty(value = "类型（1：出售中（已上架），2：仓库中（未上架），3：已售罄，4：警戒库存，5：回收站）")
     @NotNull(message = "商品类型不能为空")
-    @Range(min = 1, max = 5, message = "未知的商品类型")
+    @Range(min = 1, max = 6, message = "未知的商品类型")
     private int type;
 
     @ApiModelProperty(value = "分类ID， 多个逗号分隔")

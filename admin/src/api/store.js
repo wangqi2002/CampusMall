@@ -53,7 +53,7 @@ export function productDeleteApi(id, type) {
   return request({
     url: `/admin/store/product/delete/${id}`,
     method: 'get',
-    params:{type:type}
+    params: { type: type }
   })
 }
 
@@ -106,6 +106,26 @@ export function putOnShellApi(id) {
 export function offShellApi(id) {
   return request({
     url: `/admin/store/product/offShell/${id}`,
+    method: 'GET'
+  })
+}
+/**
+ * 商品入库
+ * @param pram
+ */
+export function putOnStashApi(id) {
+  return request({
+    url: `/admin/store/product/inStash/${id}`,
+    method: 'GET'
+  })
+}
+/**
+ * 商品出库
+ * @param pram
+ */
+export function offStashApi(id) {
+  return request({
+    url: `/admin/store/product/offStash/${id}`,
     method: 'GET'
   })
 }
@@ -252,7 +272,6 @@ export function importProductApi(params) {
   })
 }
 
-
 /**
  * 商品复制 一号通
  * @param pram
@@ -303,7 +322,7 @@ export function copyConfigApi() {
  * 订单数据 导出
  * @param pram
  */
- export function orderExcelApi(params) {
+export function orderExcelApi(params) {
   return request({
     url: `/admin/export/excel/order`,
     method: 'get',

@@ -114,6 +114,7 @@
         <el-table-column label="状态" min-width="80" fixed="right">
           <template v-if="checkPermi(['admin:product:up', 'admin:product:down'])" slot-scope="scope">
             <el-switch
+              v-if="Number(tableFrom.type) < 6"
               v-model="scope.row.isShow"
               :disabled="Number(tableFrom.type) > 2"
               :active-value="true"
@@ -121,6 +122,15 @@
               active-text="上架"
               inactive-text="下架"
               @change="onchangeIsShow(scope.row)"
+            />
+            <el-switch
+              v-else
+              v-model="scope.row.isStash"
+              :active-value="true"
+              :inactive-value="false"
+              active-text="已入库"
+              inactive-text="未入库"
+              @change="onchangeIsStash(scope.row)"
             />
           </template>
         </el-table-column>
@@ -150,7 +160,8 @@
               type="text"
               size="small"
               @click="handleDelete(scope.row.id, tableFrom.type)"
-            >{{ tableFrom.type === '5' ? '删除' : '加入回收站' }}</el-button>
+            >{{ tableFrom.type === '5' ? '删除' : '加入回收站'
+            }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -180,7 +191,7 @@
 </template>
 
 <script>
-import { productLstApi, productDeleteApi, categoryApi, putOnShellApi, offShellApi, productHeadersApi, productExportApi, restoreApi, productExcelApi } from '@/api/store'
+import { productLstApi, productDeleteApi, categoryApi, putOnShellApi, offShellApi, putOnStashApi, offStashApi, productHeadersApi, productExportApi, restoreApi, productExcelApi } from '@/api/store'
 import { getToken } from '@/utils/auth'
 import taoBao from './taoBao'
 import { checkPermi } from '@/utils/permission' // 权限判断函数
@@ -274,13 +285,14 @@ export default {
     // 列表
     getList() {
       this.listLoading = true
+      console.log(this.tableFrom)
       productLstApi(this.tableFrom).then(res => {
         this.tableData.data = res.list
         this.tableData.total = res.total
         this.listLoading = false
       }).catch(res => {
         this.listLoading = false
-        this.$message.error(res.message)
+        this.$message.error(res)
       })
     },
     pageChange(page) {
@@ -316,6 +328,23 @@ export default {
           this.goodHeade()
         }).catch(() => {
           row.isShow = !row.isShow
+        })
+    },
+    onchangeIsStash(row) {
+      const val = row.id + '#' + row.merId
+      row.isStash
+        ? putOnStashApi(val).then(() => {
+          this.$message.success('入库成功')
+          this.getList()
+          this.goodHeade()
+        }).catch(() => {
+          row.isStash = !row.isStash
+        }) : offStashApi(val).then(() => {
+          this.$message.success('出库成功')
+          this.getList()
+          this.goodHeade()
+        }).catch(() => {
+          row.isStash = !row.isStash
         })
     }
 

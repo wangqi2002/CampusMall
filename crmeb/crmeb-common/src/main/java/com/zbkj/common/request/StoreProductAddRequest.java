@@ -38,6 +38,9 @@ public class StoreProductAddRequest implements Serializable {
     @ApiModelProperty(value = "商品id|添加时不填，修改时必填")
     private Integer id;
 
+    @ApiModelProperty(value = "商户id")
+    private Integer merId;
+
     @ApiModelProperty(value = "商品图片", required = true)
     @NotBlank(message = "商品图片不能为空")
     @Length(max = 255, message = "商品图片名称长度不能超过255个字符")
@@ -75,6 +78,9 @@ public class StoreProductAddRequest implements Serializable {
 
     @ApiModelProperty(value = "排序")
     private Integer sort;
+
+    @ApiModelProperty(value = "是否在库")
+    private Boolean isStash;
 
     @ApiModelProperty(value = "是否热卖")
     private Boolean isHot;

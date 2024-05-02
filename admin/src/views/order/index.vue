@@ -16,6 +16,8 @@
                 <el-radio-button label="refunding">退款中 {{ '(' +orderChartType.refunding?orderChartType.refunding:0+ ')' }}</el-radio-button>
                 <el-radio-button label="refunded">已退款 {{ '(' +orderChartType.refunded?orderChartType.refunded:0+ ')' }}</el-radio-button>
                 <el-radio-button label="deleted">已删除 {{ '(' +orderChartType.deleted?orderChartType.deleted:0+ ')' }}</el-radio-button>
+                <el-radio-button label="recycled">待回收 {{ '(' +orderChartType.recycled?orderChartType.recycled:0+ ')' }}</el-radio-button>
+                <el-radio-button label="inStash">待入库 {{ '(' +orderChartType.inStash?orderChartType.inStash:0+ ')' }}</el-radio-button>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="时间选择：" class="width100">
@@ -581,12 +583,15 @@ export default {
     // 列表
     getList() {
       this.listLoading = true
+      console.log(this.tableFrom)
       orderListApi(this.tableFrom).then(res => {
+        console.log(res)
         this.tableData.data = res.list || []
         this.tableData.total = res.total
         this.listLoading = false
         this.checkedCities = this.$cache.local.has('order_stroge') ? this.$cache.local.getJSON('order_stroge') : this.checkedCities
-      }).catch(() => {
+      }).catch((err) => {
+        console.log(err)
         this.listLoading = false
       })
     },

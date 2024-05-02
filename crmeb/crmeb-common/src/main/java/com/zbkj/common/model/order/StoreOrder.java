@@ -93,7 +93,7 @@ public class StoreOrder implements Serializable {
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
-    @ApiModelProperty(value = "订单状态（0：待发货；1：待收货；2：已收货，待评价；3：已完成；）")
+    @ApiModelProperty(value = "订单状态（0：待发货；1：待收货；2：已收货，待评价；3：已完成；4：待回收；5：待入库；）")
     private Integer status;
 
     @ApiModelProperty(value = "0 未退款 1 申请中 2 已退款 3 退款中")
@@ -194,7 +194,7 @@ public class StoreOrder implements Serializable {
     @ApiModelProperty(value = "快递公司简称")
     private String deliveryCode;
 
-    @ApiModelProperty(value = "订单类型:0-普通订单，1-视频号订单")
+    @ApiModelProperty(value = "订单类型:0-普通订单，1-视频号订单，2-回收订单")
     private Integer type;
 
     @ApiModelProperty(value = "商品总价")

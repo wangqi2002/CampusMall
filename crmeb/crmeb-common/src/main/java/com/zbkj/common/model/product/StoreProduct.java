@@ -91,6 +91,9 @@ public class StoreProduct implements Serializable {
     @ApiModelProperty(value = "状态（0：未上架，1：上架）")
     private Boolean isShow;
 
+    @ApiModelProperty(value = "状态（0：不在库，1：在库）")
+    private Boolean isStash;
+
     @ApiModelProperty(value = "是否热卖")
     private Boolean isHot;
 

@@ -60,4 +60,10 @@ public class StoreOrderCountItemResponse implements Serializable {
 
     @ApiModelProperty(value = "已删除")
     private Integer deleted;
+
+    @ApiModelProperty(value = "待回收")
+    private Integer recycled;
+
+    @ApiModelProperty(value = "待入库")
+    private Integer inStash;
 }

@@ -147,6 +147,19 @@ public interface StoreProductService extends IService<StoreProduct> {
     Boolean putOnShelf(Integer id);
 
     /**
+     * 出库
+     * @param id 商品id
+     */
+    Boolean offStash(String id);
+
+    /**
+     * 入库
+     * @param id 商品id
+     * @return Boolean
+     */
+    Boolean inStash(String id);
+
+    /**
      * 首页商品列表
      * @param type 类型 【1 精品推荐 2 热门榜单 3首发新品 4促销单品】
      * @param pageParamRequest 分页参数

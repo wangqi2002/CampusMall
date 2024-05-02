@@ -16,6 +16,7 @@ import com.zbkj.common.constants.Constants;
 import com.zbkj.common.exception.CrmebException;
 import com.zbkj.common.model.category.Category;
 import com.zbkj.common.model.coupon.StoreCoupon;
+import com.zbkj.common.model.order.StoreOrder;
 import com.zbkj.common.model.product.*;
 import com.zbkj.common.page.CommonPage;
 import com.zbkj.common.request.*;
@@ -27,6 +28,7 @@ import com.zbkj.common.vo.MyRecord;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zbkj.service.dao.StoreOrderDao;
 import com.zbkj.service.dao.StoreProductDao;
 import com.zbkj.service.delete.ProductUtils;
 import com.zbkj.service.service.*;
@@ -59,6 +61,9 @@ public class StoreProductServiceImpl extends ServiceImpl<StoreProductDao, StoreP
 
     @Resource
     private StoreProductDao dao;
+
+    @Resource
+    private StoreOrderDao dao1;
 
     @Autowired
     private StoreProductAttrService attrService;
@@ -158,6 +163,10 @@ public class StoreProductServiceImpl extends ServiceImpl<StoreProductDao, StoreP
                 lambdaQueryWrapper.eq(StoreProduct::getIsRecycle, true);
                 lambdaQueryWrapper.eq(StoreProduct::getIsDel, false);
                 break;
+            case 6:
+                //待入库
+                lambdaQueryWrapper.eq(StoreProduct::getIsStash, false);
+                break;
             default:
                 break;
         }
@@ -251,8 +260,10 @@ public class StoreProductServiceImpl extends ServiceImpl<StoreProductDao, StoreP
         StoreProduct storeProduct = new StoreProduct();
         BeanUtils.copyProperties(request, storeProduct);
         storeProduct.setId(null);
+        storeProduct.setMerId(request.getMerId());
         storeProduct.setAddTime(DateUtil.getNowTime());
         storeProduct.setIsShow(false);
+        storeProduct.setIsStash(request.getIsStash());
 
         // 设置Acticity活动
         storeProduct.setActivity(getProductActivityStr(request.getActivity()));
@@ -731,28 +742,33 @@ public class StoreProductServiceImpl extends ServiceImpl<StoreProductDao, StoreP
         StoreProductTabsHeader header3 = new StoreProductTabsHeader(0,"已经售馨商品",3);
         StoreProductTabsHeader header4 = new StoreProductTabsHeader(0,"警戒库存",4);
         StoreProductTabsHeader header5 = new StoreProductTabsHeader(0,"商品回收站",5);
+        StoreProductTabsHeader header6 = new StoreProductTabsHeader(0,"待回收商品",6);
         headers.add(header1);
         headers.add(header2);
         headers.add(header3);
         headers.add(header4);
         headers.add(header5);
+        headers.add(header6);
         for (StoreProductTabsHeader h : headers) {
             LambdaQueryWrapper<StoreProduct> lambdaQueryWrapper = new LambdaQueryWrapper<>();
             switch (h.getType()) {
                 case 1:
                     //出售中（已上架）
+                    lambdaQueryWrapper.eq(StoreProduct::getIsStash, true);
                     lambdaQueryWrapper.eq(StoreProduct::getIsShow, true);
                     lambdaQueryWrapper.eq(StoreProduct::getIsRecycle, false);
                     lambdaQueryWrapper.eq(StoreProduct::getIsDel, false);
                     break;
                 case 2:
                     //仓库中（未上架）
+                    lambdaQueryWrapper.eq(StoreProduct::getIsStash, true);
                     lambdaQueryWrapper.eq(StoreProduct::getIsShow, false);
                     lambdaQueryWrapper.eq(StoreProduct::getIsRecycle, false);
                     lambdaQueryWrapper.eq(StoreProduct::getIsDel, false);
                     break;
                 case 3:
                     //已售罄
+                    lambdaQueryWrapper.eq(StoreProduct::getIsStash, true);
                     lambdaQueryWrapper.le(StoreProduct::getStock, 0);
                     lambdaQueryWrapper.eq(StoreProduct::getIsRecycle, false);
                     lambdaQueryWrapper.eq(StoreProduct::getIsDel, false);
@@ -760,14 +776,20 @@ public class StoreProductServiceImpl extends ServiceImpl<StoreProductDao, StoreP
                 case 4:
                     //警戒库存
                     Integer stock = Integer.parseInt(systemConfigService.getValueByKey("store_stock"));
+                    lambdaQueryWrapper.eq(StoreProduct::getIsStash, true);
                     lambdaQueryWrapper.le(StoreProduct::getStock, stock);
                     lambdaQueryWrapper.eq(StoreProduct::getIsRecycle, false);
                     lambdaQueryWrapper.eq(StoreProduct::getIsDel, false);
                     break;
                 case 5:
                     //回收站
+                    lambdaQueryWrapper.eq(StoreProduct::getIsStash, true);
                     lambdaQueryWrapper.eq(StoreProduct::getIsRecycle, true);
                     lambdaQueryWrapper.eq(StoreProduct::getIsDel, false);
+                    break;
+                case 6:
+                    //回收站
+                    lambdaQueryWrapper.eq(StoreProduct::getIsStash, false);
                     break;
                 default:
                     break;
@@ -1110,6 +1132,61 @@ public class StoreProductServiceImpl extends ServiceImpl<StoreProductDao, StoreP
         Boolean execute = transactionTemplate.execute(e -> {
             dao.updateById(storeProduct);
             storeCartService.productStatusNoEnable(skuIdList);
+            return Boolean.TRUE;
+        });
+        return execute;
+    }
+
+    /**
+     * 出库
+     * @param id 商品id
+     */
+    @Override
+    public Boolean offStash(String id) {
+        String [] parts = id.split("#");
+        StoreProduct storeProduct = getById(Integer.parseInt(parts[0]));
+        if (ObjectUtil.isNull(storeProduct)) {
+            throw new CrmebException("商品不存在");
+        }
+        if (!storeProduct.getIsStash()) {
+            return true;
+        }
+
+        storeProduct.setIsStash(false);
+        Boolean execute = transactionTemplate.execute(e -> {
+            dao.updateById(storeProduct);
+            return Boolean.TRUE;
+        });
+
+        return execute;
+    }
+
+    /**
+     * 入库
+     * @param id 商品id
+     * @return Boolean
+     */
+    @Override
+    public Boolean inStash(String id) {
+        String [] parts = id.split("#");
+        StoreProduct storeProduct = getById(Integer.parseInt(parts[0]));
+
+//        LambdaQueryWrapper<StoreOrder> lqw = Wrappers.lambdaQuery();
+//        lqw.eq(StoreOrder::getStatus, Constants.ORDER_STATUS_INT_IN_STASH);
+//        lqw.eq(StoreOrder::getUid, Integer.parseInt(parts[1]));
+//        lqw.eq(StoreOrder::getMerId, Integer.parseInt(parts[1]));
+//        StoreOrder storeOrder = dao1.selectOne(lqw);
+
+        if (ObjectUtil.isNull(storeProduct)) {
+            throw new CrmebException("商品不存在");
+        }
+        if (storeProduct.getIsStash()) {
+            return true;
+        }
+
+        storeProduct.setIsStash(true);
+        Boolean execute = transactionTemplate.execute(e -> {
+            dao.updateById(storeProduct);
             return Boolean.TRUE;
         });
         return execute;

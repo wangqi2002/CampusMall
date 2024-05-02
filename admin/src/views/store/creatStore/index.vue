@@ -525,6 +525,7 @@ import CreatTemplates from '@/views/systemSetting/logistics/shippingTemplates/cr
 import Templates from '../../appSetting/wxAccount/wxTemplate/index'
 import { Debounce } from '@/utils/validate'
 const defaultObj = {
+  merId: 0,
   image: '',
   sliderImages: [],
   videoLink: '',
@@ -539,6 +540,7 @@ const defaultObj = {
   giveIntegral: 0,
   ficti: 0,
   isShow: false,
+  isStash: true,
   isBenefit: false,
   isNew: false,
   isGood: false,

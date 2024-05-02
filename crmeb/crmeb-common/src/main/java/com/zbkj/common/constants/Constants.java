@@ -370,6 +370,8 @@ public class Constants {
     public static final String ORDER_STATUS_REFUNDING = "refunding"; //退款中
     public static final String ORDER_STATUS_REFUNDED = "refunded"; //已退款
     public static final String ORDER_STATUS_DELETED = "deleted"; //已删除
+    public static final String ORDER_STATUS_RECYCLED = "recycled"; //待回收
+    public static final String ORDER_STATUS_IN_STASH = "inStash"; //待入库
 
     public static final String ORDER_STATUS_STR_UNPAID = "未支付"; //未支付
     public static final String ORDER_STATUS_STR_NOT_SHIPPED = "未发货"; //未发货
@@ -402,6 +404,8 @@ public class Constants {
     public static final int ORDER_STATUS_INT_SPIKE = 1; //待收货
     public static final int ORDER_STATUS_INT_BARGAIN = 2; //已收货，待评价
     public static final int ORDER_STATUS_INT_COMPLETE = 3; //已完成
+    public static final int ORDER_STATUS_INT_RECYCLED = 4; //待回收
+    public static final int ORDER_STATUS_INT_IN_STASH = 5; //待入库
 
 
     //订单操作redis队列

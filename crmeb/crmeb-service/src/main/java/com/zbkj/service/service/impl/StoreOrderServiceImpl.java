@@ -148,9 +148,14 @@ public class StoreOrderServiceImpl extends ServiceImpl<StoreOrderDao, StoreOrder
         }
         getRequestTimeWhere(queryWrapper, request);
         getStatusWhere(queryWrapper, request.getStatus());
-        if (!request.getType().equals(2)) {
-            queryWrapper.eq("type", request.getType());
+
+        if(!(request.getStatus().equals("recycled")||request.getStatus().equals("inStash"))) {
+            if (!request.getType().equals(2)) {
+                queryWrapper.eq("type", request.getType());
+            }
         }
+//        queryWrapper.eq("type", request.getType());
+
         queryWrapper.orderByDesc("id");
         List<StoreOrder> orderList = dao.selectList(queryWrapper);
         List<StoreOrderDetailResponse> detailResponseList = new ArrayList<>();
@@ -273,7 +278,7 @@ public class StoreOrderServiceImpl extends ServiceImpl<StoreOrderDao, StoreOrder
 
         //获取订单详情map
         HashMap<Integer, List<StoreOrderInfoOldVo>> orderInfoList = StoreOrderInfoService.getMapInId(orderIdList);
-//
+
 //        //根据用户获取信息
 //        List<Integer> userIdList = orderList.stream().map(StoreOrder::getUid).distinct().collect(Collectors.toList());
 //        //订单用户信息
@@ -1117,6 +1122,10 @@ public class StoreOrderServiceImpl extends ServiceImpl<StoreOrderDao, StoreOrder
         response.setRefunded(getCount(dateLimit, Constants.ORDER_STATUS_REFUNDED, type));
         // 已删除订单
         response.setDeleted(getCount(dateLimit, Constants.ORDER_STATUS_DELETED, type));
+        // 待回收订单
+        response.setRecycled(getCount(dateLimit, Constants.ORDER_STATUS_RECYCLED, 2));
+        // 待入库订单
+        response.setInStash(getCount(dateLimit, Constants.ORDER_STATUS_IN_STASH, 2));
         return response;
     }
 
@@ -1892,6 +1901,14 @@ public class StoreOrderServiceImpl extends ServiceImpl<StoreOrderDao, StoreOrder
             case Constants.ORDER_STATUS_DELETED: //已删除
                 queryWrapper.eq("is_del", 1);
                 break;
+            case Constants.ORDER_STATUS_RECYCLED: //待回收
+//                queryWrapper.eq("type", 2);
+                queryWrapper.eq("status", 4);
+                break;
+            case Constants.ORDER_STATUS_IN_STASH: //待入库
+//                queryWrapper.eq("type", 2);
+                queryWrapper.eq("status", 5);
+                break;
             default:
                 queryWrapper.eq("paid", 1);
                 queryWrapper.ne("refund_status", 2);
@@ -1959,6 +1976,14 @@ public class StoreOrderServiceImpl extends ServiceImpl<StoreOrderDao, StoreOrder
                 break;
             case Constants.ORDER_STATUS_DELETED: //已删除
                 queryWrapper.eq("is_del", 1);
+                break;
+            case Constants.ORDER_STATUS_RECYCLED: //待回收
+//                queryWrapper.eq("type", 2);
+                queryWrapper.eq("status", 4);
+                break;
+            case Constants.ORDER_STATUS_IN_STASH: //待入库
+//                queryWrapper.eq("type", 2);
+                queryWrapper.eq("status", 5);
                 break;
             default:
                 queryWrapper.eq("paid", 1);

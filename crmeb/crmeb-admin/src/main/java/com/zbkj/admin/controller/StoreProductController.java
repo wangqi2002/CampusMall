@@ -184,6 +184,34 @@ public class StoreProductController {
         }
     }
 
+    /**
+     * 入库
+     */
+    @PreAuthorize("hasAuthority('admin:product:up')")
+    @ApiOperation(value = "入库")
+    @RequestMapping(value = "/inStash/{id}", method = RequestMethod.GET)
+    public CommonResult<String> inStash(@PathVariable String id) {
+        if (storeProductService.inStash(id)) {
+            return CommonResult.success();
+        } else {
+            return CommonResult.failed();
+        }
+    }
+
+    /**
+     * 出库
+     */
+    @PreAuthorize("hasAuthority('admin:product:down')")
+    @ApiOperation(value = "出库")
+    @RequestMapping(value = "/offStash/{id}", method = RequestMethod.GET)
+    public CommonResult<String> offStash(@PathVariable String id) {
+        if (storeProductService.offStash(id)) {
+            return CommonResult.success();
+        } else {
+            return CommonResult.failed();
+        }
+    }
+
     @PreAuthorize("hasAuthority('admin:product:import:product')")
     @ApiOperation(value = "导入99Api商品")
     @RequestMapping(value = "/importProduct", method = RequestMethod.POST)

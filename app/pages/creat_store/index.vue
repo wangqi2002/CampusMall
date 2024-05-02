@@ -232,6 +232,7 @@
 		Debounce
 	} from '@/utils/validate'
 	const defaultObj1 = {
+		merId: 0,
 		image: '',
 		sliderImages: [],
 		videoLink: '',
@@ -246,6 +247,7 @@
 		giveIntegral: 0,
 		ficti: 0,
 		isShow: false,
+		isStash: false,
 		isBenefit: false,
 		isNew: false,
 		isGood: false,
@@ -541,10 +543,10 @@
 							duration: 2000,
 							icon: 'success'
 						});
-						console.log(res)
 						that.orderInfo.productId = res.data.productId
 						that.orderInfo.attrValueId = res.data.attrValueId
-						that.orderInfo.storeProduct=that.formValidate
+						that.orderInfo.productNum = that.formValidate.attrValue[0].stock
+						that.orderInfo.storeProduct = that.formValidate
 						recycleOrderCreate(that.orderInfo).then(res => {
 							console.log(res)
 						}).catch(err => {
@@ -556,8 +558,11 @@
 
 						setTimeout(() => {
 							that.currentTab = 0
+							that.formValidate = null
 							that.formValidate = Object.assign({}, defaultObj1)
-						}, 500);
+							that.formValidate.merId = this.$store.getters.uid
+							console.log(that.formValidate)
+						}, 1000);
 					}).catch(res => {
 						console.log(res)
 					})
@@ -589,6 +594,7 @@
 			// this.formValidate.sliderImages = []
 			this.getCategorySelect()
 			this.getAddressList()
+			this.formValidate.merId = this.$store.getters.uid
 		}
 	}
 </script>

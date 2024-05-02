@@ -108,6 +108,9 @@
 </template>
 
 <script>
+	import {
+		getOrderList,
+	} from '@/api/order.js';
 	import emptyPage from '@/components/emptyPage.vue'
 	export default {
 		components: {
@@ -115,141 +118,15 @@
 		},
 		data() {
 			return {
+				loading: false, //是否加载中
+				loadend: false, //是否加载完毕
+				loadTitle: '加载更多', //提示语
 				orderCategory: 0, //订单类别
 				orderStatus: 0, //订单状态
-				orderList: [{
-						"storeOrder": null,
-						"cartInfo": null,
-						"statusPic": null,
-						"offlinePayStatus": null,
-						"id": 5,
-						"orderId": "order29743171386437601053710",
-						"createTime": "2024-04-23 17:26:16",
-						"realName": "大可",
-						"userPhone": "18712341234",
-						"userAddress": "安徽省马鞍山市雨山区安工大",
-						"paid": true,
-						"payTime": "2024-04-23 17:26:16",
-						"payPrice": "34.00",
-						"status": 0,
-						"orderStatus": "待发货",
-						"totalNum": 3,
-						"payPostage": "0.00",
-						"refundStatus": 0,
-						"deliveryName": null,
-						"deliveryType": null,
-						"deliveryId": null,
-						"pinkId": 0,
-						"bargainId": 0,
-						"verifyCode": "",
-						"storeId": 0,
-						"shippingType": 1,
-						"activityType": "普通",
-						"orderInfoList": [{
-								"attrId": null,
-								"productId": 29,
-								"cartNum": 2,
-								"image": "http://127.0.0.1:8080/crmebimage/public/content/2024/04/06/5d572bca82e84c1bbb273af2d088d10fs26rxuhx0z.png",
-								"storeName": "四季乐韵：中外古典音乐品鉴",
-								"price": "14.00",
-								"isReply": null,
-								"sku": null
-							},
-							{
-								"attrId": null,
-								"productId": 65,
-								"cartNum": 1,
-								"image": "http://127.0.0.1:8080/crmebimage/public/content/2024/04/09/2e6231be90df405e8ae85b060c8f7795rvfz686ktu.png",
-								"storeName": "大学计算机基础——走进智能时代",
-								"price": "6.00",
-								"isReply": null,
-								"sku": null
-							}
-						],
-						"type": 0
-					},
-					{
-						"storeOrder": null,
-						"cartInfo": null,
-						"statusPic": null,
-						"offlinePayStatus": null,
-						"id": 4,
-						"orderId": "order49083171386429179992534",
-						"createTime": "2024-04-23 17:24:51",
-						"realName": "大可",
-						"userPhone": "18712341234",
-						"userAddress": "安徽省马鞍山市雨山区安工大",
-						"paid": true,
-						"payTime": "2024-04-23 17:24:51",
-						"payPrice": "36.00",
-						"status": 0,
-						"orderStatus": "待发货",
-						"totalNum": 2,
-						"payPostage": "0.00",
-						"refundStatus": 0,
-						"deliveryName": null,
-						"deliveryType": null,
-						"deliveryId": null,
-						"pinkId": 0,
-						"bargainId": 0,
-						"verifyCode": "",
-						"storeId": 0,
-						"shippingType": 1,
-						"activityType": "普通",
-						"orderInfoList": [{
-							"attrId": null,
-							"productId": 28,
-							"cartNum": 2,
-							"image": "http://127.0.0.1:8080/crmebimage/public/content/2024/04/06/d5d4086e099b4f2caaa95ede9bbce31fdr5ddtbchf.png",
-							"storeName": "中国古代青铜器保护与修复",
-							"price": "18.00",
-							"isReply": null,
-							"sku": null
-						}],
-						"type": 0
-					},
-					{
-						"storeOrder": null,
-						"cartInfo": null,
-						"statusPic": null,
-						"offlinePayStatus": null,
-						"id": 3,
-						"orderId": "order37571171386426024297558",
-						"createTime": "2024-04-23 17:24:20",
-						"realName": "大可",
-						"userPhone": "18712341234",
-						"userAddress": "安徽省马鞍山市雨山区安工大",
-						"paid": true,
-						"payTime": "2024-04-23 17:24:20",
-						"payPrice": "5.00",
-						"status": 0,
-						"orderStatus": "待发货",
-						"totalNum": 1,
-						"payPostage": "0.00",
-						"refundStatus": 0,
-						"deliveryName": null,
-						"deliveryType": null,
-						"deliveryId": null,
-						"pinkId": 0,
-						"bargainId": 0,
-						"verifyCode": "",
-						"storeId": 0,
-						"shippingType": 1,
-						"activityType": "普通",
-						"orderInfoList": [{
-							"attrId": null,
-							"productId": 62,
-							"cartNum": 1,
-							"image": "http://127.0.0.1:8080/crmebimage/public/content/2024/04/07/ea98229f2ebe49ddb49165071c7c27578xh5vb98wo.jpg",
-							"storeName": "怎样做一名优秀的大学生",
-							"price": "5.00",
-							"isReply": null,
-							"sku": null
-						}],
-						"type": 0
-					}
-				],
+				orderList: [],
 				loadTitle: '加载更多', //提示语
+				page: 1,
+				limit: 20,
 			}
 		},
 		methods: {
@@ -257,17 +134,50 @@
 			 * 切换类别
 			 */
 			categoryClick: function(category) {
-				console.log(category)
 				if (category == this.orderCategory) return;
 				this.orderCategory = category;
+				this.loadend = false;
+				this.page = 1;
+				this.$set(this, 'orderList', []);
+				// this.getOrderList();
 			},
 			/**
 			 * 切换状态
 			 */
 			statusClick: function(status) {
-				console.log(status)
 				if (status == this.orderStatus) return;
 				this.orderStatus = status;
+				this.loadend = false;
+				this.page = 1;
+				this.$set(this, 'orderList', []);
+				// this.getOrderList();
+			},
+			/**
+			 * 获取订单列表
+			 */
+			getOrderList: function() {
+				let that = this;
+				if (that.loadend) return;
+				if (that.loading) return;
+				that.loading = true;
+				that.loadTitle = "加载更多";
+				getOrderList({
+					type: that.orderStatus,
+					page: that.page,
+					limit: that.limit,
+				}).then(res => {
+					let list = res.data.list || [];
+					let loadend = list.length < that.limit;
+					that.orderList = that.$util.SplitArray(list, that.orderList);
+					that.$set(that, 'orderList', that.orderList);
+					that.loadend = loadend;
+					that.loading = false;
+					that.loadTitle = loadend ? "我也是有底线的" : '加载更多';
+					that.page = that.page + 1;
+				}).catch(err => {
+					that.loading = false;
+					that.loadTitle = "加载更多";
+				})
 			},
 		}
 	}
