@@ -53,6 +53,17 @@
 
 		},
 		{
+			"path": "pages/admin_order_details/index",
+			"style": {
+				"navigationBarTitleText": "订单详情",
+				"navigationBarBackgroundColor": "#e93323"
+					// #ifdef MP
+					,
+				"navigationBarTextStyle": "#fff"
+				// #endif
+			}
+		},
+		{
 			"path": "pages/goods_details/index",
 			"style": {
 				"navigationStyle": "custom"
@@ -139,7 +150,7 @@
 			"path": "pages/index/components/b_combination",
 			"style": {}
 		}
-	],
+    ],
 	"subPackages": [{
 			"root": "pages/users",
 			"name": "users",

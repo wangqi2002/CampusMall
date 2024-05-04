@@ -60,6 +60,16 @@ public interface StoreOrderService extends IService<StoreOrder> {
      */
     List<StoreOrder> getUserOrderList(Integer uid, Integer status, PageParamRequest pageParamRequest);
     /**
+     * H5订单列表 管理员
+     * @param uid 用户uid
+     * @param category 订单类型|0-普通订单,1-视频号订单,2-回收订单
+     * @param status 评价等级|0=未支付,1=待发货,2=待收货,3=待评价,4=已完成,-3=售后/退款
+     * @param pageParamRequest 分页参数
+     * @return 订单结果列表
+     */
+    List<StoreOrder> getUserOrderAdminList(Integer uid, Integer category, Integer status, PageParamRequest pageParamRequest);
+
+    /**
      * 创建订单
      * @param storeOrder 订单参数
      * @return 创建结果

@@ -59,15 +59,15 @@ import java.util.stream.Collectors;
 
 /**
  * H5端订单操作
- *  +----------------------------------------------------------------------
- *  | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
- *  +----------------------------------------------------------------------
- *  | Copyright (c) 2016~2022 https://www.crmeb.com All rights reserved.
- *  +----------------------------------------------------------------------
- *  | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
- *  +----------------------------------------------------------------------
- *  | Author: CRMEB Team <admin@crmeb.com>
- *  +----------------------------------------------------------------------
+ * +----------------------------------------------------------------------
+ * | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2016~2022 https://www.crmeb.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+ * +----------------------------------------------------------------------
+ * | Author: CRMEB Team <admin@crmeb.com>
+ * +----------------------------------------------------------------------
  */
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -179,6 +179,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 发送后台管理员下单提醒通知短信
+     *
      * @param orderNo 订单编号
      */
     @Async
@@ -191,7 +192,7 @@ public class OrderServiceImpl implements OrderService {
         // 查询可已发送短信的管理员
         List<SystemAdmin> systemAdminList = systemAdminService.findIsSmsList();
         if (CollUtil.isEmpty(systemAdminList)) {
-            return ;
+            return;
         }
         // 发送短信
         SmsTemplate smsTemplate = smsTemplateService.getDetail(notification.getSmsId());
@@ -201,6 +202,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 删除已完成订单
+     *
      * @param id Integer 订单id
      * @return 删除结果
      */
@@ -208,23 +210,24 @@ public class OrderServiceImpl implements OrderService {
     public Boolean delete(Integer id) {
         StoreOrder storeOrder = storeOrderService.getById(id);
         Integer userId = userService.getUserIdException();
-        if (ObjectUtil.isNull(storeOrder) || !userId.equals(storeOrder.getUid())) {
-            throw new CrmebException("没有找到相关订单信息!");
-        }
-        if (storeOrder.getIsDel() || storeOrder.getIsSystemDel()) {
-            throw new CrmebException("订单已删除!");
-        }
-        if (storeOrder.getPaid()) {
-            if (storeOrder.getRefundStatus() > 0 && !storeOrder.getRefundStatus().equals(2)) {
-                throw new CrmebException("订单在退款流程中无法删除!");
+        if (!storeOrder.getType().equals(2)) {
+            if (ObjectUtil.isNull(storeOrder) || !userId.equals(storeOrder.getUid())) {
+                throw new CrmebException("没有找到相关订单信息!");
             }
-            if (storeOrder.getRefundStatus().equals(0) && !storeOrder.getStatus().equals(3)) {
-                throw new CrmebException("只能删除已完成订单!");
+            if (storeOrder.getIsDel() || storeOrder.getIsSystemDel()) {
+                throw new CrmebException("订单已删除!");
             }
-        } else {
-            throw new CrmebException("未支付订单无法删除!");
+            if (storeOrder.getPaid()) {
+                if (storeOrder.getRefundStatus() > 0 && !storeOrder.getRefundStatus().equals(2)) {
+                    throw new CrmebException("订单在退款流程中无法删除!");
+                }
+                if (storeOrder.getRefundStatus().equals(0) && !storeOrder.getStatus().equals(3)) {
+                    throw new CrmebException("只能删除已完成订单!");
+                }
+            } else {
+                throw new CrmebException("未支付订单无法删除!");
+            }
         }
-
         //可以删除
         storeOrder.setIsDel(true);
         Boolean execute = transactionTemplate.execute(e -> {
@@ -238,6 +241,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 创建订单商品评价
+     *
      * @param request 请求参数
      * @return Boolean
      */
@@ -251,6 +255,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 订单收货
+     *
      * @param id Integer 订单id
      */
     @Override
@@ -271,6 +276,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 订单取消
+     *
      * @param id Integer 订单id
      */
     @Override
@@ -288,6 +294,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 订单退款申请
+     *
      * @param request OrderRefundApplyRequest 退款参数
      */
     @Override
@@ -345,6 +352,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 订单退款申请Task使用
+     *
      * @param applyList OrderRefundApplyRequest 退款参数
      */
     @Override
@@ -400,7 +408,8 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 订单列表
-     * @param status 类型
+     *
+     * @param status      类型
      * @param pageRequest 分页
      * @return CommonPage<OrderDetailResponse>
      */
@@ -439,7 +448,50 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * 订单列表 管理员
+     *
+     * @param category    类别
+     * @param status      类型
+     * @param pageRequest 分页
+     * @return CommonPage<OrderDetailResponse>
+     */
+    @Override
+    public CommonPage<OrderDetailResponse> adminList(Integer category, Integer status, PageParamRequest pageRequest) {
+        Integer userId = userService.getUserIdException();
+
+        List<StoreOrder> orderList = storeOrderService.getUserOrderAdminList(userId, category, status, pageRequest);
+        CommonPage<StoreOrder> storeOrderCommonPage = CommonPage.restPage(orderList);
+        List<OrderDetailResponse> responseList = CollUtil.newArrayList();
+        for (StoreOrder storeOrder : orderList) {
+            OrderDetailResponse infoResponse = new OrderDetailResponse();
+            BeanUtils.copyProperties(storeOrder, infoResponse);
+            // 订单状态
+            infoResponse.setOrderStatus(getH5OrderStatus(storeOrder));
+            // 活动类型
+            infoResponse.setActivityType(getOrderActivityType(storeOrder));
+            // 订单详情对象列表
+            List<StoreOrderInfo> orderInfoList = storeOrderInfoService.getListByOrderNo(storeOrder.getOrderId());
+            List<OrderInfoResponse> infoResponseList = CollUtil.newArrayList();
+            orderInfoList.forEach(e -> {
+                OrderInfoResponse orderInfoResponse = new OrderInfoResponse();
+                orderInfoResponse.setStoreName(e.getProductName());
+                orderInfoResponse.setImage(e.getImage());
+                orderInfoResponse.setCartNum(e.getPayNum());
+                orderInfoResponse.setPrice(ObjectUtil.isNotNull(e.getVipPrice()) ? e.getVipPrice() : e.getPrice());
+                orderInfoResponse.setProductId(e.getProductId());
+                infoResponseList.add(orderInfoResponse);
+            });
+            infoResponse.setOrderInfoList(infoResponseList);
+            responseList.add(infoResponse);
+        }
+        CommonPage<OrderDetailResponse> detailPage = CommonPage.restPage(responseList);
+        BeanUtils.copyProperties(storeOrderCommonPage, detailPage, "list");
+        return detailPage;
+    }
+
+    /**
      * 获取订单活动类型
+     *
      * @param storeOrder 订单都西昂
      * @return 活动类型
      */
@@ -464,6 +516,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 获取H5订单状态
+     *
      * @param storeOrder 订单对象
      */
     private String getH5OrderStatus(StoreOrder storeOrder) {
@@ -508,6 +561,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 订单详情
+     *
      * @param orderId 订单id
      */
     @Override
@@ -560,6 +614,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 获取订单状态相关信息
+     *
      * @return MyRecord
      */
     private MyRecord getOrderStatusVo(StoreOrder storeOrder) {
@@ -576,8 +631,8 @@ public class OrderServiceImpl implements OrderService {
             configKeys.add("order_pink_time");
             List<String> configValues = systemConfigService.getValuesByKes(configKeys);
             Date timeSpace;
-            timeSpace = DateUtil.addSecond(storeOrder.getCreateTime(),Double.valueOf(configValues.get(0)).intValue() * 3600);
-            record.set("msg", "请在" + DateUtil.dateToStr(timeSpace, Constants.DATE_FORMAT) +"前完成支付");
+            timeSpace = DateUtil.addSecond(storeOrder.getCreateTime(), Double.valueOf(configValues.get(0)).intValue() * 3600);
+            record.set("msg", "请在" + DateUtil.dateToStr(timeSpace, Constants.DATE_FORMAT) + "前完成支付");
         } else if (storeOrder.getRefundStatus() == 1) {
             record.set("type", -1);
             record.set("title", "申请退款中");
@@ -601,7 +656,7 @@ public class OrderServiceImpl implements OrderService {
                 storeOrderStatus.setOid(storeOrder.getId());
                 storeOrderStatus.setChangeType(Constants.ORDER_LOG_DELIVERY);
                 List<StoreOrderStatus> sOrderStatusResults = storeOrderStatusService.getByEntity(storeOrderStatus);
-                if (sOrderStatusResults.size()>0) {
+                if (sOrderStatusResults.size() > 0) {
                     record.set("type", 2);
                     record.set("title", "待收货");
                     record.set("msg", "商家已送货,请耐心等待");
@@ -611,17 +666,17 @@ public class OrderServiceImpl implements OrderService {
                 storeOrderStatus.setOid(storeOrder.getId());
                 storeOrderStatus.setChangeType(Constants.ORDER_LOG_EXPRESS);
                 List<StoreOrderStatus> sOrderStatusResults = storeOrderStatusService.getByEntity(storeOrderStatus);
-                if (sOrderStatusResults.size()>0) {
+                if (sOrderStatusResults.size() > 0) {
                     record.set("type", 2);
                     record.set("title", "待收货");
                     record.set("msg", "商家已发货,请耐心等待");
                 }
-            }else {
+            } else {
                 StoreOrderStatus storeOrderStatus = new StoreOrderStatus();
                 storeOrderStatus.setOid(storeOrder.getId());
                 storeOrderStatus.setChangeType(Constants.ORDER_LOG_DELIVERY_VI);
                 List<StoreOrderStatus> sOrderStatusResults = storeOrderStatusService.getByEntity(storeOrderStatus);
-                if (sOrderStatusResults.size()>0) {
+                if (sOrderStatusResults.size() > 0) {
                     record.set("type", 2);
                     record.set("title", "待收货");
                     record.set("msg", "服务商已虚拟发货");
@@ -631,11 +686,11 @@ public class OrderServiceImpl implements OrderService {
                     record.set("msg", "退款拒绝订单已发货");
                 }
             }
-        }else if (storeOrder.getStatus() == 2) {
+        } else if (storeOrder.getStatus() == 2) {
             record.set("type", 3);
             record.set("title", "待评价");
             record.set("msg", "已收货,快去评价一下吧");
-        }else if (storeOrder.getStatus() == 3) {
+        } else if (storeOrder.getStatus() == 3) {
             record.set("type", 4);
             record.set("title", "交易完成");
             record.set("msg", "交易完成,感谢您的支持");
@@ -645,7 +700,7 @@ public class OrderServiceImpl implements OrderService {
         String orderPayTypeStr = orderUtils.getOrderPayTypeStr(storeOrder.getPayType());
         record.set("payTypeStr", orderPayTypeStr);
         if (StringUtils.isNotBlank(storeOrder.getDeliveryType())) {
-            record.set("deliveryType", StringUtils.isNotBlank(storeOrder.getDeliveryType()) ? storeOrder.getDeliveryType():"其他方式");
+            record.set("deliveryType", StringUtils.isNotBlank(storeOrder.getDeliveryType()) ? storeOrder.getDeliveryType() : "其他方式");
         }
 
         // 获取商品状态图片 ignore
@@ -661,6 +716,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 订单tap data
+     *
      * @return 订单状态数据量
      */
     @Override
@@ -706,6 +762,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 查询退款理由
+     *
      * @return 退款理由集合
      */
     @Override
@@ -718,11 +775,12 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 订单物流查看
+     *
      * @param orderId 订单id
      */
     @Override
     public Object expressOrder(String orderId) {
-        HashMap<String,Object> resultMap = new HashMap<>();
+        HashMap<String, Object> resultMap = new HashMap<>();
         StoreOrder storeOrderPram = new StoreOrder();
         storeOrderPram.setOrderId(orderId);
         StoreOrder existOrder = storeOrderService.getByEntityOne(storeOrderPram);
@@ -763,7 +821,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     *获取待评价信息
+     * 获取待评价信息
      */
     @Override
     public OrderProductReplyResponse getReplyProduct(GetProductReply productReply) {
@@ -781,6 +839,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 获取申请订单退款信息
+     *
      * @param orderId 订单编号
      * @return ApplyRefundOrderInfoResponse
      */
@@ -807,6 +866,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 订单预下单
+     *
      * @param request 预下单请求参数
      * @return PreOrderResponse
      */
@@ -850,7 +910,7 @@ public class OrderServiceImpl implements OrderService {
         orderInfoVo.setUserIntegral(user.getIntegral());
         orderInfoVo.setUserBalance(user.getNowMoney());
         // 缓存订单
-        String key = user.getUid() + DateUtil.getNowTime().toString()+CrmebUtil.getUuid();
+        String key = user.getUid() + DateUtil.getNowTime().toString() + CrmebUtil.getUuid();
         redisUtil.set("user_order:" + key, JSONObject.toJSONString(orderInfoVo), Constants.ORDER_CASH_CONFIRM, TimeUnit.MINUTES);
         MyRecord record = new MyRecord();
         record.set("preOrderNo", key);
@@ -859,6 +919,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 加载预下单信息
+     *
      * @param preOrderNo 预下单号
      * @return 预下单信息
      */
@@ -895,6 +956,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 计算订单价格
+     *
      * @param request 计算订单价格请求对象
      * @return ComputedOrderPriceResponse
      */
@@ -914,6 +976,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 创建订单
+     *
      * @param request 创建订单请求参数
      * @return MyRecord 订单编号
      */
@@ -953,7 +1016,7 @@ public class OrderServiceImpl implements OrderService {
             request.setRealName(userAddress.getRealName());
             request.setPhone(userAddress.getPhone());
             userAddressStr = userAddress.getProvince() + userAddress.getCity() + userAddress.getDistrict() + userAddress.getDetail();
-        }else if (request.getShippingType() == 2) { // 到店自提
+        } else if (request.getShippingType() == 2) { // 到店自提
             if (StringUtils.isBlank(request.getRealName()) || StringUtils.isBlank(request.getPhone())) {
                 throw new CrmebException("请填写姓名和电话");
             }
@@ -966,7 +1029,7 @@ public class OrderServiceImpl implements OrderService {
             if (ObjectUtil.isNull(systemStore) || systemStore.getIsDel() || !systemStore.getIsShow()) {
                 throw new CrmebException("暂无门店无法选择门店自提");
             }
-            verifyCode = CrmebUtil.randomCount(1111111111,999999999)+"";
+            verifyCode = CrmebUtil.randomCount(1111111111, 999999999) + "";
             userAddressStr = systemStore.getName();
         }
 
@@ -1210,6 +1273,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 创建回收订单
+     *
      * @param request 创建订单请求参数
      * @return MyRecord 订单编号
      */
@@ -1317,6 +1381,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 获取支付配置
+     *
      * @return PreOrderResponse
      */
     @Override
@@ -1335,6 +1400,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 校验商品库存（生成订单）
+     *
      * @param orderInfoVo 订单详情Vo
      * @return List<MyRecord>
      * skuRecord 扣减库存对象
@@ -1450,6 +1516,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 校验预下单商品信息
+     *
      * @param request 预下单请求参数
      * @return OrderInfoVo
      */
@@ -1475,7 +1542,7 @@ public class OrderServiceImpl implements OrderService {
                 detailVoList.add(validatePreOrderCombination(detailRequest, user));
                 orderInfoVo.setCombinationId(detailRequest.getCombinationId());
                 orderInfoVo.setPinkId(detailRequest.getPinkId());
-            } else  {
+            } else {
                 // 普通商品
                 if (ObjectUtil.isNull(detailRequest.getProductId())) {
                     throw new CrmebException("商品编号不能为空");
@@ -1543,8 +1610,9 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 购物车预下单校验
+     *
      * @param request 请求参数
-     * @param user 用户
+     * @param user    用户
      * @return List<OrderInfoDetailVo>
      */
     private List<OrderInfoDetailVo> validatePreOrderShopping(PreOrderRequest request, User user) {
@@ -1610,8 +1678,9 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 秒杀预下单校验
+     *
      * @param detailRequest 请求参数
-     * @param user 用户
+     * @param user          用户
      * @return OrderInfoDetailVo
      */
     private OrderInfoDetailVo validatePreOrderSeckill(PreOrderDetailRequest detailRequest, User user) {
@@ -1643,9 +1712,10 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 公共校验秒杀
-     * @param storeSeckill 秒杀商品
+     *
+     * @param storeSeckill     秒杀商品
      * @param seckillAttrValue 秒杀商品规格属性
-     * @param user 用户
+     * @param user             用户
      * @return MyRecord
      */
     private MyRecord commonValidateSeckill(StoreSeckill storeSeckill, StoreProductAttrValue seckillAttrValue, User user, Integer productNum) {
@@ -1680,7 +1750,7 @@ public class OrderServiceImpl implements OrderService {
         // 判断日期是否过期
         DateTime nowDateTime = cn.hutool.core.date.DateUtil.date();
         String stopTimeStr = DateUtil.dateToStr(storeSeckill.getStopTime(), Constants.DATE_FORMAT_DATE);
-        Date stopDate = DateUtil.strToDate( stopTimeStr  + " " + seckillManger.getEndTime() +":00:00", Constants.DATE_FORMAT);
+        Date stopDate = DateUtil.strToDate(stopTimeStr + " " + seckillManger.getEndTime() + ":00:00", Constants.DATE_FORMAT);
         if (nowDateTime.getTime() - stopDate.getTime() >= 0) {
             throw new CrmebException("秒杀商品已过期");
         }
@@ -1713,8 +1783,9 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 砍价预下单校验
+     *
      * @param detailRequest 请求参数
-     * @param user 用户
+     * @param user          用户
      * @return OrderInfoDetailVo
      */
     private OrderInfoDetailVo validatePreOrderBargain(PreOrderDetailRequest detailRequest, User user) {
@@ -1748,11 +1819,12 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 公共校验砍价
-     * @param storeBargain 砍价商品
+     *
+     * @param storeBargain     砍价商品
      * @param bargainAttrValue 砍价商品规格属性
-     * @param bargainUserId 砍价活动id
-     * @param user 用户
-     * @param productNum 购买数量
+     * @param bargainUserId    砍价活动id
+     * @param user             用户
+     * @param productNum       购买数量
      * @return MyRecord
      */
     private MyRecord commonValidateBargain(StoreBargain storeBargain, StoreProductAttrValue bargainAttrValue, Integer bargainUserId, User user, Integer productNum) {
@@ -1823,8 +1895,9 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 拼团预下单校验
+     *
      * @param detailRequest 请求参数
-     * @param user 用户
+     * @param user          用户
      * @return OrderInfoDetailVo
      */
     private OrderInfoDetailVo validatePreOrderCombination(PreOrderDetailRequest detailRequest, User user) {
@@ -1857,10 +1930,11 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 公共校验拼团
-     * @param storeCombination 砍价商品
+     *
+     * @param storeCombination     砍价商品
      * @param combinationAttrValue 砍价商品规格属性
-     * @param user 用户
-     * @param productNum 购买数量
+     * @param user                 用户
+     * @param productNum           购买数量
      * @return MyRecord
      */
     private MyRecord commonValidateCombination(StoreCombination storeCombination, StoreProductAttrValue combinationAttrValue, User user, Integer productNum) {
@@ -1919,6 +1993,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 再次下单预下单校验
+     *
      * @param detailRequest 请求参数
      * @return List<OrderInfoDetailVo>
      */

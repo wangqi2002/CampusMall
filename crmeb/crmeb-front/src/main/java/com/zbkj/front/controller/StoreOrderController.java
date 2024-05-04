@@ -18,15 +18,15 @@ import java.util.Map;
 
 /**
  * H5端订单操作
- *  +----------------------------------------------------------------------
- *  | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
- *  +----------------------------------------------------------------------
- *  | Copyright (c) 2016~2022 https://www.crmeb.com All rights reserved.
- *  +----------------------------------------------------------------------
- *  | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
- *  +----------------------------------------------------------------------
- *  | Author: CRMEB Team <admin@crmeb.com>
- *  +----------------------------------------------------------------------
+ * +----------------------------------------------------------------------
+ * | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2016~2022 https://www.crmeb.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+ * +----------------------------------------------------------------------
+ * | Author: CRMEB Team <admin@crmeb.com>
+ * +----------------------------------------------------------------------
  */
 @Slf4j
 @RestController("StoreOrderFrontController")
@@ -84,14 +84,15 @@ public class StoreOrderController {
 
     /**
      * 订单列表
-     * @param type 类型
+     *
+     * @param type        类型
      * @param pageRequest 分页
      * @return 订单列表
      */
     @ApiOperation(value = "订单列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    @ApiImplicitParams ({
-        @ApiImplicitParam(name = "type", value = "评价等级|0=未支付,1=待发货,2=待收货,3=待评价,4=已完成,-3=售后/退款", required = true)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "type", value = "评价等级|0=未支付,1=待发货,2=待收货,3=待评价,4=已完成,-3=售后/退款", required = true)
     })
     public CommonResult<CommonPage<OrderDetailResponse>> orderList(@RequestParam(name = "type") Integer type,
                                                                    @ModelAttribute PageParamRequest pageRequest) {
@@ -99,7 +100,28 @@ public class StoreOrderController {
     }
 
     /**
+     * 订单列表 管理员
+     *
+     * @param category    类别
+     * @param type        类型
+     * @param pageRequest 分页
+     * @return 订单列表
+     */
+    @ApiOperation(value = "订单列表")
+    @RequestMapping(value = "/list/admin", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "category", value = "订单类型|0-普通订单,1-视频号订单,2-回收订单", required = false),
+            @ApiImplicitParam(name = "type", value = "评价等级|0=未支付,1=待发货,2=待收货,3=待评价,4=已完成,-3=售后/退款", required = true)
+    })
+    public CommonResult<CommonPage<OrderDetailResponse>> orderAdminList(
+            @RequestParam(name = "category") Integer category, @RequestParam(name = "type") Integer type,
+            @ModelAttribute PageParamRequest pageRequest) {
+        return CommonResult.success(orderService.adminList(category,type, pageRequest));
+    }
+
+    /**
      * 订单详情
+     *
      * @param orderId 订单编号
      * @return 订单详情
      */
@@ -111,6 +133,7 @@ public class StoreOrderController {
 
     /**
      * 订单头部信息
+     *
      * @return 查询集合数量
      */
     @ApiOperation(value = "订单头部数量")
@@ -121,63 +144,68 @@ public class StoreOrderController {
 
     /**
      * 删除已完成订单
+     *
      * @param id String 订单号
      * @return 删除结果
      */
     @ApiOperation(value = "删除订单")
     @RequestMapping(value = "/del", method = RequestMethod.POST)
     public CommonResult<Boolean> delete(@RequestParam Integer id) {
-        if( orderService.delete(id)) {
+        if (orderService.delete(id)) {
             return CommonResult.success();
-        }else{
+        } else {
             return CommonResult.failed();
         }
     }
 
     /**
      * 订单评价
+     *
      * @param request StoreProductReplyAddRequest 评论参数
      */
     @ApiOperation(value = "评价订单")
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
     public CommonResult<Boolean> comment(@RequestBody @Validated StoreProductReplyAddRequest request) {
-        if(orderService.reply(request)) {
+        if (orderService.reply(request)) {
             return CommonResult.success();
-        }else{
+        } else {
             return CommonResult.failed();
         }
     }
 
     /**
      * 订单收货
+     *
      * @param id Integer 订单id
      */
     @ApiOperation(value = "订单收货")
     @RequestMapping(value = "/take", method = RequestMethod.POST)
     public CommonResult<Boolean> take(@RequestParam(value = "id") Integer id) {
-        if(orderService.take(id)) {
+        if (orderService.take(id)) {
             return CommonResult.success();
-        }else{
+        } else {
             return CommonResult.failed();
         }
     }
 
     /**
      * 订单取消
+     *
      * @param id Integer 订单id
      */
     @ApiOperation(value = "订单取消")
     @RequestMapping(value = "/cancel", method = RequestMethod.POST)
     public CommonResult<Boolean> cancel(@RequestParam(value = "id") Integer id) {
-        if(orderService.cancel(id)) {
+        if (orderService.cancel(id)) {
             return CommonResult.success();
-        }else{
+        } else {
             return CommonResult.failed();
         }
     }
 
     /**
      * 获取申请订单退款信息
+     *
      * @param orderId 订单编号
      */
     @ApiOperation(value = "获取申请订单退款信息")
@@ -188,20 +216,22 @@ public class StoreOrderController {
 
     /**
      * 订单退款申请
+     *
      * @param request OrderRefundApplyRequest 订单id
      */
     @ApiOperation(value = "订单退款申请")
     @RequestMapping(value = "/refund", method = RequestMethod.POST)
     public CommonResult<Boolean> refundApply(@RequestBody @Validated OrderRefundApplyRequest request) {
-        if(orderService.refundApply(request)) {
+        if (orderService.refundApply(request)) {
             return CommonResult.success();
-        }else{
+        } else {
             return CommonResult.failed();
         }
     }
 
     /**
      * 查询订单退款理由
+     *
      * @return 退款理由
      */
     @ApiOperation(value = "订单退款理由（商家提供）")
@@ -212,6 +242,7 @@ public class StoreOrderController {
 
     /**
      * 根据订单号查询物流信息
+     *
      * @param orderId 订单号
      * @return 物流信息
      */

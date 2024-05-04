@@ -55,6 +55,14 @@ export function getOrderList(data) {
 }
 
 /**
+ * 订单列表 admin
+ * @param object data
+ */
+export function getOrderAdminList(data) {
+	return request.get('order/list/admin', data);
+}
+
+/**
  * 订单产品信息
  * @param string unique 
  */

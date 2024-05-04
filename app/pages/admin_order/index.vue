@@ -5,20 +5,20 @@
 				<view class="row-name">订单类型：</view>
 				<view class="row-button">
 					<view class='item' :class='orderCategory==0 ? "on": ""' @click="categoryClick(0)">
-						<view>回收</view>
-					</view>
-					<view class='item' :class='orderCategory==1 ? "on": ""' @click="categoryClick(1)">
 						<view>配送</view>
+					</view>
+					<view class='item' :class='orderCategory==2 ? "on": ""' @click="categoryClick(2)">
+						<view>回收</view>
 					</view>
 				</view>
 			</view>
 			<view class="category-row">
 				<view class="row-name">订单状态：</view>
 				<view class="row-button">
-					<view v-if="orderCategory" style="display: flex;">
-						<view class='item' :class='orderStatus==0 ? "on": ""' @click="statusClick(0)">
+					<view v-if="orderCategory != 2" style="display: flex;">
+						<!-- <view class='item' :class='orderStatus==0 ? "on": ""' @click="statusClick(0)">
 							<view>待出库</view>
-						</view>
+						</view> -->
 						<view class='item' :class='orderStatus==1 ? "on": ""' @click="statusClick(1)">
 							<view>待发货</view>
 						</view>
@@ -27,15 +27,15 @@
 						</view>
 					</view>
 					<view v-else style="display: flex;">
-						<view class='item' :class='orderStatus==0 ? "on": ""' @click="statusClick(0)">
+						<view class='item' :class='orderStatus==7 ? "on": ""' @click="statusClick(7)">
 							<view>待回收</view>
 						</view>
-						<view class='item' :class='orderStatus==1 ? "on": ""' @click="statusClick(1)">
+						<view class='item' :class='orderStatus==8 ? "on": ""' @click="statusClick(8)">
 							<view>待入库</view>
 						</view>
-						<view class='item' :class='orderStatus==2 ? "on": ""' @click="statusClick(3)">
+						<!-- <view class='item' :class='orderStatus==2 ? "on": ""' @click="statusClick(3)">
 							<view>待上架</view>
-						</view>
+						</view> -->
 					</view>
 				</view>
 			</view>
@@ -43,7 +43,7 @@
 		<view class="order-list">
 			<view class='list'>
 				<view class='item' v-for="(item,index) in orderList" :key="index">
-					<view @click=''>
+					<view>
 						<view class='title acea-row row-between-wrapper'>
 							<view class="acea-row row-middle">
 								<text class="sign cart-color acea-row row-center-wrapper"
@@ -86,19 +86,15 @@
 						<view class='totalPrice'>共{{item.totalNum}}件商品</view>
 					</view>
 					<view class='bottom acea-row row-right row-middle'>
-						<view class='bnt cancelBnt' v-if="!item.paid" @click='cancelOrder(index,item.id)'>取消订单</view>
-						<view class='bnt bg-color' v-if="!item.paid" @click='goPay(item.payPrice,item.orderId)'>立即付款
+						<view class='bnt bg-color' @click='goOrderDetails(item.orderId)'>查看详情</view>
+						<view class='bnt bg-color' v-if="orderCategory==2" @click='handleComfirm1(item.orderId)'>确认
 						</view>
-						<view class='bnt bg-color' v-else-if="item.status== 0 || item.status== 1 || item.status== 3"
-							@click='goOrderDetails(item.orderId)'>查看详情</view>
-						<view class='bnt bg-color' v-else-if="item.status==2" @click='goOrderDetails(item.orderId)'>去评价
-						</view>
-						<view class='bnt cancelBnt' v-if="item.status == 3" @click='delOrder(item.id,index)'>删除订单</view>
+						<view class='bnt bg-color' v-else @click='handleComfirm(item.orderId)'>确认</view>
 					</view>
 				</view>
 			</view>
 			<view class='loadingicon acea-row row-center-wrapper' v-if="orderList.length>0">
-				<!-- <text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{loadTitle}} -->
+				<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{loadTitle}}
 			</view>
 			<view v-if="orderList.length == 0">
 				<emptyPage title="暂无订单~"></emptyPage>
@@ -109,8 +105,14 @@
 
 <script>
 	import {
-		getOrderList,
+		getOrderAdminList,
 	} from '@/api/order.js';
+	import {
+		toLogin
+	} from '@/libs/login.js';
+	import {
+		mapGetters
+	} from "vuex";
 	import emptyPage from '@/components/emptyPage.vue'
 	export default {
 		components: {
@@ -122,24 +124,93 @@
 				loadend: false, //是否加载完毕
 				loadTitle: '加载更多', //提示语
 				orderCategory: 0, //订单类别
-				orderStatus: 0, //订单状态
+				orderStatus: 1, //订单状态
 				orderList: [],
 				loadTitle: '加载更多', //提示语
 				page: 1,
 				limit: 20,
 			}
 		},
+		computed: mapGetters(['isLogin', 'userInfo']),
+		onShow() {
+			if (this.isLogin) {
+				this.loadend = false;
+				this.page = 1;
+				this.$set(this, 'orderList', []);
+				// this.getOrderData();
+				this.getOrderAdminList();
+			} else {
+				toLogin();
+			}
+		},
 		methods: {
+			handleComfirm: function(order_id) {
+				console.log("handleComfirm", order_id)
+			},
+			handleComfirm1: function(order_id) {
+				console.log(order_id)
+			},
+			confirmOrder: function() {
+				let that = this;
+				uni.showModal({
+					title: '确认收货',
+					content: '为保障权益，请收到货确认无误后，再确认收货',
+					// success: function(res) {
+					// 	if (res.confirm) {
+					// 		orderTake(that.id).then(res => {
+					// 			return that.$util.Tips({
+					// 				title: '操作成功',
+					// 				icon: 'success'
+					// 			}, function() {
+					// 				that.getOrderInfo();
+					// 			});
+					// 		}).catch(err => {
+					// 			return that.$util.Tips({
+					// 				title: err
+					// 			});
+					// 		})
+					// 	}
+					// }
+				})
+			},
+			/**
+			 * 去订单详情
+			 */
+			goOrderDetails: function(order_id) {
+				if (!order_id) return that.$util.Tips({
+					title: '缺少订单号无法查看订单详情'
+				});
+				// #ifdef MP
+				uni.showLoading({
+					title: '正在加载',
+				})
+				openOrderSubscribe().then(() => {
+					uni.hideLoading();
+					uni.navigateTo({
+						url: '/pages/admin_order_details/index?order_id=' + order_id
+					})
+				}).catch(() => {
+					uni.hideLoading();
+				})
+				// #endif  
+				// #ifndef MP
+				uni.navigateTo({
+					url: '/pages/admin_order_details/index?order_id=' + order_id
+				})
+				// #endif
+			},
 			/**
 			 * 切换类别
 			 */
 			categoryClick: function(category) {
 				if (category == this.orderCategory) return;
+				if (category == 0) this.orderStatus = 1
+				if (category == 2) this.orderStatus = 7
 				this.orderCategory = category;
 				this.loadend = false;
 				this.page = 1;
 				this.$set(this, 'orderList', []);
-				// this.getOrderList();
+				this.getOrderAdminList();
 			},
 			/**
 			 * 切换状态
@@ -150,22 +221,25 @@
 				this.loadend = false;
 				this.page = 1;
 				this.$set(this, 'orderList', []);
-				// this.getOrderList();
+				this.getOrderAdminList();
 			},
 			/**
 			 * 获取订单列表
 			 */
-			getOrderList: function() {
+			getOrderAdminList: function() {
 				let that = this;
 				if (that.loadend) return;
 				if (that.loading) return;
 				that.loading = true;
 				that.loadTitle = "加载更多";
-				getOrderList({
+				console.log("category:", that.orderCategory, "type:", that.orderStatus)
+				getOrderAdminList({
+					category: that.orderCategory,
 					type: that.orderStatus,
 					page: that.page,
 					limit: that.limit,
 				}).then(res => {
+					console.log(res.data)
 					let list = res.data.list || [];
 					let loadend = list.length < that.limit;
 					that.orderList = that.$util.SplitArray(list, that.orderList);
@@ -331,6 +405,7 @@
 						.bnt {
 							width: 176rpx;
 							height: 60rpx;
+							margin: 0 10rpx;
 							text-align: center;
 							line-height: 60rpx;
 							color: #fff;

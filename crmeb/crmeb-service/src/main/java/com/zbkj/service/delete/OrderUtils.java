@@ -194,6 +194,44 @@ public class OrderUtils {
         queryWrapper.eq(StoreOrder::getIsDel, false);
         queryWrapper.eq(StoreOrder::getIsSystemDel, false);
     }
+    /**
+     * h5 订单查询 where status 封装
+     * @param queryWrapper 查询条件
+     * @param status 状态
+     * @param category    类别
+     */
+    public void statusApiByWhere(LambdaQueryWrapper<StoreOrder> queryWrapper, Integer category, Integer status){
+        queryWrapper.eq(StoreOrder::getType, category);
+        switch (status){
+            case Constants.ORDER_STATUS_H5_NOT_SHIPPED: // 待发货
+                queryWrapper.eq(StoreOrder::getPaid, true);
+                queryWrapper.eq(StoreOrder::getStatus, 0);
+                queryWrapper.eq(StoreOrder::getRefundStatus, 0);
+//                queryWrapper.eq(StoreOrder::getShippingType, 1);
+                break;
+            case Constants.ORDER_STATUS_H5_SPIKE: // 待收货
+                queryWrapper.eq(StoreOrder::getPaid, true);
+                queryWrapper.eq(StoreOrder::getStatus, 1);
+                queryWrapper.eq(StoreOrder::getRefundStatus, 0);
+                break;
+            case Constants.ORDER_STATUS_H5_RECYCLE: // 待回收
+                queryWrapper.eq(StoreOrder::getPaid, true);
+                queryWrapper.eq(StoreOrder::getStatus, 4);
+                queryWrapper.eq(StoreOrder::getRefundStatus, 0);
+                break;
+            case Constants.ORDER_STATUS_H5_STORAGE: // 待入库
+                queryWrapper.eq(StoreOrder::getPaid, true);
+                queryWrapper.eq(StoreOrder::getStatus, 5);
+                queryWrapper.eq(StoreOrder::getRefundStatus, 0);
+                break;
+            case Constants.ORDER_STATUS_H5_REFUND: // 包含已退款和退款中
+                queryWrapper.eq(StoreOrder::getPaid, true);
+                queryWrapper.in(StoreOrder::getRefundStatus, 1,2,3);
+                break;
+        }
+        queryWrapper.eq(StoreOrder::getIsDel, false);
+        queryWrapper.eq(StoreOrder::getIsSystemDel, false);
+    }
 
     /**
      * 根据订单id获取订单中商品和名称和购买数量字符串
