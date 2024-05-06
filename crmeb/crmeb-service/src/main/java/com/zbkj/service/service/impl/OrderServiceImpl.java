@@ -293,6 +293,70 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * 订单回收
+     *
+     * @param id Integer 订单id
+     */
+    @Override
+    public Boolean takeRec(Integer id) {
+        StoreOrder storeOrder = orderUtils.getInfoById(id);
+        if (!storeOrder.getStatus().equals(Constants.ORDER_STATUS_INT_RECYCLED)) {
+            throw new CrmebException("订单状态错误");
+        }
+        storeOrder.setStatus(Constants.ORDER_STATUS_INT_IN_STASH);
+        boolean result = storeOrderService.updateById(storeOrder);
+        return result;
+    }
+
+    /**
+     * 订单入库
+     *
+     * @param id Integer 订单id
+     */
+    @Override
+    public Boolean takeInS(Integer id) {
+        StoreOrder storeOrder = orderUtils.getInfoById(id);
+        if (!storeOrder.getStatus().equals(Constants.ORDER_STATUS_INT_IN_STASH)) {
+            throw new CrmebException("订单状态错误");
+        }
+        storeOrder.setStatus(Constants.ORDER_STATUS_INT_COMPLETE);
+        boolean result = storeOrderService.updateById(storeOrder);
+        return result;
+    }
+
+    /**
+     * 订单出库
+     *
+     * @param id Integer 订单id
+     */
+    @Override
+    public Boolean takeOutS(Integer id) {
+        StoreOrder storeOrder = orderUtils.getInfoById(id);
+        if (!storeOrder.getStatus().equals(Constants.ORDER_STATUS_INT_PAID)) {
+            throw new CrmebException("订单状态错误");
+        }
+        storeOrder.setStatus(Constants.ORDER_STATUS_INT_OUT_STASH);
+        boolean result = storeOrderService.updateById(storeOrder);
+        return result;
+    }
+
+    /**
+     * 订单送达
+     *
+     * @param id Integer 订单id
+     */
+    @Override
+    public Boolean takeSent(Integer id) {
+        StoreOrder storeOrder = orderUtils.getInfoById(id);
+        if (!storeOrder.getStatus().equals(Constants.ORDER_STATUS_INT_SPIKE) && !storeOrder.getStatus().equals(Constants.ORDER_STATUS_INT_OUT_STASH)) {
+            throw new CrmebException("订单状态错误");
+        }
+        storeOrder.setStatus(Constants.ORDER_STATUS_INT_SENT);
+        boolean result = storeOrderService.updateById(storeOrder);
+        return result;
+    }
+
+    /**
      * 订单退款申请
      *
      * @param request OrderRefundApplyRequest 退款参数
@@ -545,16 +609,16 @@ public class OrderServiceImpl implements OrderService {
             return "已完成";
         }
         if (storeOrder.getStatus().equals(4)) {
-            return "待出库";
-        }
-        if (storeOrder.getStatus().equals(5)) {
             return "待回收";
         }
-        if (storeOrder.getStatus().equals(6)) {
+        if (storeOrder.getStatus().equals(5)) {
             return "待入库";
         }
+        if (storeOrder.getStatus().equals(6)) {
+            return "待收货";
+        }
         if (storeOrder.getStatus().equals(7)) {
-            return "待上架";
+            return "待收货";
         }
         return "";
     }
@@ -694,6 +758,22 @@ public class OrderServiceImpl implements OrderService {
             record.set("type", 4);
             record.set("title", "交易完成");
             record.set("msg", "交易完成,感谢您的支持");
+        } else if (storeOrder.getStatus() == 4) {
+            record.set("type", 5);
+            record.set("title", "待回收");
+            record.set("msg", "配送员已去回收,请耐心等待");
+        } else if (storeOrder.getStatus() == 5) {
+            record.set("type", 6);
+            record.set("title", "待入库");
+            record.set("msg", "商品已回收，准备入库");
+        } else if (storeOrder.getStatus() == 5) {
+            record.set("type", 7);
+            record.set("title", "待收货");
+            record.set("msg", "商家已发货,请耐心等待");
+        } else if (storeOrder.getStatus() == 5) {
+            record.set("type", 8);
+            record.set("title", "待收货");
+            record.set("msg", "商家已发货,请耐心等待");
         }
 
         // 支付方式

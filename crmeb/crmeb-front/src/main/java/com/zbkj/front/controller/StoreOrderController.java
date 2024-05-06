@@ -116,7 +116,7 @@ public class StoreOrderController {
     public CommonResult<CommonPage<OrderDetailResponse>> orderAdminList(
             @RequestParam(name = "category") Integer category, @RequestParam(name = "type") Integer type,
             @ModelAttribute PageParamRequest pageRequest) {
-        return CommonResult.success(orderService.adminList(category,type, pageRequest));
+        return CommonResult.success(orderService.adminList(category, type, pageRequest));
     }
 
     /**
@@ -197,6 +197,66 @@ public class StoreOrderController {
     @RequestMapping(value = "/cancel", method = RequestMethod.POST)
     public CommonResult<Boolean> cancel(@RequestParam(value = "id") Integer id) {
         if (orderService.cancel(id)) {
+            return CommonResult.success();
+        } else {
+            return CommonResult.failed();
+        }
+    }
+
+    /**
+     * 订单回收
+     *
+     * @param id Integer 订单id
+     */
+    @ApiOperation(value = "订单回收")
+    @RequestMapping(value = "/take/recycle", method = RequestMethod.POST)
+    public CommonResult<Boolean> takeRec(@RequestParam(value = "id") Integer id) {
+        if (orderService.takeRec(id)) {
+            return CommonResult.success();
+        } else {
+            return CommonResult.failed();
+        }
+    }
+
+    /**
+     * 订单入库
+     *
+     * @param id Integer 订单id
+     */
+    @ApiOperation(value = "订单入库")
+    @RequestMapping(value = "/take/stash/in", method = RequestMethod.POST)
+    public CommonResult<Boolean> takeInS(@RequestParam(value = "id") Integer id) {
+        if (orderService.takeInS(id)) {
+            return CommonResult.success();
+        } else {
+            return CommonResult.failed();
+        }
+    }
+
+    /**
+     * 订单出库
+     *
+     * @param id Integer 订单id
+     */
+    @ApiOperation(value = "订单出库")
+    @RequestMapping(value = "/take/stash/out", method = RequestMethod.POST)
+    public CommonResult<Boolean> takeOutS(@RequestParam(value = "id") Integer id) {
+        if (orderService.takeOutS(id)) {
+            return CommonResult.success();
+        } else {
+            return CommonResult.failed();
+        }
+    }
+
+    /**
+     * 订单送达
+     *
+     * @param id Integer 订单id
+     */
+    @ApiOperation(value = "订单送达")
+    @RequestMapping(value = "/take/sent", method = RequestMethod.POST)
+    public CommonResult<Boolean> takeSent(@RequestParam(value = "id") Integer id) {
+        if (orderService.takeSent(id)) {
             return CommonResult.success();
         } else {
             return CommonResult.failed();

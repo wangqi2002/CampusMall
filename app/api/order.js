@@ -147,6 +147,50 @@ export function orderTake(uni) {
 }
 
 /**
+ * 订单回收
+ * @param string uni
+ * 
+ */
+export function orderTakeRec(uni) {
+	return request.post('order/take/recycle', {
+		id: uni
+	}, {}, 1);
+}
+
+/**
+ 订单入库
+ * @param string uni
+ * 
+ */
+export function orderTakeIns(uni) {
+	return request.post('order/take/stash/in', {
+		id: uni
+	}, {}, 1);
+}
+
+/**
+ * 订单出库
+ * @param string uni
+ * 
+ */
+export function orderTakeOuts(uni) {
+	return request.post('order/take/stash/out', {
+		id: uni
+	}, {}, 1);
+}
+
+/**
+ * 订单送达
+ * @param string uni
+ * 
+ */
+export function orderTakeSent(uni) {
+	return request.post('order/take/sent', {
+		id: uni
+	}, {}, 1);
+}
+
+/**
  * 订单查询物流信息
  * @returns {*}
  */

@@ -15,7 +15,9 @@
 			</view>
 			<view class="pad30">
 				<view class='nav'>
-					<uni-steps :options="[{title: '商品信息'}, {title: '商品详情'}, {title: '个人信息'}]" :active="0">
+					<uni-steps v-if="category==2" :options="[{title: '待回收'}, {title: '待入库'}]" :active="status - 8">
+					</uni-steps>
+					<uni-steps v-else :options="[{title: '待出库'}, {title: '待签收'}]" :active="status - 1">
 					</uni-steps>
 				</view>
 				<view class='address borRadius14'>
@@ -79,7 +81,7 @@
 				<view style='height:120rpx;'></view>
 				<view class='footer acea-row row-right row-middle'>
 					<view class='bnt cancel' @tap='delOrder'>删除订单</view>
-					<view class='bnt bg-color' @tap='handleComfirm(orderInfo.orderId)'>确认</view>
+					<view class='bnt bg-color' @tap='handleComfirm'>确认</view>
 				</view>
 			</view>
 		</view>
@@ -104,6 +106,8 @@
 		},
 		data() {
 			return {
+				category: '',
+				status: '',
 				order_id: '',
 				uniId: '',
 				isClose: false,
@@ -120,14 +124,16 @@
 		computed: mapGetters(['isLogin', 'chatUrl', 'userInfo']),
 		onLoad: function(options) {
 			// options.type == undefined || options.type == null ? this.type = 'normal' : this.type = options.type;
-			if (!options.order_id && !options.uniId) return this.$util.Tips({
+			if (!options.status && !options.order_id && !options.uniId) return this.$util.Tips({
 				title: '缺少参数'
 			}, {
 				tab: 3,
 				url: 1
 			});
-			// console.log("order_id: ", options.order_id, " uniId: ", options.uniId)
+			// console.log("category: ", options.category, "status: ", options.status, "order_id: ", options.order_id, " uniId: ", options.uniId)
 			this.$set(this, 'order_id', options.order_id);
+			this.$set(this, 'category', options.category);
+			this.$set(this, 'status', options.status);
 		},
 		onShow() {
 			if (this.isLogin) {
@@ -140,31 +146,105 @@
 			this.isClose = true;
 		},
 		methods: {
-			handleComfirm: function(order_id) {
-				console.log(order_id)
-			},
-			confirmOrder: function() {
+			handleComfirm: function() {
+				console.log(this.status, "--handleComfirm--", this.id)
 				let that = this;
-				uni.showModal({
-					title: '确认收货',
-					content: '为保障权益，请收到货确认无误后，再确认收货',
-					// success: function(res) {
-					// 	if (res.confirm) {
-					// 		orderTake(that.id).then(res => {
-					// 			return that.$util.Tips({
-					// 				title: '操作成功',
-					// 				icon: 'success'
-					// 			}, function() {
-					// 				that.getOrderInfo();
-					// 			});
-					// 		}).catch(err => {
-					// 			return that.$util.Tips({
-					// 				title: err
-					// 			});
-					// 		})
-					// 	}
-					// }
-				})
+				// switch (this.status) {
+				// 	case 1:
+				// 		uni.showModal({
+				// 			title: '确认发货',
+				// 			content: '请将商品取出后，再确认发货',
+				// 			success: function(res) {
+				// 				if (res.confirm) {
+				// 					console.log(this.status)
+				// 					orderTakeOuts(that.id).then(res => {
+				// 						return that.$util.Tips({
+				// 							title: '操作成功',
+				// 							icon: 'success'
+				// 						}, function() {
+				// 							that.getOrderAdminList();
+				// 						});
+				// 					}).catch(err => {
+				// 						return that.$util.Tips({
+				// 							title: err
+				// 						});
+				// 					})
+				// 				}
+				// 			}
+				// 		})
+				// 		break;
+				// 	case 2:
+				// 		uni.showModal({
+				// 			title: '确认送达',
+				// 			content: '请将商品送到买家位置后，再确认送达',
+				// 			success: function(res) {
+				// 				if (res.confirm) {
+				// 					console.log(this.status)
+				// 					orderTakeSent(that.id).then(res => {
+				// 						return that.$util.Tips({
+				// 							title: '操作成功',
+				// 							icon: 'success'
+				// 						}, function() {
+				// 							that.getOrderAdminList();
+				// 						});
+				// 					}).catch(err => {
+				// 						return that.$util.Tips({
+				// 							title: err
+				// 						});
+				// 					})
+				// 				}
+				// 			}
+				// 		})
+				// 		break;
+				// 	case 8:
+				// 		uni.showModal({
+				// 			title: '确认回收',
+				// 			content: '请将商品从卖家处取回后，再确认回收',
+				// 			success: function(res) {
+				// 				if (res.confirm) {
+				// 					console.log(this.status)
+				// 					orderTakeRec(that.id).then(res => {
+				// 						return that.$util.Tips({
+				// 							title: '操作成功',
+				// 							icon: 'success'
+				// 						}, function() {
+				// 							that.getOrderAdminList();
+				// 						});
+				// 					}).catch(err => {
+				// 						return that.$util.Tips({
+				// 							title: err
+				// 						});
+				// 					})
+				// 				}
+				// 			}
+				// 		})
+				// 		break;
+				// 	case 9:
+				// 		uni.showModal({
+				// 			title: '确认入库',
+				// 			content: '请将商品放入仓库后，再确认入库',
+				// 			success: function(res) {
+				// 				if (res.confirm) {
+				// 					console.log(this.status)
+				// 					orderTakeIns(that.id).then(res => {
+				// 						return that.$util.Tips({
+				// 							title: '操作成功',
+				// 							icon: 'success'
+				// 						}, function() {
+				// 							that.getOrderAdminList();
+				// 						});
+				// 					}).catch(err => {
+				// 						return that.$util.Tips({
+				// 							title: err
+				// 						});
+				// 					})
+				// 				}
+				// 			}
+				// 		})
+				// 		break;
+				// 	default:
+				// 		console.log("default")
+				// }
 			},
 			/**
 			 * 获取订单详细信息

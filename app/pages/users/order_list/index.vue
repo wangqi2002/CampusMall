@@ -76,7 +76,7 @@
 						<view class='bnt cancelBnt' v-if="!item.paid" @click='cancelOrder(index,item.id)'>取消订单</view>
 						<view class='bnt bg-color' v-if="!item.paid" @click='goPay(item.payPrice,item.orderId)'>立即付款
 						</view>
-						<view class='bnt bg-color' v-else-if="item.status== 0 || item.status== 1 || item.status== 3"
+						<view class='bnt bg-color' v-else-if="item.status== 0 || item.status== 1 || item.status== 3 || item.status== 6 || item.status== 7"
 							@click='goOrderDetails(item.orderId)'>查看详情</view>
 						<view class='bnt bg-color' v-else-if="item.status==2" @click='goOrderDetails(item.orderId)'>去评价
 						</view>
@@ -341,6 +341,7 @@
 					page: that.page,
 					limit: that.limit,
 				}).then(res => {
+					console.log(res.data)
 					let list = res.data.list || [];
 					let loadend = list.length < that.limit;
 					that.orderList = that.$util.SplitArray(list, that.orderList);

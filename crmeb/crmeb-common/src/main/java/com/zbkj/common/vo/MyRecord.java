@@ -187,7 +187,7 @@ public class MyRecord implements Serializable {
      * Set column to record.
      *
      * @param column the column name
-     * @param value  the value of the column
+     * @param value  the value of the column 0=未支付,1=待发货,2=待收货,3=待评价,4=已完成,5=待出库,6=已送达,7=待回收,8=待入库 订单状态
      */
     public MyRecord set(String column, Object value) {
         getColumns().put(column, value);

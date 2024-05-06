@@ -94,6 +94,38 @@ public interface OrderService {
     Boolean cancel(Integer id);
 
     /**
+     * 订单回收
+     *
+     * @param id 订单id
+     * @return Boolean
+     */
+    Boolean takeRec(Integer id);
+
+    /**
+     * 订单入库
+     *
+     * @param id 订单id
+     * @return Boolean
+     */
+    Boolean takeInS(Integer id);
+
+    /**
+     * 订单出库
+     *
+     * @param id 订单id
+     * @return Boolean
+     */
+    Boolean takeOutS(Integer id);
+
+    /**
+     * 订单送达
+     *
+     * @param id 订单id
+     * @return Boolean
+     */
+    Boolean takeSent(Integer id);
+
+    /**
      * 订单退款申请
      *
      * @param request 申请参数

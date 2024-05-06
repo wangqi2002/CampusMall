@@ -27,10 +27,10 @@
 						</view>
 					</view>
 					<view v-else style="display: flex;">
-						<view class='item' :class='orderStatus==7 ? "on": ""' @click="statusClick(7)">
+						<view class='item' :class='orderStatus==8 ? "on": ""' @click="statusClick(8)">
 							<view>待回收</view>
 						</view>
-						<view class='item' :class='orderStatus==8 ? "on": ""' @click="statusClick(8)">
+						<view class='item' :class='orderStatus==9 ? "on": ""' @click="statusClick(9)">
 							<view>待入库</view>
 						</view>
 						<!-- <view class='item' :class='orderStatus==2 ? "on": ""' @click="statusClick(3)">
@@ -87,9 +87,14 @@
 					</view>
 					<view class='bottom acea-row row-right row-middle'>
 						<view class='bnt bg-color' @click='goOrderDetails(item.orderId)'>查看详情</view>
-						<view class='bnt bg-color' v-if="orderCategory==2" @click='handleComfirm1(item.orderId)'>确认
+						<view class='bnt bg-color' v-if="orderStatus==1" @click='handleComfirm(1,item.id)'>确认
 						</view>
-						<view class='bnt bg-color' v-else @click='handleComfirm(item.orderId)'>确认</view>
+						<view class='bnt bg-color' v-else-if="orderStatus==2" @click='handleComfirm(2,item.id)'>确认
+						</view>
+						<view class='bnt bg-color' v-else-if="orderStatus==8" @click='handleComfirm(8,item.id)'>确认
+						</view>
+						<view class='bnt bg-color' v-else-if="orderStatus==9" @click='handleComfirm(9,item.id)'>确认
+						</view>
 					</view>
 				</view>
 			</view>
@@ -106,6 +111,10 @@
 <script>
 	import {
 		getOrderAdminList,
+		orderTakeRec,
+		orderTakeIns,
+		orderTakeOuts,
+		orderTakeSent
 	} from '@/api/order.js';
 	import {
 		toLogin
@@ -144,35 +153,107 @@
 			}
 		},
 		methods: {
-			handleComfirm: function(order_id) {
-				console.log("handleComfirm", order_id)
-			},
-			handleComfirm1: function(order_id) {
-				console.log(order_id)
-			},
-			confirmOrder: function() {
+			handleComfirm: function(tag, id) {
+				console.log(tag, "--handleComfirm--", id)
 				let that = this;
-				uni.showModal({
-					title: '确认收货',
-					content: '为保障权益，请收到货确认无误后，再确认收货',
-					// success: function(res) {
-					// 	if (res.confirm) {
-					// 		orderTake(that.id).then(res => {
-					// 			return that.$util.Tips({
-					// 				title: '操作成功',
-					// 				icon: 'success'
-					// 			}, function() {
-					// 				that.getOrderInfo();
-					// 			});
-					// 		}).catch(err => {
-					// 			return that.$util.Tips({
-					// 				title: err
-					// 			});
-					// 		})
-					// 	}
-					// }
-				})
+				switch (tag) {
+					case 1:
+						uni.showModal({
+							title: '确认发货',
+							content: '请将商品取出后，再确认发货',
+							success: function(res) {
+								if (res.confirm) {
+									console.log(tag)
+									orderTakeOuts(id).then(res => {
+										return that.$util.Tips({
+											title: '操作成功',
+											icon: 'success'
+										}, function() {
+											that.getOrderAdminList();
+										});
+									}).catch(err => {
+										return that.$util.Tips({
+											title: err
+										});
+									})
+								}
+							}
+						})
+						break;
+					case 2:
+						uni.showModal({
+							title: '确认送达',
+							content: '请将商品送到买家位置后，再确认送达',
+							success: function(res) {
+								if (res.confirm) {
+									console.log(tag)
+									orderTakeSent(id).then(res => {
+										return that.$util.Tips({
+											title: '操作成功',
+											icon: 'success'
+										}, function() {
+											that.getOrderAdminList();
+										});
+									}).catch(err => {
+										return that.$util.Tips({
+											title: err
+										});
+									})
+								}
+							}
+						})
+						break;
+					case 8:
+						uni.showModal({
+							title: '确认回收',
+							content: '请将商品从卖家处取回后，再确认回收',
+							success: function(res) {
+								if (res.confirm) {
+									console.log(tag)
+									orderTakeRec(id).then(res => {
+										return that.$util.Tips({
+											title: '操作成功',
+											icon: 'success'
+										}, function() {
+											that.getOrderAdminList();
+										});
+									}).catch(err => {
+										return that.$util.Tips({
+											title: err
+										});
+									})
+								}
+							}
+						})
+						break;
+					case 9:
+						uni.showModal({
+							title: '确认入库',
+							content: '请将商品放入仓库后，再确认入库',
+							success: function(res) {
+								if (res.confirm) {
+									console.log(tag)
+									orderTakeIns(id).then(res => {
+										return that.$util.Tips({
+											title: '操作成功',
+											icon: 'success'
+										}, function() {
+											that.getOrderAdminList();
+										});
+									}).catch(err => {
+										return that.$util.Tips({
+											title: err
+										});
+									})
+								}
+							}
+						})
+						break;
+					default:
+						console.log("default")
+				}
 			},
+
 			/**
 			 * 去订单详情
 			 */
@@ -187,7 +268,8 @@
 				openOrderSubscribe().then(() => {
 					uni.hideLoading();
 					uni.navigateTo({
-						url: '/pages/admin_order_details/index?order_id=' + order_id
+						url: '/pages/admin_order_details/index?order_id=' + order_id + '&category=' +
+							this.orderCategory + '&status=' + this.orderStatus
 					})
 				}).catch(() => {
 					uni.hideLoading();
@@ -195,7 +277,8 @@
 				// #endif  
 				// #ifndef MP
 				uni.navigateTo({
-					url: '/pages/admin_order_details/index?order_id=' + order_id
+					url: '/pages/admin_order_details/index?order_id=' + order_id + '&category=' +
+						this.orderCategory + '&status=' + this.orderStatus
 				})
 				// #endif
 			},
@@ -205,7 +288,7 @@
 			categoryClick: function(category) {
 				if (category == this.orderCategory) return;
 				if (category == 0) this.orderStatus = 1
-				if (category == 2) this.orderStatus = 7
+				if (category == 2) this.orderStatus = 8
 				this.orderCategory = category;
 				this.loadend = false;
 				this.page = 1;
@@ -232,7 +315,6 @@
 				if (that.loading) return;
 				that.loading = true;
 				that.loadTitle = "加载更多";
-				console.log("category:", that.orderCategory, "type:", that.orderStatus)
 				getOrderAdminList({
 					category: that.orderCategory,
 					type: that.orderStatus,

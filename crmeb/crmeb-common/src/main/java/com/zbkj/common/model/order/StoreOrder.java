@@ -93,7 +93,7 @@ public class StoreOrder implements Serializable {
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
-    @ApiModelProperty(value = "订单状态（0：待发货；1：待收货；2：已收货，待评价；3：已完成；4：待回收；5：待入库；）")
+    @ApiModelProperty(value = "订单状态（0：待发货；1：待收货；2：已收货，待评价；3：已完成；4：待回收；5：待入库；6：已出库；7：已送达；）")
     private Integer status;
 
     @ApiModelProperty(value = "0 未退款 1 申请中 2 已退款 3 退款中")

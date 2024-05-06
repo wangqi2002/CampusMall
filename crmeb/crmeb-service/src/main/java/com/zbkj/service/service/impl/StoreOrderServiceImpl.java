@@ -2027,7 +2027,7 @@ public class StoreOrderServiceImpl extends ServiceImpl<StoreOrderDao, StoreOrder
                 break;
             case Constants.ORDER_STATUS_SPIKE: //待收货
                 queryWrapper.eq("paid", 1);
-                queryWrapper.eq("status", 1);
+                queryWrapper.in("status", 1,6,7);
                 queryWrapper.eq("refund_status", 0);
                 queryWrapper.eq("is_del", 0);
                 break;
