@@ -7,7 +7,7 @@ crmeb:
   wechat-js-api-beta: true #微信js api是否是beta版本
   asyncConfig: false #是否同步config表数据到redis
   asyncWeChatProgramTempList: false #是否同步小程序公共模板库
-  imagePath: /www/wwwroot/your Crmeb-admin.jar Path/ # 服务器图片路径配置 斜杠结尾
+  imagePath: /www/wwwroot/api.java.cz999.top/ # 服务器图片路径配置 斜杠结尾
 
 server:
   port: 20000
