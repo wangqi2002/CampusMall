@@ -565,6 +565,10 @@
 						}, 1000);
 					}).catch(res => {
 						console.log(res)
+						uni.hideLoading();
+						return that.$util.Tips({
+							title: "入库出错"
+						});
 					})
 				}).catch(err => {
 					that.$util.Tips({

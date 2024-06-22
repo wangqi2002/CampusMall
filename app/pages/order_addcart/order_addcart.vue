@@ -728,6 +728,7 @@
 					if (c.data.count === 0) that.getHostProduct();
 					for (let i = 0; i < Math.ceil(that.cartCount / that.limit); i++) {
 						let cartList = await this.getCartData(data);
+						console.log(cartList)
 						let valid = cartList.list;
 						let validList = that.$util.SplitArray(valid, that.cartList.valid);
 						let numSub = [{

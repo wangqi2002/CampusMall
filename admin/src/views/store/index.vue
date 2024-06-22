@@ -287,6 +287,7 @@ export default {
       this.listLoading = true
       console.log(this.tableFrom)
       productLstApi(this.tableFrom).then(res => {
+        console.log(res.list)
         this.tableData.data = res.list
         this.tableData.total = res.total
         this.listLoading = false

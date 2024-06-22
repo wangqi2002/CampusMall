@@ -7,7 +7,7 @@ crmeb:
   wechat-js-api-beta: true #微信js api是否是beta版本
   asyncConfig: false #是否同步config表数据到redis
   asyncWeChatProgramTempList: false #是否同步小程序公共模板库
-  imagePath: /www/wwwroot/api.java.cz999.top/ # 服务器图片路径配置 斜杠结尾
+  imagePath: /www/wwwroot/api.admin.java.cz999.top/ # 服务器图片路径配置 斜杠结尾
 
 server:
   port: 20000
@@ -23,16 +23,13 @@ spring:
     #  数据库配置
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.jdbc.Driver
-#    url: jdbc:mysql://127.0.0.1:3306/campusmall?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimeZone=GMT+8
-#    username: root
-#    password: 341225
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://47.113.206.230:3306/campusmall?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
     username: admin
     password: cBJNMdcmmK2JmpZt
 
+
   redis:
-    #    host: 127.0.0.1 #地址
     host: 47.113.206.230 #地址
     port: 6379 #端口
     password: 341225
